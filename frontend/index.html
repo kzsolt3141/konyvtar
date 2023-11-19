@@ -4,7 +4,7 @@
     <title>Berecki konyvtar</title>
   </head>
   <body>
-    <h1>Konyvkereses</h1>
+    <h1>Konyv kereses</h1>
     <form id="konyv_kereses">
       <label for="kulcsszo">Kereses:</label>
       <input type="text" id="kulcsszo" name="kulcsszo" value="Clara" required />
@@ -16,9 +16,25 @@
         <option value="minden">Minden</option>
       </select>
 
-      <button type="submit" id="mentes">Keres</button>
+      <button type="submit" id="kereses">Keres</button>
     </form>
-    <div class="lista"></div>
+    <div class="konyvlista"></div>
+
+    <h1>Kliens kereses</h1>
+    <form id="kliens_kereses">
+      <label for="kulcsszo">Kereses:</label>
+      <input type="text" id="kulcsszo" name="kulcsszo" value="Clara" required />
+
+      <label for="tipus">Hol ?</label>
+      <select id="tipus" name="tipus">
+        <option value="nev">Nev</option>
+        <option value="telefon">Tel</option>
+        <option value="mail">e-Mail</option>
+      </select>
+
+      <button type="submit" id="kereses">Keres</button>
+    </form>
+    <div class="klienslista"></div>
   </body>
 
   <script src="scripts/index.js"></script>
