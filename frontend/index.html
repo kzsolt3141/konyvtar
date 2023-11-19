@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki konyvtar</title>
+  </head>
+  <body>
+    <h1>Konyvkereses</h1>
+    <form id="konyv_kereses">
+      <label for="kulcsszo">Kereses:</label>
+      <input type="text" id="kulcsszo" name="kulcsszo" value="Clara" required />
+
+      <label for="tipus">Hol ?</label>
+      <select id="tipus" name="tipus">
+        <option value="konyv_cim">Konyvcim</option>
+        <option value="szerzo">Szerzo</option>
+        <option value="minden">Minden</option>
+      </select>
+
+      <button type="submit" id="mentes">Keres</button>
+    </form>
+    <div class="lista"></div>
+  </body>
+
+  <script src="scripts/index.js"></script>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML frontend</title>
+  </head>
+  <body>
+    <h1>Uj konyv hozzaadasa az adatbazishoz</h1>
+    <form id="uj_konyv">
+      <label for="isbm">Egyedi azonosito ISBN :</label>
+      <input
+        type="text"
+        id="isbn"
+        name="isbn"
+        value="012-3-45-6789AB-C"
+        required
+      />
+
+      <label for="konyv_cim">Cim:</label>
+      <input
+        type="text"
+        id="konyv_cim"
+        name="konyv_cim"
+        value="Konyv Cime"
+        required
+      />
+
+      <label for="szerzo">Szerzo:</label>
+      <input
+        type="text"
+        id="szerzo"
+        name="szerzo"
+        value="Szerzo Neve"
+        required
+      />
+
+      <label for="kiadasi_ev">Kiadasi ev:</label>
+      <input type="date" id="kiadasi_ev" name="kiadasi_ev" required />
+
+      <label for="kiado">Kiado:</label>
+      <input type="text" id="kiado" name="kiado" value="Kiado Neve" />
+
+      <label for="kiadas">Kiadas:</label>
+      <input type="text" id="kiadas" name="kiadas" value="Kiadas neve/szama" />
+
+      <label for="megjegyzes">Megjegyes:</label>
+      <input type="text" id="megjegyzes" name="megjegyzes" value="Megjegyzes" />
+
+      <label for="kepek">Kep(ek) hozzasadasa:</label>
+      <input type="file" id="kepek" name="kepek" accept="image/*" multiple />
+
+      <button type="submit" id="mentes">Mentes</button>
+    </form>
+  </body>
+
+  <script src="scripts/index.js"></script>
+</html>
