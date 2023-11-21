@@ -1,46 +1,44 @@
 const path = require("path");
 const sqlite3 = require("sqlite3");
 
-const db = new sqlite3.Database(
-  path.join(__dirname, "../database/konyvtar.db")
-);
+const db = new sqlite3.Database(path.join(__dirname, "../database/library.db"));
 
 function init() {
   // Create a table for books if it doesn't exist
   db.run(`
-    CREATE TABLE IF NOT EXISTS konyvek (
+    CREATE TABLE IF NOT EXISTS books (
         isbn TEXT PRIMARY KEY,
-        konyv_cim TEXT,
-        szerzo TEXT,
-        kiadasi_ev TEXT,
-        kiado TEXT,
-        kiadas TEXT,
-        megjegyzes TEXT
+        title TEXT,
+        author TEXT,
+        year TEXT,
+        publ TEXT,
+        ver TEXT,
+        notes TEXT
     )
 `);
 
   db.run(`
-    CREATE TABLE IF NOT EXISTS konyv_kepek (
+    CREATE TABLE IF NOT EXISTS book_pics (
         isbn TEXT PRIMARY KEY,
-        kep_link TEXT,
-        tipus TEXT
+        link TEXT,
+        type TEXT
     )
 `);
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS kolcsonzes (
-        isbn TEXT PRIMARY KEY,
-        id INTEGER,
-        tipus TEXT
-    )
-`);
+  //   db.run(`
+  //     CREATE TABLE IF NOT EXISTS kolcsonzes (
+  //         isbn TEXT PRIMARY KEY,
+  //         id INTEGER,
+  //         tipus TEXT
+  //     )
+  // `);
 
   db.run(`
-    CREATE TABLE IF NOT EXISTS kliens (
+    CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nev TEXT,
-        cim TEXT,
-        tel TEXT,
+        name TEXT,
+        address TEXT,
+        phone TEXT,
         mail TEXT
     )
 `);
@@ -49,18 +47,18 @@ function init() {
 function registerBook(body) {
   db.run(
     `
-  INSERT INTO konyvek 
-  (isbn, konyv_cim, szerzo, kiadasi_ev, kiado, kiadas, megjegyzes)
+  INSERT INTO books 
+  (isbn, title, author, year, publ, ver, notes)
   VALUES (?, ?, ?, ?, ?, ?, ?)
 `,
     [
       body.isbn,
-      body.konyv_cim,
-      body.szerzo,
-      body.kiadasi_ev,
-      body.kiado,
-      body.kiadas,
-      body.megjegyzes,
+      body.title,
+      body.author,
+      body.year,
+      body.publ,
+      body.ver,
+      body.notes,
     ],
     (err) => {
       if (err) {
@@ -71,15 +69,15 @@ function registerBook(body) {
   );
 }
 
-function registerBookImgs(isbn, bookImgs) {
-  bookImgs.forEach((bookImage) => {
+function registerBookPics(isbn, bookPics) {
+  bookPics.forEach((bookPic) => {
     db.run(
       `
-    INSERT INTO konyv_kepek 
-    (isbn, kep_link, tipus)
+    INSERT INTO book_pics
+    (isbn, link, type)
     VALUES (?, ?, ?)
   `,
-      [isbn, bookImage, "none"],
+      [isbn, bookPic, "none"],
       (err) => {
         if (err) {
           return;
@@ -93,23 +91,23 @@ function registerBookImgs(isbn, bookImgs) {
 function registerUser(body) {
   db.run(
     `
-  INSERT INTO kliens 
-  (nev, cim, tel, mail)
+  INSERT INTO users 
+  (name, address, phone, mail)
   VALUES (?, ?, ?, ?)
 `,
-    [body.nev, body.lakcim, body.telefon, body.mail],
+    [body.name, body.address, body.phone, body.mail],
     (err) => {
       if (err) {
         return;
       }
-      console.log("Book data saved successfully");
+      console.log("User data saved successfully");
     }
   );
 }
 
 function findBook(body, res) {
-  const sql = `SELECT * FROM konyvek WHERE ${body.tipus} = ?`;
-  db.all(sql, [body.kulcsszo], (err, rows) => {
+  const sql = `SELECT * FROM books WHERE ${body.type} = ?`;
+  db.all(sql, [body.key], (err, rows) => {
     if (err) {
       console.log(err);
       return;
@@ -128,19 +126,31 @@ function findBook(body, res) {
 }
 
 function deleteBook(body, res) {
-  const sql = `DELETE FROM konyvek WHERE isbn = ?`;
+  var sql = `DELETE FROM books WHERE isbn = ?`;
+  var resp = "";
   db.run(sql, [body], (err, rows) => {
     if (err) {
       return console.log(err.message);
     }
-    console.log(`Row(s) deleted!`);
+    resp = `book ${body} deleted successfully`;
+  });
+
+  // TODO Search for the saved pictures adn delete
+
+  sql = `DELETE FROM book_pics WHERE isbn = ?`;
+  db.run(sql, [body], (err, rows) => {
+    if (err) {
+      return console.log(err.message);
+    }
+    res.json(`Book deleted!`);
+    console.log(rows);
   });
 }
 
 module.exports = {
   init: init,
   registerBook: registerBook,
-  registerBookImgs: registerBookImgs,
+  registerBookPics: registerBookPics,
   registerUser: registerUser,
   findBook: findBook,
   deleteBook: deleteBook,

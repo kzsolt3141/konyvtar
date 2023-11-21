@@ -1,4 +1,4 @@
-const form = document.getElementById("uj_kliens");
+const form = document.getElementById("add_book");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -8,10 +8,10 @@ form.addEventListener("submit", async (event) => {
     console.log(key + ": " + value);
   });
 
-  fetch("/kliens/mentes", {
+  fetch("/book/add", {
     method: "POST",
     body: formData,
   })
     .then((rsp) => rsp.text())
-    .then((data) => console.log(data));
+    .then((data) => alert(data));
 });

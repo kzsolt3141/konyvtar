@@ -1,17 +1,13 @@
-const form = document.getElementById("uj_konyv");
+const form = document.getElementById("add_user");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);
 
-  formData.forEach((value, key) => {
-    console.log(key + ": " + value);
-  });
-
-  fetch("/konyv/mentes", {
+  fetch("/user/add", {
     method: "POST",
     body: formData,
   })
     .then((rsp) => rsp.text())
-    .then((data) => alert(data));
+    .then((data) => console.log(data));
 });

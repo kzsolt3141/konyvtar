@@ -5,36 +5,37 @@
   </head>
   <body>
     <h1>Konyv kereses</h1>
-    <form id="konyv_kereses">
-      <label for="kulcsszo">Kereses:</label>
-      <input type="text" id="kulcsszo" name="kulcsszo" value="Clara" required />
+    <form id="search_books">
+      <label for="key">Kereses:</label>
+      <input type="text" id="key" name="key" value="Clara" required />
 
-      <label for="tipus">Hol ?</label>
-      <select id="tipus" name="tipus">
-        <option value="konyv_cim">Konyvcim</option>
-        <option value="szerzo">Szerzo</option>
-        <option value="minden">Minden</option>
+      <label for="type">Hol ?</label>
+      <select id="type" name="type">
+        <option value="title">Konyvcim</option>
+        <option value="author">Szerzo</option>
+        <option value="all">Minden</option>
       </select>
 
-      <button type="submit" id="kereses">Keres</button>
+      <button type="submit" id="search">Kereses</button>
     </form>
-    <div class="konyvlista"></div>
 
-    <h1>Kliens kereses</h1>
-    <form id="kliens_kereses">
-      <label for="kulcsszo">Kereses:</label>
-      <input type="text" id="kulcsszo" name="kulcsszo" value="Clara" required />
+    <div class="book_list"></div>
 
-      <label for="tipus">Hol ?</label>
-      <select id="tipus" name="tipus">
-        <option value="nev">Nev</option>
-        <option value="telefon">Tel</option>
+    <h1>Felhasznalo kereses</h1>
+    <form id="search_users">
+      <label for="key">Kereses:</label>
+      <input type="text" id="key" name="key" value="Clara" required />
+
+      <label for="type">Hol ?</label>
+      <select id="type" name="type">
+        <option value="name">Nev</option>
+        <option value="tel">Telefonszam</option>
         <option value="mail">e-Mail</option>
       </select>
 
-      <button type="submit" id="kereses">Keres</button>
+      <button type="submit" id="search">Keres</button>
     </form>
-    <div class="klienslista"></div>
+    <div class="user_list"></div>
   </body>
 
   <script src="scripts/index.js"></script>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki konyvtar</title>
+  </head>
+  <body>
+    <h1>Uj konyv hozzaadasa az adatbazishoz</h1>
+    <form id="add_book">
+      <label for="isbn">ISBN</label>
+      <input type="text" id="isbn" name="isbn" value="012-3-45" required />
+
+      <label for="title">Cim:</label>
+      <input type="text" id="title" name="title" value="Clara" required />
+
+      <label for="author">Szerzo</label>
+      <input type="text" id="author" name="author" value="Szerzo" required />
+
+      <label for="year">Kiadas eve</label>
+      <input type="text" id="year" name="year" value="2023" required />
+
+      <label for="publ">Kiado:</label>
+      <input type="text" id="publ" name="publ" value="Kiado" />
+
+      <label for="ver">Kiadas</label>
+      <input type="text" id="ver" name="ver" value="Kiadas" />
+
+      <label for="notes">Megjegyes</label>
+      <input type="text" id="notes" name="notes" value="Megjegyzes" />
+
+      <label for="images">Kep(ek) hozzasadasa:</label>
+      <input type="file" id="images" name="images" accept="image/*" multiple />
+
+      <button type="submit" id="add">Mentes</button>
+    </form>
+  </body>
+
+  <script src="scripts/book.js"></script>
+</html>

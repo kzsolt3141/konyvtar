@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Berecki konyvtar</title>
+    <title>HTML frontend</title>
   </head>
   <body>
     <h1>Uj konyv hozzaadasa az adatbazishoz</h1>
@@ -20,7 +20,7 @@
         type="text"
         id="konyv_cim"
         name="konyv_cim"
-        value="Clara"
+        value="Konyv Cime"
         required
       />
 
@@ -34,13 +34,7 @@
       />
 
       <label for="kiadasi_ev">Kiadasi ev:</label>
-      <input
-        type="text"
-        id="kiadasi_ev"
-        name="kiadasi_ev"
-        value="2023"
-        required
-      />
+      <input type="date" id="kiadasi_ev" name="kiadasi_ev" required />
 
       <label for="kiado">Kiado:</label>
       <input type="text" id="kiado" name="kiado" value="Kiado Neve" />
@@ -58,5 +52,5 @@
     </form>
   </body>
 
-  <script src="scripts/konyv.js"></script>
+  <script src="scripts/lend.js"></script>
 </html>

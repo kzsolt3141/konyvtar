@@ -18,20 +18,20 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(base_dir, "frontend/index.html"));
 });
 
-app.get("/konyv", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/konyv.html"));
+app.get("/book", (req, res) => {
+  res.sendFile(path.join(base_dir, "frontend/book.html"));
 });
 
-app.get("/kliens", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/kliens.html"));
+app.get("/user", (req, res) => {
+  res.sendFile(path.join(base_dir, "frontend/user.html"));
 });
 
-app.get("/kolcsonzes", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/kolcsonzes.html"));
+app.get("/lend", (req, res) => {
+  res.sendFile(path.join(base_dir, "frontend/lend.html"));
 });
 
-app.get("/lista", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/lista.html"));
+app.get("/list", (req, res) => {
+  res.sendFile(path.join(base_dir, "frontend/list.html"));
 });
 
 //----------------------------------------------------------------
@@ -52,25 +52,24 @@ const upload = multer({ storage: storage });
 
 const textMulter = multer();
 
-app.post("/konyv/mentes", upload.array("kepek"), (req, res) => {
+app.post("/book/add", upload.array("images"), (req, res) => {
   database.registerBook(req.body);
-  database.registerBookImgs(req.body.isbn, bookImgs);
-  res.json("Sikeres konyv mentes!");
+  database.registerBookPics(req.body.isbn, bookImgs);
+  res.json(`${req.body.title} was saved successfully!`);
 });
 
-app.post("/konyv/kereses", upload.none(), (req, res) => {
+app.post("/book/find", upload.none(), (req, res) => {
   database.findBook(req.body, res);
 });
 
-app.post("/konyv/torles", textMulter.none(), (req, res) => {
-  console.log("torles:", req.body);
+app.post("/book/delete", textMulter.none(), (req, res) => {
   database.deleteBook(req.body, res);
 });
 
-app.post("/kliens/mentes", upload.any(), (req, res) => {
+app.post("/user/add", upload.any(), (req, res) => {
   console.log(req.body);
   database.registerUser(req.body);
-  res.json("Sikeres kliens mentes!");
+  res.json(`${req.body.name} added successfully!`);
 });
 
 //----------------------------------------------------------------
