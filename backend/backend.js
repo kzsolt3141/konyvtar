@@ -35,15 +35,13 @@ app.get("/list", (req, res) => {
 });
 
 //----------------------------------------------------------------
-const bookImgs = [];
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(base_dir, "uploads"));
   },
   filename: function (req, file, cb) {
     const newName = req.body.isbn + "_" + file.originalname;
-    bookImgs.push(newName);
+    database.registerBookImg(req.body.isbn, newName);
     cb(null, newName);
   },
 });
@@ -53,9 +51,7 @@ const upload = multer({ storage: storage });
 const textMulter = multer();
 
 app.post("/book/add", upload.array("images"), (req, res) => {
-  database.registerBook(req.body);
-  database.registerBookPics(req.body.isbn, bookImgs);
-  res.json(`${req.body.title} was saved successfully!`);
+  database.registerBook(req.body, res);
 });
 
 app.post("/book/find", upload.none(), (req, res) => {
@@ -68,10 +64,12 @@ app.post("/book/delete", textMulter.none(), (req, res) => {
 
 app.post("/user/add", upload.any(), (req, res) => {
   console.log(req.body);
-  database.registerUser(req.body);
-  res.json(`${req.body.name} added successfully!`);
+  database.registerUser(req.body, res);
 });
 
+app.post("/user/find", upload.none(), (req, res) => {
+  database.findUser(req.body, res);
+});
 //----------------------------------------------------------------
 app.listen(8080, () => {
   console.log("Server listening on 8080");

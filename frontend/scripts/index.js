@@ -1,7 +1,8 @@
 const bookForm = document.getElementById("search_books");
+const bookSearchBtn = document.getElementById("search_book");
 const bookFormData = new FormData(bookForm);
 
-bookForm.addEventListener("submit", async (event) => {
+bookSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   searchBook(bookFormData);
 });
@@ -24,7 +25,8 @@ function listBooks(data) {
   JSON.parse(data).forEach((value, key) => {
     if (bookList) {
       var paragraph = document.createElement("p");
-      paragraph.textContent = value.title + " " + value.author;
+      paragraph.textContent =
+        value.isbn + " " + value.title + " " + value.author;
       bookList.appendChild(paragraph);
 
       var button = document.createElement("button");
@@ -64,12 +66,14 @@ function deleteBook(key) {
   );
 }
 
-const usertForm = document.getElementById("search_users");
-const userFormData = new FormData(usertForm);
+const userForm = document.getElementById("search_users");
+const userSearchBtn = document.getElementById("search_user");
+const userFormData = new FormData(userForm);
 
-usertForm.addEventListener("submit", async (event) => {
+userSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
-  searchBook(userFormData);
+  console.log(userForm);
+  searchUser(userFormData);
 });
 
 function searchUser(formData) {

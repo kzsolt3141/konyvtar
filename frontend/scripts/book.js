@@ -4,14 +4,14 @@ form.addEventListener("submit", async (event) => {
 
   const formData = new FormData(form);
 
-  formData.forEach((value, key) => {
-    console.log(key + ": " + value);
-  });
-
   fetch("/book/add", {
     method: "POST",
     body: formData,
   })
     .then((rsp) => rsp.text())
-    .then((data) => alert(data));
+    .then((data) => updateStatus(data));
 });
+
+function updateStatus(data) {
+  document.querySelector(".submit_status").textContent = data;
+}

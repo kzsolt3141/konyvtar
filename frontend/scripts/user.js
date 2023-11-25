@@ -9,5 +9,9 @@ form.addEventListener("submit", async (event) => {
     body: formData,
   })
     .then((rsp) => rsp.text())
-    .then((data) => console.log(data));
+    .then((data) => updateStatus(data));
 });
+
+function updateStatus(data) {
+  document.querySelector(".submit_status").textContent = data;
+}
