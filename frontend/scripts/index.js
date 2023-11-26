@@ -1,9 +1,8 @@
-const bookForm = document.getElementById("search_books");
 const bookSearchBtn = document.getElementById("search_book");
-const bookFormData = new FormData(bookForm);
 
 bookSearchBtn.addEventListener("click", async (event) => {
-  event.preventDefault();
+  const bookForm = document.getElementById("search_books");
+  const bookFormData = new FormData(bookForm);
   searchBook(bookFormData);
 });
 
@@ -61,18 +60,17 @@ function deleteBook(key) {
   }).then((rsp) =>
     rsp.json().then((data) => {
       console.log(data);
-      searchBook(bookFormData);
+      bookSearchBtn.click();
     })
   );
 }
 
-const userForm = document.getElementById("search_users");
 const userSearchBtn = document.getElementById("search_user");
-const userFormData = new FormData(userForm);
 
 userSearchBtn.addEventListener("click", async (event) => {
+  const userForm = document.getElementById("search_users");
+  const userFormData = new FormData(userForm);
   event.preventDefault();
-  console.log(userForm);
   searchUser(userFormData);
 });
 
@@ -95,12 +93,13 @@ function listUsers(data) {
     if (userList) {
       var paragraph = document.createElement("p");
       paragraph.textContent =
-        value.nev + " " + value.telefon + " " + value.mail;
+        value.name + " " + value.phone + " " + value.mail + " " + value.status;
       userList.appendChild(paragraph);
 
       var button = document.createElement("button");
-      button.textContent = "Torles";
+      button.textContent = "Deaktivalas";
       button.addEventListener("click", function () {
+        // TODO: Add textbox to leave deactivation cause
         deactivateUser(value.id);
       });
       userList.appendChild(button);
@@ -130,7 +129,7 @@ function deactivateUser(key) {
   }).then((rsp) =>
     rsp.json().then((data) => {
       console.log(data);
-      searchUser(userFormData);
+      userSearchBtn.click();
     })
   );
 }

@@ -63,8 +63,12 @@ app.post("/book/delete", textMulter.none(), (req, res) => {
 });
 
 app.post("/user/add", upload.any(), (req, res) => {
-  console.log(req.body);
   database.registerUser(req.body, res);
+});
+
+app.post("/user/deactivate", upload.any(), (req, res) => {
+  console.log(req.body);
+  database.deactivateUser(req.body, res);
 });
 
 app.post("/user/find", upload.none(), (req, res) => {

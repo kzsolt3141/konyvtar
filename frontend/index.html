@@ -6,34 +6,34 @@
   <body>
     <h1>Konyv kereses</h1>
     <form id="search_books">
-      <label for="key">Kereses:</label>
-      <input type="text" id="key" name="key" value="Clara" required />
+      <label for="book_key">Kereses:</label>
+      <input type="text" id="book_key" name="key" value="Clara" required />
 
-      <label for="type">Hol ?</label>
-      <select id="type" name="type">
+      <label for="book_type">Hol ?</label>
+      <select id="book_type" name="type">
         <option value="title">Konyvcim</option>
         <option value="author">Szerzo</option>
         <option value="all">Minden</option>
       </select>
 
-      <button type="submit" id="search_book">Kereses</button>
+      <button type="button" id="search_book">Kereses</button>
     </form>
 
     <div class="book_list"></div>
 
     <h1>Felhasznalo kereses</h1>
     <form id="search_users">
-      <label for="key">Kereses:</label>
-      <input type="text" id="key" name="key" value="Clara2" required />
+      <label for="user_key">Kereses:</label>
+      <input type="text" id="user_key" name="key" value="Jancsi" required />
 
-      <label for="type">Hol ?</label>
-      <select id="type" name="type">
+      <label for="user_type">Hol ?</label>
+      <select id="user_type" name="type">
         <option value="name">Nev</option>
-        <option value="tel">Telefonszam</option>
+        <option value="phone">Telefonszam</option>
         <option value="mail">e-Mail</option>
       </select>
 
-      <button type="submit" id="search_user">Keres</button>
+      <button type="button" id="search_user">Keres</button>
     </form>
 
     <div class="user_list"></div>
