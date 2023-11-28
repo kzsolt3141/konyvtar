@@ -14,7 +14,8 @@ function init() {
         year TEXT,
         publ TEXT,
         ver TEXT,
-        notes TEXT
+        notes TEXT,
+        status TEXT
     )
 `);
 
@@ -51,8 +52,8 @@ function registerBook(body, res) {
   db.run(
     `
   INSERT INTO books 
-  (isbn, title, author, year, publ, ver, notes)
-  VALUES (?, ?, ?, ?, ?, ?, ?)
+  (isbn, title, author, year, publ, ver, notes, status)
+  VALUES (?, ?, ?, ?, ?, ?, ?, "active")
 `,
     [
       body.isbn,
@@ -122,8 +123,8 @@ function registerUser(body, res) {
 }
 
 function findBook(body, res) {
-  const sql = `SELECT * FROM books WHERE ${body.type} = ?`;
-  db.all(sql, [body.key], (err, rows) => {
+  const sql = `SELECT * FROM books WHERE ${body.type} LIKE ?`;
+  db.all(sql, [`%${body.key}%`], (err, rows) => {
     if (err) {
       res.json("Database error please try again");
       console.log(err.message);
@@ -142,51 +143,22 @@ function findBook(body, res) {
   });
 }
 
-// TODO: IMPORTANT: Never delete a book, deactivate it
-function deleteBook(body, res) {
-  var sql = `DELETE FROM books WHERE isbn = ?`;
-  var resp = "";
-  db.run(sql, [body], (err, rows) => {
+function deactivateBook(body, res) {
+  console.log(body);
+  const sql = `UPDATE books SET status = "inactive", notes = ? WHERE isbn = ?`;
+  db.run(sql, [body.notes, body.isbn], (err) => {
     if (err) {
-      console.log(err.message);
+      console.error(err.message);
+      res.json(`Book isbn ${body.isbn} could not be deactivated`);
       return;
     }
-
-    sql = `SELECT * FROM book_pics WHERE isbn = ?`;
-    db.all(sql, [body], (err, rows) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      if (rows) {
-        rows.forEach((row, index) => {
-          deleteBookByName(row.link);
-        });
-      } else {
-        console.log("Book pic not found:", body);
-      }
-
-      sql = `DELETE FROM book_pics WHERE isbn = ?`;
-      db.run(sql, [body], (err) => {
-        if (err) {
-          return console.log(err.message);
-        }
-        res.json(`Book ${body} deleted!`);
-      });
-    });
-  });
-}
-
-function deleteBookByName(name) {
-  fs.unlink(path.join(__dirname, "../uploads/", name), (err) => {
-    if (err) console.log(err.message);
-    else console.log(`${name} deleted`);
+    res.json(`Book isbn ${body.isbn} was deactivated`);
   });
 }
 
 function findUser(body, res) {
-  const sql = `SELECT * FROM users WHERE ${body.type} = ?`;
-  db.all(sql, [body.key], (err, rows) => {
+  const sql = `SELECT * FROM users WHERE ${body.type} LIKE ?`;
+  db.all(sql, [`%${body.key}%`], (err, rows) => {
     if (err) {
       res.json("Database error please try again");
       console.log(err.message);
@@ -205,7 +177,6 @@ function findUser(body, res) {
   });
 }
 
-// TODO Implement deactivatio: remove from activa table, add to deactivated
 function deactivateUser(body, res) {
   const sql = `UPDATE users SET status = "inactive" WHERE id = ?`;
   db.run(sql, [body], (err) => {
@@ -224,7 +195,7 @@ module.exports = {
   registerBookImg: registerBookImg,
   registerUser: registerUser,
   findBook: findBook,
-  deleteBook: deleteBook,
+  deactivateBook: deactivateBook,
   findUser: findUser,
   deactivateUser: deactivateUser,
 };

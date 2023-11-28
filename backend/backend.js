@@ -58,8 +58,8 @@ app.post("/book/find", upload.none(), (req, res) => {
   database.findBook(req.body, res);
 });
 
-app.post("/book/delete", textMulter.none(), (req, res) => {
-  database.deleteBook(req.body, res);
+app.post("/book/delete", upload.none(), (req, res) => {
+  database.deactivateBook(req.body, res);
 });
 
 app.post("/user/add", upload.any(), (req, res) => {
