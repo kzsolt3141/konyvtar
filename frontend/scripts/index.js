@@ -8,8 +8,8 @@ bookSearchBtn.addEventListener("click", async (event) => {
   searchBook(bookFormData);
 });
 
-function searchBook(bookFormData) {
-  fetch("/book/find", {
+async function searchBook(bookFormData) {
+  await fetch("/book/find", {
     method: "POST",
     body: bookFormData,
   })
@@ -17,6 +17,26 @@ function searchBook(bookFormData) {
     .then((data) => {
       BookData = JSON.parse(data);
       listBooks(data);
+    });
+
+  BookData.forEach((book) => {
+    searchBookPic(book.isbn);
+  });
+}
+
+function searchBookPic(isbn) {
+  fetch("/book/find_book_pic", {
+    method: "POST",
+    body: isbn,
+  })
+    .then((rsp) => rsp.json())
+    .then((data) => {
+      JSON.parse(data).forEach((pic) => {
+        console.log(pic);
+        var imgElement = document.createElement("img");
+        imgElement.src = "/" + pic.link;
+        document.body.appendChild(imgElement);
+      });
     });
 }
 

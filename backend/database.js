@@ -143,6 +143,27 @@ function findBook(body, res) {
   });
 }
 
+function findBookPic(body, res) {
+  const sql = `SELECT link FROM book_pics WHERE isbn = ?`;
+  db.all(sql, [body], (err, rows) => {
+    if (err) {
+      res.json("Database error please try again");
+      console.log(err.message);
+      return;
+    }
+    if (rows) {
+      const resp = [];
+      rows.forEach((row, index) => {
+        resp.push(row);
+      });
+      res.json(JSON.stringify(resp));
+    } else {
+      console.log("Book pics not found:", body);
+      res.json("Book not found:", body);
+    }
+  });
+}
+
 function deactivateBook(body, res) {
   const sql = `UPDATE books SET status = "inactive", notes = ? WHERE isbn = ?`;
   db.run(sql, [body.notes, body.isbn], (err) => {
@@ -232,6 +253,7 @@ module.exports = {
   registerBookImg: registerBookImg,
   registerUser: registerUser,
   findBook: findBook,
+  findBookPic: findBookPic,
   editBook: editBook,
   deactivateBook: deactivateBook,
   findUser: findUser,

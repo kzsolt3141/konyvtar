@@ -10,6 +10,7 @@ database.init();
 //----------------------------------------------------------------
 const app = express();
 app.use(express.static("frontend"));
+app.use(express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
 const base_dir = path.join(__dirname, "../");
@@ -56,6 +57,10 @@ app.post("/book/add", upload.array("images"), (req, res) => {
 
 app.post("/book/find", upload.none(), (req, res) => {
   database.findBook(req.body, res);
+});
+
+app.post("/book/find_book_pic", textMulter.none(), (req, res) => {
+  database.findBookPic(req.body, res);
 });
 
 app.post("/book/delete", upload.none(), (req, res) => {
