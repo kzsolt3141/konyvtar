@@ -1,6 +1,7 @@
 const bookSearchBtn = document.getElementById("search_book");
 
 var BookData = null;
+var BookPics = null;
 
 bookSearchBtn.addEventListener("click", async (event) => {
   const bookForm = document.getElementById("search_books");
@@ -18,25 +19,39 @@ async function searchBook(bookFormData) {
       BookData = JSON.parse(data);
       listBooks(data);
     });
-
-  BookData.forEach((book) => {
-    searchBookPic(book.isbn);
-  });
 }
 
-function searchBookPic(isbn) {
+function createBookPics(isbn, bookDiv) {
   fetch("/book/find_book_pic", {
     method: "POST",
     body: isbn,
   })
     .then((rsp) => rsp.json())
     .then((data) => {
+      const picDiv = document.createElement("div");
+      picDiv.id = "pic" + isbn;
       JSON.parse(data).forEach((pic) => {
-        console.log(pic);
-        var imgElement = document.createElement("img");
-        imgElement.src = "/" + pic.link;
-        document.body.appendChild(imgElement);
+        const img = document.createElement("img");
+        img.src = "/" + pic.link;
+        img.width = 300;
+        img.addEventListener("click", () => {
+          deleteBookPic(pic.link);
+        });
+        picDiv.appendChild(img);
       });
+      bookDiv.appendChild(picDiv);
+    });
+}
+
+function deleteBookPic(link) {
+  fetch("/book/delete_book_pic", {
+    method: "POST",
+    body: link,
+  })
+    .then((rsp) => rsp.json())
+    .then((data) => {
+      console.log(data);
+      bookSearchBtn.click();
     });
 }
 
@@ -181,6 +196,8 @@ function editBook(key) {
     bookSearchBtn.click();
   });
   newDiv.appendChild(revertBtn);
+
+  createBookPics(key, bookDiv);
 
   bookDiv.appendChild(newDiv);
 }

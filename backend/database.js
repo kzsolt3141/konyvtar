@@ -1,6 +1,5 @@
 const path = require("path");
 const sqlite3 = require("sqlite3");
-const fs = require("fs");
 
 const db = new sqlite3.Database(path.join(__dirname, "../database/library.db"));
 
@@ -48,7 +47,7 @@ function init() {
 `);
 }
 
-function registerBook(body, res) {
+function registerBook(body, newNames, res) {
   db.run(
     `
   INSERT INTO books 
@@ -70,6 +69,9 @@ function registerBook(body, res) {
         res.json(`Book ${body.title} could not be saved`);
         return;
       }
+      newNames.forEach((newName) => {
+        registerBookImg(body.isbn, newName);
+      });
       res.json(`Book ${body.title} saved successfully`);
     }
   );
@@ -123,8 +125,9 @@ function registerUser(body, res) {
 }
 
 function findBook(body, res) {
-  const sql = `SELECT * FROM books WHERE ${body.type} LIKE ?`;
-  db.all(sql, [`%${body.key}%`], (err, rows) => {
+  const status = body.status == "on" ? "active" : "inactive";
+  const sql = `SELECT * FROM books WHERE LOWER(${body.type}) LIKE LOWER(?) AND status = ?`;
+  db.all(sql, [`%${body.key}%`, status], (err, rows) => {
     if (err) {
       res.json("Database error please try again");
       console.log(err.message);
@@ -161,6 +164,19 @@ function findBookPic(body, res) {
       console.log("Book pics not found:", body);
       res.json("Book not found:", body);
     }
+  });
+}
+
+function deleteBookPic(body, sts) {
+  const sql = `DELETE FROM book_pics WHERE link = ?`;
+  db.all(sql, [body], (err, rows) => {
+    if (err) {
+      sts = "Database error please try again";
+      console.log(err.message);
+      return;
+    }
+    console.log("Book pic deleted:", body);
+    sts = `Book pic deleted: ${body}`;
   });
 }
 
@@ -254,6 +270,7 @@ module.exports = {
   registerUser: registerUser,
   findBook: findBook,
   findBookPic: findBookPic,
+  deleteBookPic: deleteBookPic,
   editBook: editBook,
   deactivateBook: deactivateBook,
   findUser: findUser,

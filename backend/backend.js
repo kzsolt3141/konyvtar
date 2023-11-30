@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
+const fs = require("fs");
 
 const database = require("./database.js");
 
@@ -42,7 +43,6 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const newName = req.body.isbn + "_" + file.originalname;
-    database.registerBookImg(req.body.isbn, newName);
     cb(null, newName);
   },
 });
@@ -52,7 +52,13 @@ const upload = multer({ storage: storage });
 const textMulter = multer();
 
 app.post("/book/add", upload.array("images"), (req, res) => {
-  database.registerBook(req.body, res);
+  var sts = null;
+  newNames = [];
+  req.files.forEach((file) => {
+    newNames.push(file.filename);
+  });
+
+  database.registerBook(req.body, newNames, res);
 });
 
 app.post("/book/find", upload.none(), (req, res) => {
@@ -61,6 +67,19 @@ app.post("/book/find", upload.none(), (req, res) => {
 
 app.post("/book/find_book_pic", textMulter.none(), (req, res) => {
   database.findBookPic(req.body, res);
+});
+
+app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
+  const sts = "";
+  fs.unlink(path.join(base_dir, "uploads", req.body), (err) => {
+    if (err) {
+      console.log(err.message);
+      sts = `Could not delete picture: ${req.body}`;
+    } else {
+      database.deleteBookPic(req.body, sts);
+    }
+  });
+  res.json(sts);
 });
 
 app.post("/book/delete", upload.none(), (req, res) => {
