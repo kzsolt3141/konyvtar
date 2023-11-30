@@ -21,7 +21,7 @@ async function searchBook(bookFormData) {
     });
 }
 
-function createBookPics(isbn, bookDiv) {
+function createBookPics(isbn, bookDiv, deletion) {
   fetch("/book/find_book_pic", {
     method: "POST",
     body: isbn,
@@ -34,9 +34,11 @@ function createBookPics(isbn, bookDiv) {
         const img = document.createElement("img");
         img.src = "/" + pic.link;
         img.width = 300;
-        img.addEventListener("click", () => {
-          deleteBookPic(pic.link);
-        });
+        if (deletion) {
+          img.addEventListener("click", () => {
+            deleteBookPic(pic.link);
+          });
+        }
         picDiv.appendChild(img);
       });
       bookDiv.appendChild(picDiv);
@@ -89,6 +91,8 @@ function listBooks(data) {
         deactivateBook(value.isbn);
       });
       bookDiv.appendChild(button);
+
+      createBookPics(value.isbn, bookDiv, false);
 
       bookList.appendChild(bookDiv);
     }
@@ -197,7 +201,7 @@ function editBook(key) {
   });
   newDiv.appendChild(revertBtn);
 
-  createBookPics(key, bookDiv);
+  createBookPics(key, newDiv, true);
 
   bookDiv.appendChild(newDiv);
 }
