@@ -62,6 +62,10 @@ app.post("/book/delete", upload.none(), (req, res) => {
   database.deactivateBook(req.body, res);
 });
 
+app.post("/book/change", upload.none(), (req, res) => {
+  database.editBook(req.body, res);
+});
+
 app.post("/user/add", upload.any(), (req, res) => {
   database.registerUser(req.body, res);
 });

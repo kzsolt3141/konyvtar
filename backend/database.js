@@ -144,7 +144,6 @@ function findBook(body, res) {
 }
 
 function deactivateBook(body, res) {
-  console.log(body);
   const sql = `UPDATE books SET status = "inactive", notes = ? WHERE isbn = ?`;
   db.run(sql, [body.notes, body.isbn], (err) => {
     if (err) {
@@ -154,6 +153,44 @@ function deactivateBook(body, res) {
     }
     res.json(`Book isbn ${body.isbn} was deactivated`);
   });
+}
+
+function editBook(body, res) {
+  console.log(body);
+  sql = `UPDATE books 
+  SET 
+    isbn = ?,
+    title= ?,
+    author = ?,
+    year = ?,
+    publ = ?,
+    ver = ?,
+    notes = ?,
+    status = ?
+  WHERE isbn = ?`;
+  db.run(
+    sql,
+    [
+      body.new_isbn,
+      body.title,
+      body.author,
+      body.year,
+      body.publ,
+      body.ver,
+      body.notes,
+      body.status,
+      body.isbn,
+    ],
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.json(`Book ${body.title} could not be modified`);
+        return;
+      }
+      console.log(`Book ${body.title} modified successfully`);
+      res.json(`Book ${body.title} modified successfully`);
+    }
+  );
 }
 
 function findUser(body, res) {
@@ -195,6 +232,7 @@ module.exports = {
   registerBookImg: registerBookImg,
   registerUser: registerUser,
   findBook: findBook,
+  editBook: editBook,
   deactivateBook: deactivateBook,
   findUser: findUser,
   deactivateUser: deactivateUser,

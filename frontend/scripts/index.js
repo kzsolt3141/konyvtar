@@ -94,59 +94,75 @@ function editBook(key) {
   const bookDiv = document.getElementById(`${key}`);
   const newDiv = document.createElement("div");
   const book = BookData.find((book) => book.isbn == key);
-  console.log(book);
 
-  // TODO refactor, make it prettier and functional
+  isbn = document.createElement("input");
+  isbn.value = book.isbn;
+  newDiv.appendChild(isbn);
 
-  newDiv.innerHTML = `<form id="add_book">
-  <label for="isbn">ISBN</label>
-  <input type="text" id="isbn" name="isbn" value=${book.isbn} required />
+  title = document.createElement("input");
+  title.value = book.title;
+  newDiv.appendChild(title);
 
-  <label for="title">Cim:</label>
-  <input type="text" id="title" name="title" value=${book.name}  required />
+  author = document.createElement("input");
+  author.value = book.author;
+  newDiv.appendChild(author);
 
-  <label for="author">Szerzo</label>
-  <input type="text" id="author" name="author" value=${book.author}  required />
+  year = document.createElement("input");
+  year.value = book.year;
+  newDiv.appendChild(year);
 
-  <label for="year">Kiadas eve</label>
-  <input type="text" id="year" name="year" value="${book.year}  required />
+  publ = document.createElement("input");
+  publ.value = book.publ;
+  newDiv.appendChild(publ);
 
-  <label for="publ">Kiado:</label>
-  <input type="text" id="publ" name="publ" value=${book.publ}  />
+  ver = document.createElement("input");
+  ver.value = book.ver;
+  newDiv.appendChild(ver);
 
-  <label for="ver">Kiadas</label>
-  <input type="text" id="ver" name="ver" value=${book.ver}  />
+  notes = document.createElement("input");
+  notes.value = book.notes;
+  newDiv.appendChild(notes);
 
-  <label for="notes">Megjegyes</label>
-  <input type="text" id="notes" name="notes" value=${book.notes}  />
+  sts = document.createElement("input");
+  sts.type = "checkbox";
+  sts.checked = book.status === "active" ? true : false;
+  newDiv.appendChild(sts);
 
-  <label for="images">Kep(ek) hozzasadasa:</label>
-  <input type="file" id="images" name="images" accept="image/*" multiple />
+  changeBtn = document.createElement("button");
+  changeBtn.textContent = "Modositas";
+  changeBtn.addEventListener("click", function () {
+    changeForm = new FormData();
+    changeForm.append("new_isbn", isbn.value);
+    changeForm.append("title", title.value);
+    changeForm.append("author", author.value);
+    changeForm.append("year", year.value);
+    changeForm.append("publ", publ.value);
+    changeForm.append("ver", ver.value);
+    changeForm.append("notes", notes.value);
+    changeForm.append("status", sts.checked ? "active" : "inactive");
+    changeForm.append("isbn", key);
 
-  <button type="submit" id="add">Mentes</button>
-</form>`;
+    fetch("/book/change", {
+      method: "POST",
+      body: changeForm,
+    }).then((rsp) =>
+      rsp.json().then((data) => {
+        console.log(data);
+        bookSearchBtn.click();
+      })
+    );
+  });
+
+  newDiv.appendChild(changeBtn);
+
+  revertBtn = document.createElement("button");
+  revertBtn.textContent = "Megse";
+  revertBtn.addEventListener("click", function () {
+    bookSearchBtn.click();
+  });
+  newDiv.appendChild(revertBtn);
+
   bookDiv.appendChild(newDiv);
-  // bookDiv.appendChild(document.createElement("p"));
-
-  // bookDiv.appendChild(bookForm);
-
-  // button.addEventListener("click", function () {
-  //   deactivateForm = new FormData();
-  //   deactivateForm.append("isbn", key);
-  //   deactivateForm.append("notes", input.value);
-
-  //   fetch("/book/delete", {
-  //     method: "POST",
-  //     body: deactivateForm,
-  //   }).then((rsp) =>
-  //     rsp.json().then((data) => {
-  //       console.log(data);
-  //       bookSearchBtn.click();
-  //     })
-  //   );
-  // });
-
-  // bookDiv.appendChild(button);
 }
 
 const userSearchBtn = document.getElementById("search_user");
@@ -183,7 +199,7 @@ function listUsers(data) {
       var button = document.createElement("button");
       button.textContent = "Deaktivalas";
       button.addEventListener("click", function () {
-        // TODO: Add textbox to leave deactivation cause
+        // TODO: Add textbox to leave deactivation notes
         deactivateUser(value.id);
       });
       userList.appendChild(button);
