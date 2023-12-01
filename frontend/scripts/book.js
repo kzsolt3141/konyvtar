@@ -82,15 +82,11 @@ function addGenre() {
       .then((rsp) => rsp.text())
       .then((data) => {
         console.log(data);
+        location.reload();
       });
   });
 
   cancelButton.addEventListener("click", function (event) {
-    event.preventDefault();
-    genre = document.getElementById("genre");
-    genre.value = "valassz";
-    genreDiv = document.getElementById("genre_div");
-    genreDiv.innerHTML = "";
-    genreDiv.appendChild(genre);
+    location.reload();
   });
 }

@@ -28,7 +28,7 @@ function init() {
 
   db.run(`
 CREATE TABLE IF NOT EXISTS book_genres (
-  isbn TEXT PRIMARY KEY
+  genre TEXT PRIMARY KEY
 )
 `);
 
@@ -104,6 +104,7 @@ function registerBookImg(isbn, bookImg) {
 }
 
 function addGenre(body, res) {
+  console.log(body);
   var sql = `INSERT INTO book_genres (genre) VALUES (?)`;
   db.all(sql, [body], (err, rows) => {
     if (err) {
