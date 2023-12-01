@@ -1,3 +1,6 @@
+const currentDate = new Date().toISOString().split("T")[0];
+document.getElementById("notes").value = `Init: ${currentDate}`;
+
 const form = document.getElementById("add_book");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

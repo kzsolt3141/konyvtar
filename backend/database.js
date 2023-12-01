@@ -26,6 +26,12 @@ function init() {
     )
 `);
 
+  db.run(`
+CREATE TABLE IF NOT EXISTS book_genres (
+  isbn TEXT PRIMARY KEY
+)
+`);
+
   //   db.run(`
   //     CREATE TABLE IF NOT EXISTS kolcsonzes (
   //         isbn TEXT PRIMARY KEY,
@@ -95,6 +101,32 @@ function registerBookImg(isbn, bookImg) {
       console.log(`Image ${bookImg} for ${isbn} saved successfully`);
     }
   );
+}
+
+function addGenre(body, res) {
+  var sql = `INSERT INTO book_genres (genre) VALUES (?)`;
+  db.all(sql, [body], (err, rows) => {
+    if (err) {
+      console.log(err);
+      res.json(`Genres could not be added`);
+      return;
+    }
+    res.json(`Genres added successfully`);
+  });
+}
+
+function getGenres(res) {
+  var sql = `SELECT * FROM book_genres`;
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.log(err);
+      res.json(`Genres could not be listed`);
+      return;
+    }
+    if (rows && rows.length > 0) {
+      res.json(rows);
+    }
+  });
 }
 
 function registerUser(body, res) {
@@ -193,7 +225,6 @@ function deactivateBook(body, res) {
 }
 
 function editBook(body, res) {
-  console.log(body);
   sql = `UPDATE books 
   SET 
     isbn = ?,
@@ -270,6 +301,8 @@ module.exports = {
   registerUser: registerUser,
   findBook: findBook,
   findBookPic: findBookPic,
+  addGenre: addGenre,
+  getGenres: getGenres,
   deleteBookPic: deleteBookPic,
   editBook: editBook,
   deactivateBook: deactivateBook,

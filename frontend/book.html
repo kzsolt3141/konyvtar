@@ -24,12 +24,30 @@
       <label for="ver">Kiadas</label>
       <input type="text" id="ver" name="ver" value="Kiadas" />
 
-      <!-- TODO Add current date for initial notes -->
+      <label for="genre">Tipus</label>
+      <select id="genre" name="genre">
+        <label for="dropdown">Select an option:</label>
+        <select id="dropdown"></select>
+        <!-- <script> reuses in book.js
+          const optionsArray = ["Option 1", "Option 2", "Option 3", "Option 4"];
+          const dropdown = document.getElementById("dropdown");
+          optionsArray.forEach((optionText, index) => {
+            const option = document.createElement("option");
+            option.value = `option${index + 1}`;
+            option.text = optionText;
+            dropdown.add(option);
+          });
+        </script> -->
+
       <label for="notes">Megjegyes</label>
-      <input type="text" id="notes" name="notes" value="Megjegyzes" />
+      <input type="text" id="notes" name="notes" />
 
       <label for="images">Kep(ek) hozzasadasa:</label>
       <input type="file" id="images" name="images" accept="image/*" multiple />
+
+      <!-- TODO add genere as a dropdown with special place to add new element -->
+      <!-- TODO save genere in a table with only one column unique -->
+      <!-- TODO genre dropdown should communicate with genre table -->
 
       <button type="submit" id="add">Mentes</button>
     </form>
