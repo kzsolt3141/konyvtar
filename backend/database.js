@@ -10,6 +10,7 @@ function init() {
         isbn TEXT PRIMARY KEY,
         title TEXT,
         author TEXT,
+        genre TEXT,
         year TEXT,
         publ TEXT,
         ver TEXT,
@@ -57,13 +58,14 @@ function registerBook(body, newNames, res) {
   db.run(
     `
   INSERT INTO books 
-  (isbn, title, author, year, publ, ver, notes, status)
-  VALUES (?, ?, ?, ?, ?, ?, ?, "active")
+  (isbn, title, author, genre, year, publ, ver, notes, status)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, "active")
 `,
     [
       body.isbn,
       body.title,
       body.author,
+      body.genre,
       body.year,
       body.publ,
       body.ver,

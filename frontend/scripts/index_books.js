@@ -139,6 +139,9 @@ function editBook(key) {
   const newDiv = document.createElement("div");
   const book = BookData.find((book) => book.isbn == key);
 
+  // TODO do this in a silimar automatic way
+  // TODO use the same dropdown for genre (book.js may need refactored)
+
   isbn = document.createElement("input");
   isbn.value = book.isbn;
   newDiv.appendChild(isbn);
@@ -150,6 +153,10 @@ function editBook(key) {
   author = document.createElement("input");
   author.value = book.author;
   newDiv.appendChild(author);
+
+  genre = document.createElement("input");
+  genre.value = book.genre;
+  newDiv.appendChild(genre);
 
   year = document.createElement("input");
   year.value = book.year;
