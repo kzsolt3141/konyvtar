@@ -123,9 +123,7 @@ function getGenres(res) {
       res.json(`Genres could not be listed`);
       return;
     }
-    if (rows && rows.length > 0) {
-      res.json(rows);
-    }
+    res.json(rows);
   });
 }
 

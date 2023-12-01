@@ -90,12 +90,12 @@ app.post("/book/change", upload.none(), (req, res) => {
   database.editBook(req.body, res);
 });
 
-app.post("/book/get_genres", textMulter.none(), (req, res) => {
-  database.getGenres(res);
-});
-
-app.post("/book/add_genre", textMulter.none(), (req, res) => {
-  database.addGenre(req.body, res);
+app.post("/book/genres", textMulter.none(), (req, res) => {
+  if (Object.keys(req.body).length == 0) {
+    database.getGenres(res);
+  } else {
+    database.addGenre(req.body, res);
+  }
 });
 
 app.post("/user/add", upload.any(), (req, res) => {
