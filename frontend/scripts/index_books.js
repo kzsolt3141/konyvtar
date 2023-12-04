@@ -16,7 +16,7 @@ function searchBook(bookFormData) {
     .then((rsp) => rsp.json())
     .then((data) => {
       BookData = JSON.parse(data);
-      listBooks(data);
+      listBooks(BookData);
     });
 }
 
@@ -24,15 +24,15 @@ function listBooks(data) {
   const booksDiv = document.querySelector(".books_div");
   booksDiv.innerHTML = "";
 
-  JSON.parse(data).forEach((value, key) => {
+  data.forEach((value, key) => {
     var bookDiv = document.createElement("div");
     bookDiv.id = value.isbn;
 
     const table = document.createElement("table");
     var tableRow = table.insertRow();
-    for (key in value) {
+    for (k in value) {
       const tableCell = tableRow.insertCell();
-      tableCell.textContent = value[key];
+      tableCell.textContent = value[k];
     }
 
     tableRow = table.insertRow();
@@ -139,50 +139,36 @@ function editBook(key) {
   const newDiv = document.createElement("div");
   const book = BookData.find((book) => book.isbn == key);
 
-  // TODO do this in a silimar automatic way
   // TODO use the same dropdown for genre (book.js may need refactored)
+  // TODO reuse book,js genere code (move it in separate file)
 
-  isbn = document.createElement("input");
-  isbn.value = book.isbn;
-  newDiv.appendChild(isbn);
+  for (const key in book) {
+    const inputType = key === "genre" ? "select" : "input";
+    const textbox = document.createElement(inputType);
+    textbox.value = book[key];
 
-  title = document.createElement("input");
-  title.value = book.title;
-  newDiv.appendChild(title);
+    if (key == "status") {
+      textbox.type = "checkbox";
+      textbox.checked = book[key] == "active";
+    }
 
-  author = document.createElement("input");
-  author.value = book.author;
-  newDiv.appendChild(author);
+    if (key == "genre") {
+      const genre = document.createElement("option");
+      genre.value = book[key];
+      genre.text = book[key];
+      textbox.add(genre);
+    }
 
-  genre = document.createElement("input");
-  genre.value = book.genre;
-  newDiv.appendChild(genre);
+    newDiv.appendChild(textbox);
+  }
 
-  year = document.createElement("input");
-  year.value = book.year;
-  newDiv.appendChild(year);
-
-  publ = document.createElement("input");
-  publ.value = book.publ;
-  newDiv.appendChild(publ);
-
-  ver = document.createElement("input");
-  ver.value = book.ver;
-  newDiv.appendChild(ver);
-
-  notes = document.createElement("input");
-  notes.value = book.notes;
-  newDiv.appendChild(notes);
-
-  sts = document.createElement("input");
-  sts.type = "checkbox";
-  sts.checked = book.status === "active" ? true : false;
-  newDiv.appendChild(sts);
+  // TODO change the FETCH according to the changes in editBook (see ln:144 for (const key in book) {...}
 
   changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
   changeBtn.addEventListener("click", function () {
     changeForm = new FormData();
+
     changeForm.append("new_isbn", isbn.value);
     changeForm.append("title", title.value);
     changeForm.append("author", author.value);
