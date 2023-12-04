@@ -88,6 +88,7 @@ app.post("/book/delete", upload.none(), (req, res) => {
 
 app.post("/book/change", upload.none(), (req, res) => {
   database.editBook(req.body, res);
+  // TODO rename files if required, maybe add a function pointer to the edit function
 });
 
 app.post("/book/genres", textMulter.none(), (req, res) => {

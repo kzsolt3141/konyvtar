@@ -153,31 +153,39 @@ function editBook(key) {
     }
 
     if (key == "genre") {
-      creteGenreSelect(`genre_${key}`, newDiv);
+      creteGenreSelect(key, newDiv);
     } else {
       newDiv.appendChild(textbox);
     }
   }
 
-  // TODO fix this, find relatin between the inptut textpoxes and how to collect data
   const changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
   changeBtn.addEventListener("click", function () {
     const elementsInDiv = document
       .getElementById(`edit_${key}`)
       .querySelectorAll("*");
-    console.log(elementsInDiv["isbn"]);
-    changeForm = new FormData();
+    const changeForm = new FormData();
 
-    changeForm.append("new_isbn", isbn.value);
-    changeForm.append("title", title.value);
-    changeForm.append("author", author.value);
-    changeForm.append("year", year.value);
-    changeForm.append("publ", publ.value);
-    changeForm.append("ver", ver.value);
-    changeForm.append("notes", notes.value);
-    changeForm.append("status", sts.checked ? "active" : "inactive");
     changeForm.append("isbn", key);
+
+    elementsInDiv.forEach((element) => {
+      if (element.type === "text") {
+        if (element.id === "isbn") {
+          changeForm.append("new_isbn", element.value);
+        } else {
+          changeForm.append(element.id, element.value);
+        }
+      }
+
+      if (element.type === "select-one") {
+        changeForm.append("genre", element.value);
+      }
+
+      if (element.type === "checkbox") {
+        changeForm.append(element.id, element.checked ? "active" : "inactive");
+      }
+    });
 
     fetch("/book/change", {
       method: "POST",

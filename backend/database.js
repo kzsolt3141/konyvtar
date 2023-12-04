@@ -225,12 +225,15 @@ function deactivateBook(body, res) {
   });
 }
 
+// TODO change image link database and picture name with ISBN change
 function editBook(body, res) {
+  console.log(body);
   sql = `UPDATE books 
   SET 
     isbn = ?,
     title= ?,
     author = ?,
+    genre = ?,
     year = ?,
     publ = ?,
     ver = ?,
@@ -243,6 +246,7 @@ function editBook(body, res) {
       body.new_isbn,
       body.title,
       body.author,
+      body.genre,
       body.year,
       body.publ,
       body.ver,
@@ -257,6 +261,7 @@ function editBook(body, res) {
         return;
       }
       console.log(`Book ${body.title} modified successfully`);
+      // update book pic table
       res.json(`Book ${body.title} modified successfully`);
     }
   );
