@@ -1,3 +1,5 @@
+import { creteGenreSelect } from "./genre.js";
+
 const bookSearchBtn = document.getElementById("search_books_btn");
 
 var BookData = null;
@@ -30,7 +32,7 @@ function listBooks(data) {
 
     const table = document.createElement("table");
     var tableRow = table.insertRow();
-    for (k in value) {
+    for (const k in value) {
       const tableCell = tableRow.insertCell();
       tableCell.textContent = value[k];
     }
@@ -137,15 +139,13 @@ function deactivateBook(key) {
 function editBook(key) {
   const bookDiv = document.getElementById(`${key}`);
   const newDiv = document.createElement("div");
+  newDiv.id = `edit_${key}`;
   const book = BookData.find((book) => book.isbn == key);
 
-  // TODO use the same dropdown for genre (book.js may need refactored)
-  // TODO reuse book,js genere code (move it in separate file)
-
   for (const key in book) {
-    const inputType = key === "genre" ? "select" : "input";
-    const textbox = document.createElement(inputType);
+    const textbox = document.createElement("input");
     textbox.value = book[key];
+    textbox.id = key;
 
     if (key == "status") {
       textbox.type = "checkbox";
@@ -153,20 +153,20 @@ function editBook(key) {
     }
 
     if (key == "genre") {
-      const genre = document.createElement("option");
-      genre.value = book[key];
-      genre.text = book[key];
-      textbox.add(genre);
+      creteGenreSelect(`genre_${key}`, newDiv);
+    } else {
+      newDiv.appendChild(textbox);
     }
-
-    newDiv.appendChild(textbox);
   }
 
-  // TODO change the FETCH according to the changes in editBook (see ln:144 for (const key in book) {...}
-
-  changeBtn = document.createElement("button");
+  // TODO fix this, find relatin between the inptut textpoxes and how to collect data
+  const changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
   changeBtn.addEventListener("click", function () {
+    const elementsInDiv = document
+      .getElementById(`edit_${key}`)
+      .querySelectorAll("*");
+    console.log(elementsInDiv["isbn"]);
     changeForm = new FormData();
 
     changeForm.append("new_isbn", isbn.value);
@@ -192,7 +192,7 @@ function editBook(key) {
 
   newDiv.appendChild(changeBtn);
 
-  revertBtn = document.createElement("button");
+  const revertBtn = document.createElement("button");
   revertBtn.textContent = "Megse";
   revertBtn.addEventListener("click", function () {
     bookSearchBtn.click();

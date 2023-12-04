@@ -1,7 +1,10 @@
+import { creteGenreSelect } from "./genre.js";
+
 const currentDate = new Date().toISOString().split("T")[0];
 document.getElementById("notes").value = `Init: ${currentDate}`;
 
-updateGenres();
+const genreDiv = document.getElementById("genre_div");
+creteGenreSelect("macska", genreDiv);
 
 const formBtn = document.getElementById("add_button");
 formBtn.addEventListener("click", async (event) => {
@@ -27,66 +30,4 @@ formBtn.addEventListener("click", async (event) => {
 
 function updateStatus(data) {
   document.querySelector(".submit_status").textContent = data;
-}
-
-function updateGenres() {
-  bookGenre = document.getElementById("genre");
-  bookGenre.addEventListener("change", () => {
-    if (bookGenre.value === "+") addGenre();
-  });
-
-  const option = document.createElement("option");
-  option.value = `valassz`;
-  option.text = `valassz`;
-  bookGenre.add(option);
-
-  fetch("/book/genres", {
-    method: "POST",
-  })
-    .then((rsp) => rsp.text())
-    .then((data) => {
-      JSON.parse(data).forEach((opt, idx) => {
-        const option = document.createElement("option");
-        option.value = opt["genre"];
-        option.text = opt["genre"];
-        bookGenre.add(option);
-      });
-      const option = document.createElement("option");
-      option.value = "+";
-      option.text = "+";
-      bookGenre.add(option);
-    });
-}
-
-function addGenre() {
-  genreDiv = document.getElementById("genre_div");
-  const input = document.createElement("input");
-  genreDiv.appendChild(input);
-  const addButton = document.createElement("button");
-  addButton.textContent = "Hozzaad";
-  genreDiv.appendChild(addButton);
-  const cancelButton = document.createElement("button");
-  cancelButton.textContent = "Megse";
-  genreDiv.appendChild(cancelButton);
-
-  addButton.addEventListener("click", function (event) {
-    event.preventDefault();
-    if (input.value.trim() === "") {
-      console.log("Input field empty");
-      return;
-    }
-    fetch("/book/genres", {
-      method: "POST",
-      body: input.value,
-    })
-      .then((rsp) => rsp.text())
-      .then((data) => {
-        console.log(data);
-        location.reload();
-      });
-  });
-
-  cancelButton.addEventListener("click", function (event) {
-    location.reload();
-  });
 }
