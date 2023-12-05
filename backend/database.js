@@ -225,8 +225,7 @@ function deactivateBook(body, res) {
   });
 }
 
-// TODO change image link database and picture name with ISBN change
-function editBook(body, res) {
+function editBook(body, renameCb, res) {
   console.log(body);
   sql = `UPDATE books 
   SET 
@@ -260,12 +259,31 @@ function editBook(body, res) {
         res.json(`Book ${body.title} could not be modified`);
         return;
       }
+      // TODO if ISBN was chnaged, get all the picture names with that ISBN, use the callback to rename those files
+      // TODO update image links table with the new names
       console.log(`Book ${body.title} modified successfully`);
       // update book pic table
       res.json(`Book ${body.title} modified successfully`);
     }
   );
 }
+
+// TODO or maybe use something like tis:
+// function renameImageTale(oldIsbn, newIsbn) {
+//   const sql = `UPDATE book_pics
+//   SET isbn = ?,
+//   link =
+//     CASE
+//       WHEN link LIKE ${oldIsbn}% THEN ${newIsbn} || SUBSTR(link, LENGTH(${oldIsbn}) + 1)
+//       ELSE link
+//   WHERE isbn = ?`;
+//   db.run(sql, [newIsbn, oldIsbn], (err) => {
+//     if (err) {
+//       console.log(err.message);
+//       return;
+//     }
+//   });
+// }
 
 function findUser(body, res) {
   const sql = `SELECT * FROM users WHERE ${body.type} LIKE ?`;

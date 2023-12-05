@@ -87,9 +87,19 @@ app.post("/book/delete", upload.none(), (req, res) => {
 });
 
 app.post("/book/change", upload.none(), (req, res) => {
-  database.editBook(req.body, res);
-  // TODO rename files if required, maybe add a function pointer to the edit function
+  database.editBook(req.body, renameFile, res);
 });
+
+function renameFile(oldName, newName) {
+  fs.rename(
+    path.join(base_dir, "uploads", oldName),
+    path.join(base_dir, "uploads", newName),
+    (err) => {
+      if (err) console.log(err.message);
+      else console.log(`File ${oldName} renamed to ${newName}`);
+    }
+  );
+}
 
 app.post("/book/genres", textMulter.none(), (req, res) => {
   if (Object.keys(req.body).length == 0) {
