@@ -4,14 +4,14 @@ const sqlite3 = require("sqlite3");
 const db = new sqlite3.Database(path.join(__dirname, "../database/library.db"));
 
 function init() {
-  // Create a table for books if it doesn't exist
   db.run(`
     CREATE TABLE IF NOT EXISTS books (
-        isbn TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        isbn TEXT UNIQUE NOT NULL,
         title TEXT,
         author TEXT,
         genre TEXT,
-        year TEXT,
+        year INTEGER,
         publ TEXT,
         ver TEXT,
         notes TEXT,
@@ -21,7 +21,7 @@ function init() {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS book_pics (
-        isbn TEXT,
+        id INTEGER,
         link TEXT,
         type TEXT
     )
@@ -55,54 +55,59 @@ CREATE TABLE IF NOT EXISTS book_genres (
 }
 
 function registerBook(body, newNames, res) {
-  db.run(
-    `
-  INSERT INTO books 
+  year = parseInt(body.year, 10);
+  if (isNaN(year)) {
+    console.log(`Book ${body.title} has incorrect year: ${body.year}`);
+    res.json(`Book ${body.title} has incorrect year: ${body.year}`);
+    return;
+  }
+
+  const sql = `INSERT INTO books 
   (isbn, title, author, genre, year, publ, ver, notes, status)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, "active")
-`,
-    [
-      body.isbn,
-      body.title,
-      body.author,
-      body.genre,
-      body.year,
-      body.publ,
-      body.ver,
-      body.notes,
-    ],
-    (err) => {
-      if (err) {
-        console.log(err.message);
-        res.json(`Book ${body.title} could not be saved`);
-        return;
-      }
-      newNames.forEach((newName) => {
-        registerBookImg(body.isbn, newName);
-      });
-      res.json(`Book ${body.title} saved successfully`);
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
+
+  const values = [
+    body.isbn,
+    body.title,
+    body.author,
+    body.genre,
+    year,
+    body.publ,
+    body.ver,
+    body.notes,
+    1,
+  ];
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      console.log(err.message);
+      res.json(`Book ${body.title} could not be saved`);
+      return;
     }
-  );
+
+    //TODO: this qlso sqhoud return someting... blokcing maybe?
+    registerBookImgs(this.lastID, newNames);
+
+    res.json(`Book ${body.title} saved successfully to ID:${this.lastID}`);
+  });
 }
 
-function registerBookImg(isbn, bookImg) {
-  db.run(
-    `
-    INSERT INTO book_pics
-    (isbn, link, type)
-    VALUES (?, ?, ?)
-  `,
-    [isbn, bookImg, "none"],
-    (err) => {
+function registerBookImgs(id, bookImgs) {
+  const sql = `INSERT INTO book_pics
+  (id, link, type)
+  VALUES (?, ?, ?)`;
+
+  bookImgs.forEach((bookImg) => {
+    db.run(sql, [id, bookImg, 0], (err) => {
       if (err) {
         console.log(
-          `${bookImg} for ${isbn} could not be saved: ${err.message}`
+          `${bookImg} for ID:${id} could not be saved: ${err.message}`
         );
         return;
       }
-      console.log(`Image ${bookImg} for ${isbn} saved successfully`);
-    }
-  );
+      console.log(`Image ${bookImg} for ID:${id} saved successfully`);
+    });
+  });
 }
 
 function addGenre(body, res) {
@@ -110,16 +115,16 @@ function addGenre(body, res) {
   var sql = `INSERT INTO book_genres (genre) VALUES (?)`;
   db.all(sql, [body], (err, rows) => {
     if (err) {
-      console.log(err);
-      res.json(`Genres could not be added`);
+      console.log(err.message);
+      res.json(`Genre ${body} could not be added`);
       return;
     }
-    res.json(`Genres added successfully`);
+    res.json(`Genre ${body} added successfully`);
   });
 }
 
 function getGenres(res) {
-  var sql = `SELECT * FROM book_genres`;
+  var sql = `SELECT * FROM book_genres ORDER BY genre ASC`;
   db.all(sql, [], (err, rows) => {
     if (err) {
       console.log(err);
@@ -129,6 +134,8 @@ function getGenres(res) {
     res.json(rows);
   });
 }
+
+//--------------------------
 
 function registerUser(body, res) {
   var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
@@ -321,7 +328,6 @@ function deactivateUser(body, res) {
 module.exports = {
   init: init,
   registerBook: registerBook,
-  registerBookImg: registerBookImg,
   registerUser: registerUser,
   findBook: findBook,
   findBookPic: findBookPic,

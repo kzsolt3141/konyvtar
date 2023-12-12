@@ -1,6 +1,12 @@
 export function creteGenreSelect(id, place) {
+  const selectLabel = document.createElement("label");
+  selectLabel.setAttribute("for", id);
+  selectLabel.textContent = "Tipus:";
+
   const genreSelect = document.createElement("select");
   genreSelect.id = id;
+
+  place.appendChild(selectLabel);
   place.appendChild(genreSelect);
 
   genreSelect.addEventListener("change", () => {
@@ -28,6 +34,18 @@ export function creteGenreSelect(id, place) {
       option.text = "+";
       genreSelect.add(option);
     });
+}
+
+export function genreSelectIsValid(id) {
+  const bookGenre = document.getElementById(id);
+  if (bookGenre === null) {
+    return false;
+  }
+  if (bookGenre.value === "+" || bookGenre.value === "down") {
+    return false;
+  }
+
+  return true;
 }
 
 function addGenre() {

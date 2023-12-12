@@ -42,7 +42,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(base_dir, "uploads"));
   },
   filename: function (req, file, cb) {
-    const newName = req.body.isbn + "_" + file.originalname;
+    const newName = Date.now() + "_" + file.originalname;
     cb(null, newName);
   },
 });
@@ -52,7 +52,7 @@ const upload = multer({ storage: storage });
 const textMulter = multer();
 
 app.post("/book/add", upload.array("images"), (req, res) => {
-  var sts = null;
+  // get the names from multer.diskStorage after it adds current date and time to it
   newNames = [];
   req.files.forEach((file) => {
     newNames.push(file.filename);

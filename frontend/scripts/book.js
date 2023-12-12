@@ -1,24 +1,27 @@
-import { creteGenreSelect } from "./genre.js";
+import { creteGenreSelect, genreSelectIsValid } from "./genre.js";
 
 const currentDate = new Date().toISOString().split("T")[0];
 document.getElementById("notes").value = `Init: ${currentDate}`;
 
 const genreDiv = document.getElementById("genre_div");
-creteGenreSelect("macska", genreDiv);
+creteGenreSelect("genre", genreDiv);
 
 const formBtn = document.getElementById("add_button");
 formBtn.addEventListener("click", async (event) => {
   event.preventDefault();
 
-  bookGenre = document.getElementById("genre");
-  if (bookGenre.value === "+" || bookGenre.value === "valassz") {
+  if (!genreSelectIsValid("genre")) {
     updateStatus("Kivalasztott 'Tipus' nem megfelelo");
     return;
   }
 
   const form = document.getElementById("add_book");
 
-  const formData = new FormData(form);
+  const formData = new FormData();
+
+  for (const element of form.elements) {
+    formData.append(element.id, element.value);
+  }
 
   fetch("/book/add", {
     method: "POST",
