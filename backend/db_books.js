@@ -34,9 +34,20 @@ CREATE TABLE IF NOT EXISTS book_genres (
 `);
 }
 
+// TODO: use check functions like this:
+function getValidYear(textyear) {
+  year = parseInt(textyear, 10);
+  const currentDate = new Date();
+
+  if (isNaN(year) || year > currentDate.getFullYear()) {
+    return { error: new Error(`Invalid year: ${textyear}`) };
+  }
+  return { value: year };
+}
+
 function registerBook(body, newNames, res) {
-  year = parseInt(body.year, 10);
-  if (isNaN(year)) {
+  year = getValidYear(body.year, 10);
+  if (year.error) {
     console.log(`Book ${body.title} has incorrect year: ${body.year}`);
     res.json(`Book ${body.title} has incorrect year: ${body.year}`);
     return;
@@ -51,7 +62,7 @@ function registerBook(body, newNames, res) {
     body.title,
     body.author,
     body.genre,
-    year,
+    year.value,
     body.publ,
     body.ver,
     body.notes,
