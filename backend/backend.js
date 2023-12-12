@@ -3,7 +3,7 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
-const database = require("./database.js");
+const database = require("./db_common.js");
 
 //----------------------------------------------------------------
 database.init();

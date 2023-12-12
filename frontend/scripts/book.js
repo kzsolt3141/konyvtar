@@ -1,11 +1,15 @@
+//import genre related functions
 import { creteGenreSelect, genreSelectIsValid } from "./genre.js";
 
+//use date for initial notes in form
 const currentDate = new Date().toISOString().split("T")[0];
 document.getElementById("notes").value = `Init: ${currentDate}`;
 
+//create genre selection drop-down
 const genreDiv = document.getElementById("genre_div");
 creteGenreSelect("genre", genreDiv);
 
+//add button will prepare formData and send it to backend
 const formBtn = document.getElementById("add_button");
 formBtn.addEventListener("click", async (event) => {
   event.preventDefault();
