@@ -15,7 +15,7 @@ function init(db) {
         publ TEXT,
         ver TEXT,
         notes TEXT,
-        status TEXT
+        status INTEGER DEFAULT 1 NOT NULL
     )
 `);
 
@@ -45,41 +45,38 @@ function getValidYear(textyear) {
   return { value: year };
 }
 
-function registerBook(body, newNames, res) {
-  year = getValidYear(body.year, 10);
-  if (year.error) {
-    console.log(`Book ${body.title} has incorrect year: ${body.year}`);
-    res.json(`Book ${body.title} has incorrect year: ${body.year}`);
-    return;
-  }
-
-  const sql = `INSERT INTO books 
-  (isbn, title, author, genre, year, publ, ver, notes, status)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
-
-  const values = [
-    body.isbn,
-    body.title,
-    body.author,
-    body.genre,
-    year.value,
-    body.publ,
-    body.ver,
-    body.notes,
-    1,
-  ];
-
-  db_.run(sql, values, function (err) {
-    if (err) {
-      console.log(err.message);
-      res.json(`Book ${body.title} could not be saved`);
-      return;
+function registerBook(body, newNames) {
+  return new Promise((resolve, reject) => {
+    year = getValidYear(body.year, 10);
+    if (year.error) {
+      reject(`Book ${body.title} has incorrect year: ${body.year}`);
     }
 
-    //TODO: this also sqhoud return someting... blokcing maybe?
-    registerBookImgs(this.lastID, newNames);
+    const sql = `INSERT INTO books 
+  (isbn, title, author, genre, year, publ, ver, notes)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
 
-    res.json(`Book ${body.title} saved successfully to ID:${this.lastID}`);
+    const values = [
+      body.isbn,
+      body.title,
+      body.author,
+      body.genre,
+      year.value,
+      body.publ,
+      body.ver,
+      body.notes,
+    ];
+
+    db_.run(sql, values, function (err) {
+      if (err) {
+        console.log(err.message);
+        reject(err.message);
+      }
+      resolve(this.lastID);
+
+      // this function shuold be blocking
+      registerBookImgs(this.lastID, newNames);
+    });
   });
 }
 
@@ -91,10 +88,11 @@ function registerBookImgs(id, bookImgs) {
   bookImgs.forEach((bookImg) => {
     db_.run(sql, [id, bookImg, 0], (err) => {
       if (err) {
-        console.log(
-          `${bookImg} for ID:${id} could not be saved: ${err.message}`
-        );
-        return;
+        return {
+          error: new Error(
+            `${bookImg} for ID:${id} could not be saved: ${err.message}`
+          ),
+        };
       }
       console.log(`Image ${bookImg} for ID:${id} saved successfully`);
     });

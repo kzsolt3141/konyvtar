@@ -21,11 +21,10 @@ formBtn.addEventListener("click", async (event) => {
 
   const form = document.getElementById("add_book");
 
-  const formData = new FormData();
+  const formData = new FormData(form);
+  const genre = document.getElementById("genre");
 
-  for (const element of form.elements) {
-    formData.append(element.id, element.value);
-  }
+  formData.append(genre.id, genre.value);
 
   fetch("/book/add", {
     method: "POST",

@@ -58,6 +58,7 @@ app.post("/book/add", upload.array("images"), (req, res) => {
     newNames.push(file.filename);
   });
 
+  // TODO this is async, check and if there is a problem delete the files
   database.registerBook(req.body, newNames, res);
 });
 
