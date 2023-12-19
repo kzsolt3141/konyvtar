@@ -23,7 +23,7 @@ function init(db) {
     CREATE TABLE IF NOT EXISTS book_pics (
         id INTEGER,
         link TEXT,
-        type TEXT
+        type INTEGER DEFAULT 1 NOT NULL
     )
 `);
 
@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS book_genres (
 `);
 }
 
-// TODO: use check functions like this:
 function getValidYear(textyear) {
   year = parseInt(textyear, 10);
   const currentDate = new Date();
@@ -71,30 +70,25 @@ function registerBook(body, newNames) {
       if (err) {
         console.log(err.message);
         reject(err.message);
+        return;
       }
       resolve(this.lastID);
 
-      // this function shuold be blocking
       registerBookImgs(this.lastID, newNames);
     });
   });
 }
 
 function registerBookImgs(id, bookImgs) {
-  const sql = `INSERT INTO book_pics
-  (id, link, type)
-  VALUES (?, ?, ?)`;
+  const sql = `INSERT INTO book_pics (id, link, type) VALUES (?, ?, ?)`;
 
-  bookImgs.forEach((bookImg) => {
-    db_.run(sql, [id, bookImg, 0], (err) => {
+  bookImgs.forEach((bookImg, idx) => {
+    db_.run(sql, [id, bookImg, idx == 0 ? 1 : 0], (err) => {
       if (err) {
-        return {
-          error: new Error(
-            `${bookImg} for ID:${id} could not be saved: ${err.message}`
-          ),
-        };
+        console.log(`Image ${bookImg} for ID:${id} was not added to DB`);
+        return;
       }
-      console.log(`Image ${bookImg} for ID:${id} saved successfully`);
+      console.log(`Image ${bookImg} for ID:${id} was  added to DB`);
     });
   });
 }
@@ -124,11 +118,10 @@ function getGenres(res) {
   });
 }
 
-//----------------------------------------------------------------
-
 function findBook(body, res) {
-  const status = body.status == "on" ? "active" : "inactive";
+  const status = body.status == "on" ? 1 : 0;
   const sql = `SELECT * FROM books WHERE LOWER(${body.type}) LIKE LOWER(?) AND status = ?`;
+
   db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
     if (err) {
       res.json("Database error please try again");
@@ -137,7 +130,7 @@ function findBook(body, res) {
     }
     if (rows) {
       const resp = [];
-      rows.forEach((row, index) => {
+      rows.forEach((row) => {
         resp.push(row);
       });
       res.json(JSON.stringify(resp));
@@ -148,8 +141,9 @@ function findBook(body, res) {
   });
 }
 
+// TODO should use ID and not ISBN
 function findBookPic(body, res) {
-  const sql = `SELECT link FROM book_pics WHERE isbn = ?`;
+  const sql = `SELECT link FROM book_pics WHERE id = ?`;
   db_.all(sql, [body], (err, rows) => {
     if (err) {
       res.json("Database error please try again");
@@ -158,7 +152,7 @@ function findBookPic(body, res) {
     }
     if (rows) {
       const resp = [];
-      rows.forEach((row, index) => {
+      rows.forEach((row) => {
         resp.push(row);
       });
       res.json(JSON.stringify(resp));
@@ -182,17 +176,20 @@ function deleteBookPic(body, sts) {
   });
 }
 
+// TODO should use ID and not ISBN
 function deactivateBook(body, res) {
-  const sql = `UPDATE books SET status = "inactive", notes = ? WHERE isbn = ?`;
-  db_.run(sql, [body.notes, body.isbn], (err) => {
+  const sql = `UPDATE books SET status = 0, notes = ? WHERE id = ?`;
+  db_.run(sql, [body.notes, body.id], (err) => {
     if (err) {
       console.error(err.message);
-      res.json(`Book isbn ${body.isbn} could not be deactivated`);
+      res.json(`Book ${body.id} could not be deactivated`);
       return;
     }
-    res.json(`Book isbn ${body.isbn} was deactivated`);
+    res.json(`Book ${body.id} was deactivated`);
   });
 }
+
+//----------------------------------------------------------------
 
 function editBook(body, renameCb, res) {
   console.log(body);

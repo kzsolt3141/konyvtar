@@ -22,27 +22,26 @@ function searchBook(bookFormData) {
     });
 }
 
-function listBooks(data) {
+// TODO find a dynamic solution which supports scalable windows (flexbox maybe?)
+function listBooks(books) {
   const booksDiv = document.querySelector(".books_div");
   booksDiv.innerHTML = "";
+  const booksTable = document.createElement("table");
+  booksTable.innerHTML = "";
 
-  data.forEach((value, key) => {
-    var bookDiv = document.createElement("div");
-    bookDiv.id = value.isbn;
-
-    const table = document.createElement("table");
-    var tableRow = table.insertRow();
-    for (const k in value) {
+  books.forEach((book) => {
+    var tableRow = booksTable.insertRow();
+    for (const k in book) {
       const tableCell = tableRow.insertCell();
-      tableCell.textContent = value[k];
+      tableCell.textContent = `${k}: ${book[k]}`;
     }
 
-    tableRow = table.insertRow();
+    tableRow = booksTable.insertRow();
 
     var button = document.createElement("button");
     button.textContent = "Deaktivalas";
     button.addEventListener("click", function () {
-      deactivateBook(value.isbn);
+      deactivateBook(book.id);
     });
     var tableCell = tableRow.insertCell();
     tableCell.appendChild(button);
@@ -50,7 +49,7 @@ function listBooks(data) {
     button = document.createElement("button");
     button.textContent = "Szerkesztes";
     button.addEventListener("click", function () {
-      editBook(value.isbn);
+      editBook(book.id);
     });
     var tableCell = tableRow.insertCell();
     tableCell.appendChild(button);
@@ -58,17 +57,17 @@ function listBooks(data) {
     button = document.createElement("button");
     button.textContent = "Reszletek";
     button.addEventListener("click", function () {
-      deactivateBook(value.isbn);
+      deactivateBook(book.id);
     });
     var tableCell = tableRow.insertCell();
     tableCell.appendChild(button);
 
-    bookDiv.appendChild(table);
+    tableRow = booksTable.insertRow();
 
-    showBookPics(value.isbn, bookDiv, false);
-
-    booksDiv.appendChild(bookDiv);
+    showBookPics(book.id, tableRow, false);
   });
+
+  booksDiv.appendChild(booksTable);
 }
 
 function showBookPics(isbn, bookDiv, deletion) {
@@ -210,73 +209,4 @@ function editBook(key) {
   showBookPics(key, newDiv, true);
 
   bookDiv.appendChild(newDiv);
-}
-
-const userSearchBtn = document.getElementById("search_user");
-
-userSearchBtn.addEventListener("click", async (event) => {
-  const userForm = document.getElementById("search_users");
-  const userFormData = new FormData(userForm);
-  event.preventDefault();
-  searchUser(userFormData);
-});
-
-function searchUser(formData) {
-  fetch("/user/find", {
-    method: "POST",
-    body: formData,
-  })
-    .then((rsp) => rsp.json())
-    .then((data) => {
-      listUsers(data);
-    });
-}
-
-function listUsers(data) {
-  const userList = document.querySelector(".user_list");
-  userList.innerHTML = "";
-
-  JSON.parse(data).forEach((value, key) => {
-    if (userList) {
-      var paragraph = document.createElement("p");
-      paragraph.textContent =
-        value.name + " " + value.phone + " " + value.mail + " " + value.status;
-      userList.appendChild(paragraph);
-
-      var button = document.createElement("button");
-      button.textContent = "Deaktivalas";
-      button.addEventListener("click", function () {
-        // TODO: Add textbox to leave deactivation notes
-        deactivateUser(value.id);
-      });
-      userList.appendChild(button);
-
-      button = document.createElement("button");
-      button.textContent = "Szerkesztes";
-      button.addEventListener("click", function () {
-        deactivateUser(value.id);
-      });
-      userList.appendChild(button);
-
-      button = document.createElement("button");
-      button.textContent = "Reszletek";
-      button.addEventListener("click", function () {
-        deactivateUser(value.id);
-      });
-      userList.appendChild(button);
-    }
-    // add to the page
-  });
-}
-
-function deactivateUser(key) {
-  fetch("/user/deactivate", {
-    method: "POST",
-    body: key,
-  }).then((rsp) =>
-    rsp.json().then((data) => {
-      console.log(data);
-      userSearchBtn.click();
-    })
-  );
 }

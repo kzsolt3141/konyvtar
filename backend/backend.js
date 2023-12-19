@@ -58,8 +58,25 @@ app.post("/book/add", upload.array("images"), (req, res) => {
     newNames.push(file.filename);
   });
 
-  // TODO this is async, check and if there is a problem delete the files
-  database.registerBook(req.body, newNames, res);
+  // TODO update with meaningful res messages + start using HTTP status codes
+  database
+    .registerBook(req.body, newNames)
+    .then((message) => {
+      res.json(message);
+    })
+    .catch((err) => {
+      newNames.forEach((newName) => {
+        fs.unlink(path.join(base_dir, "uploads", newName), (err) => {
+          if (err) {
+            console.log(err.message);
+            sts = `Could not delete picture: ${req.body}`;
+          } else {
+            console.log("deleted:", newName);
+          }
+        });
+      });
+      res.json(err);
+    });
 });
 
 app.post("/book/find", upload.none(), (req, res) => {
