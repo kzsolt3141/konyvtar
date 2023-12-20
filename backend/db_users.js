@@ -19,15 +19,23 @@ function init(db) {
         address TEXT,
         phone TEXT,
         mail TEXT,
-        status TEXT,
-        notes TEXT
+        pic TEXT
+        status TEXT
     )
+`);
+
+  db_.run(`
+CREATE TABLE IF NOT EXISTS user_notes (
+  id INTEGER,
+  date DATE,
+  notes TEXT
+)
 `);
 }
 
 //--------------------------
 
-function registerUser(body, res) {
+function registerUser(body, filename, res) {
   var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
   db_.all(sql, [body.phone, body.mail], (err, rows) => {
     if (err) {
@@ -41,16 +49,20 @@ function registerUser(body, res) {
       );
       return;
     }
-    sql = `INSERT INTO users (name, address, phone, mail, status, notes) VALUES (?, ?, ?, ?, "active", "") `;
-    db_.run(sql, [body.name, body.address, body.phone, body.mail], (err) => {
-      if (err) {
-        console.log(err);
-        res.json(`User ${body.name} could not be added`);
-        return;
+    sql = `INSERT INTO users (name, address, phone, mail, status) VALUES (?, ?, ?, ?, ?, 1) `;
+    db_.run(
+      sql,
+      [body.name, body.address, body.phone, body.mail, filename],
+      (err) => {
+        if (err) {
+          console.log(err);
+          res.json(`User ${body.name} could not be added`);
+          return;
+        }
+        console.log(`User ${body.name} added successfully`);
+        res.json(`User ${body.name} added successfully`);
       }
-      console.log(`User ${body.name} added successfully`);
-      res.json(`User ${body.name} added successfully`);
-    });
+    );
   });
 }
 

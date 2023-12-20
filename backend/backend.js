@@ -112,17 +112,18 @@ app.post("/book/genres", textMulter.none(), (req, res) => {
   }
 });
 
-app.post("/user/add", upload.any(), (req, res) => {
-  database.registerUser(req.body, res);
-});
-
-app.post("/user/deactivate", upload.any(), (req, res) => {
-  database.deactivateUser(req.body, res);
+app.post("/user/add", upload.single("image"), (req, res) => {
+  database.registerUser(req.body, file.filename, res);
 });
 
 app.post("/user/find", upload.none(), (req, res) => {
   database.findUser(req.body, res);
 });
+
+// TODO implement
+// app.post("/user/edit", upload.none(), (req, res) => {
+//   database.editUser(req.body, res);
+// });
 //----------------------------------------------------------------
 app.listen(8080, () => {
   console.log("Server listening on 8080");
