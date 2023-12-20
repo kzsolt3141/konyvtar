@@ -100,24 +100,9 @@ app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
   res.json(sts);
 });
 
-app.post("/book/delete", upload.none(), (req, res) => {
-  database.deactivateBook(req.body, res);
-});
-
 app.post("/book/change", upload.none(), (req, res) => {
-  database.editBook(req.body, renameFile, res);
+  database.editBook(req.body, res);
 });
-
-function renameFile(oldName, newName) {
-  fs.rename(
-    path.join(base_dir, "uploads", oldName),
-    path.join(base_dir, "uploads", newName),
-    (err) => {
-      if (err) console.log(err.message);
-      else console.log(`File ${oldName} renamed to ${newName}`);
-    }
-  );
-}
 
 app.post("/book/genres", textMulter.none(), (req, res) => {
   if (Object.keys(req.body).length == 0) {

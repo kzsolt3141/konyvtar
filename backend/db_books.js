@@ -1,5 +1,7 @@
 var db_ = null;
 
+const currentDate = new Date();
+
 function init(db) {
   if (db === null) return false;
   db_ = db;
@@ -14,10 +16,9 @@ function init(db) {
         year INTEGER,
         publ TEXT,
         ver TEXT,
-        notes TEXT,
         status INTEGER DEFAULT 1 NOT NULL
     )
-`);
+  `);
 
   db_.run(`
     CREATE TABLE IF NOT EXISTS book_pics (
@@ -25,18 +26,25 @@ function init(db) {
         link TEXT,
         type INTEGER DEFAULT 1 NOT NULL
     )
-`);
+  `);
 
   db_.run(`
-CREATE TABLE IF NOT EXISTS book_genres (
-  genre TEXT PRIMARY KEY
-)
-`);
+    CREATE TABLE IF NOT EXISTS book_genres (
+      genre TEXT PRIMARY KEY
+    )
+  `);
+
+  db_.run(`
+    CREATE TABLE IF NOT EXISTS book_notes (
+      id INTEGER,
+      date DATE,
+      notes TEXT
+    )
+  `);
 }
 
 function getValidYear(textyear) {
   year = parseInt(textyear, 10);
-  const currentDate = new Date();
 
   if (isNaN(year) || year > currentDate.getFullYear()) {
     return { error: new Error(`Invalid year: ${textyear}`) };
@@ -52,8 +60,8 @@ function registerBook(body, newNames) {
     }
 
     const sql = `INSERT INTO books 
-  (isbn, title, author, genre, year, publ, ver, notes)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+  (isbn, title, author, genre, year, publ, ver)
+  VALUES (?, ?, ?, ?, ?, ?, ?) `;
 
     const values = [
       body.isbn,
@@ -63,7 +71,6 @@ function registerBook(body, newNames) {
       year.value,
       body.publ,
       body.ver,
-      body.notes,
     ];
 
     db_.run(sql, values, function (err) {
@@ -75,6 +82,8 @@ function registerBook(body, newNames) {
       resolve(this.lastID);
 
       registerBookImgs(this.lastID, newNames);
+      body.notes = body.notes === "" ? "Init" : body.notes;
+      registerBookNotes(this.lastID, currentDate, body.notes);
     });
   });
 }
@@ -90,6 +99,20 @@ function registerBookImgs(id, bookImgs) {
       }
       console.log(`Image ${bookImg} for ID:${id} was  added to DB`);
     });
+  });
+}
+
+function registerBookNotes(id, date, notes) {
+  const sql = `
+  INSERT INTO book_notes (id, date, notes) 
+  VALUES (?, ?, ?)`;
+
+  db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
+    if (err) {
+      console.log(`Notes coudld not be added to DB`);
+      return;
+    }
+    console.log(`Notes added to DB`);
   });
 }
 
@@ -120,7 +143,16 @@ function getGenres(res) {
 
 function findBook(body, res) {
   const status = body.status == "on" ? 1 : 0;
-  const sql = `SELECT * FROM books WHERE LOWER(${body.type}) LIKE LOWER(?) AND status = ?`;
+  const sql = `
+  SELECT * 
+  FROM books 
+  JOIN book_notes 
+  ON
+    books.id = book_notes.id
+  WHERE 
+    LOWER(books.${body.type}) LIKE LOWER(?) 
+      AND 
+    books.status = ?`;
 
   db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
     if (err) {
@@ -131,6 +163,7 @@ function findBook(body, res) {
     if (rows) {
       const resp = [];
       rows.forEach((row) => {
+        console.log(row);
         resp.push(row);
       });
       res.json(JSON.stringify(resp));
@@ -141,7 +174,6 @@ function findBook(body, res) {
   });
 }
 
-// TODO should use ID and not ISBN
 function findBookPic(body, res) {
   const sql = `SELECT link FROM book_pics WHERE id = ?`;
   db_.all(sql, [body], (err, rows) => {
@@ -176,22 +208,9 @@ function deleteBookPic(body, sts) {
   });
 }
 
-// TODO should use ID and not ISBN
-function deactivateBook(body, res) {
-  const sql = `UPDATE books SET status = 0, notes = ? WHERE id = ?`;
-  db_.run(sql, [body.notes, body.id], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.json(`Book ${body.id} could not be deactivated`);
-      return;
-    }
-    res.json(`Book ${body.id} was deactivated`);
-  });
-}
-
 //----------------------------------------------------------------
 
-function editBook(body, renameCb, res) {
+function editBook(body, res) {
   console.log(body);
   sql = `UPDATE books 
   SET 
@@ -202,13 +221,12 @@ function editBook(body, renameCb, res) {
     year = ?,
     publ = ?,
     ver = ?,
-    notes = ?,
     status = ?
-  WHERE isbn = ?`;
+  WHERE id = ?`;
   db_.run(
     sql,
     [
-      body.new_isbn,
+      body.isbn,
       body.title,
       body.author,
       body.genre,
@@ -217,7 +235,7 @@ function editBook(body, renameCb, res) {
       body.ver,
       body.notes,
       body.status,
-      body.isbn,
+      body.id,
     ],
     (err) => {
       if (err) {
@@ -225,6 +243,7 @@ function editBook(body, renameCb, res) {
         res.json(`Book ${body.title} could not be modified`);
         return;
       }
+      registerBookNotes(body.id, date, body.note);
       console.log(`Book ${body.title} modified successfully`);
       // update book pic table
       res.json(`Book ${body.title} modified successfully`);
@@ -241,5 +260,4 @@ module.exports = {
   getGenres: getGenres,
   deleteBookPic: deleteBookPic,
   editBook: editBook,
-  deactivateBook: deactivateBook,
 };
