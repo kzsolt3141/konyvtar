@@ -102,6 +102,7 @@ function deleteBookPic(link) {
     });
 }
 
+// TODO transfer edit to the book page, should simplify the things...
 function editBook(key) {
   // table id with all the book data
   const booktable = document.getElementById(key);
