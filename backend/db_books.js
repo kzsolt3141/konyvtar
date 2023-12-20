@@ -1,7 +1,5 @@
 var db_ = null;
 
-const currentDate = new Date();
-
 function init(db) {
   if (db === null) return false;
   db_ = db;
@@ -45,7 +43,7 @@ function init(db) {
 
 function getValidYear(textyear) {
   year = parseInt(textyear, 10);
-
+  const currentDate = new Date();
   if (isNaN(year) || year > currentDate.getFullYear()) {
     return { error: new Error(`Invalid year: ${textyear}`) };
   }
@@ -83,6 +81,7 @@ function registerBook(body, newNames) {
 
       registerBookImgs(this.lastID, newNames);
       body.notes = body.notes === "" ? "Init" : body.notes;
+      const currentDate = new Date();
       registerBookNotes(this.lastID, currentDate, body.notes);
     });
   });
@@ -144,15 +143,19 @@ function getGenres(res) {
 function findBook(body, res) {
   const status = body.status == "on" ? 1 : 0;
   const sql = `
-  SELECT * 
-  FROM books 
-  JOIN book_notes 
-  ON
-    books.id = book_notes.id
-  WHERE 
-    LOWER(books.${body.type}) LIKE LOWER(?) 
-      AND 
-    books.status = ?`;
+  SELECT 
+  books.*,
+  replace(GROUP_CONCAT(book_notes.notes, '; '), ',', '') AS notes
+FROM 
+  books 
+LEFT JOIN 
+  book_notes ON books.id = book_notes.id
+WHERE 
+  LOWER(books.${body.type}) LIKE LOWER(?) 
+  AND 
+  books.status = ?
+GROUP BY 
+  books.id;`;
 
   db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
     if (err) {
@@ -163,6 +166,7 @@ function findBook(body, res) {
     if (rows) {
       const resp = [];
       rows.forEach((row) => {
+        delete row.date;
         console.log(row);
         resp.push(row);
       });
@@ -211,7 +215,6 @@ function deleteBookPic(body, sts) {
 //----------------------------------------------------------------
 
 function editBook(body, res) {
-  console.log(body);
   sql = `UPDATE books 
   SET 
     isbn = ?,
@@ -233,7 +236,6 @@ function editBook(body, res) {
       body.year,
       body.publ,
       body.ver,
-      body.notes,
       body.status,
       body.id,
     ],
@@ -243,7 +245,8 @@ function editBook(body, res) {
         res.json(`Book ${body.title} could not be modified`);
         return;
       }
-      registerBookNotes(body.id, date, body.note);
+      const currentDate = new Date();
+      registerBookNotes(body.id, currentDate, body.notes);
       console.log(`Book ${body.title} modified successfully`);
       // update book pic table
       res.json(`Book ${body.title} modified successfully`);
