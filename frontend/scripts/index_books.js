@@ -5,6 +5,11 @@ addBookBtn.addEventListener("click", async (event) => {
   window.location.href = "/book";
 });
 
+const addUserBtn = document.getElementById("add_user_btn");
+addUserBtn.addEventListener("click", async (event) => {
+  window.location.href = "/user";
+});
+
 const bookSearchBtn = document.getElementById("search_books_btn");
 
 var BookData = null;

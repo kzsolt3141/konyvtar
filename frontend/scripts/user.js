@@ -1,3 +1,8 @@
+const mainBtn = document.getElementById("main_btn");
+mainBtn.addEventListener("click", async (event) => {
+  window.location.href = "/";
+});
+
 const form = document.getElementById("add_user");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
