@@ -1,6 +1,11 @@
 //import genre related functions
 import { creteGenreSelect, genreSelectIsValid } from "./genre.js";
 
+const mainBtn = document.getElementById("main_btn");
+mainBtn.addEventListener("click", async (event) => {
+  window.location.href = "/";
+});
+
 //create genre selection drop-down
 const genreDiv = document.getElementById("genre_div");
 creteGenreSelect("genre", genreDiv);

@@ -1,5 +1,10 @@
 import { creteGenreSelect } from "./genre.js";
 
+const addBookBtn = document.getElementById("add_book_btn");
+addBookBtn.addEventListener("click", async (event) => {
+  window.location.href = "/book";
+});
+
 const bookSearchBtn = document.getElementById("search_books_btn");
 
 var BookData = null;
