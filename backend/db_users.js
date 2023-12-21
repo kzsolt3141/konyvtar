@@ -19,7 +19,7 @@ function init(db) {
         address TEXT,
         phone TEXT,
         mail TEXT,
-        pic TEXT
+        pic TEXT,
         status TEXT
     )
 `);
@@ -35,35 +35,58 @@ CREATE TABLE IF NOT EXISTS user_notes (
 
 //--------------------------
 
-function registerUser(body, filename, res) {
-  var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
-  db_.all(sql, [body.phone, body.mail], (err, rows) => {
-    if (err) {
-      console.log(err);
-      res.json(`User ${body.name} could not be added`);
-      return;
-    }
-    if (rows && rows.length > 0) {
-      res.json(
-        `User with phone:${body.phone} and mail ${body.mail} already exists`
-      );
-      return;
-    }
-    sql = `INSERT INTO users (name, address, phone, mail, status) VALUES (?, ?, ?, ?, ?, 1) `;
-    db_.run(
-      sql,
-      [body.name, body.address, body.phone, body.mail, filename],
-      (err) => {
-        if (err) {
-          console.log(err);
-          res.json(`User ${body.name} could not be added`);
-          return;
-        }
-        console.log(`User ${body.name} added successfully`);
-        res.json(`User ${body.name} added successfully`);
+function registerUser(body, filename) {
+  return new Promise((resolve, reject) => {
+    // seach for incopatible user data (phone and mail both used by other user)
+    var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
+    db_.all(sql, [body.phone, body.mail], (err, rows) => {
+      if (err) {
+        reject(err.message);
       }
-    );
+      if (rows && rows.length > 0) {
+        reject(`Phone:${body.phone} AND mail:${body.mail} used`);
+      }
+
+      // additional check for user validation
+      if (body.name === "") reject("Empty name");
+      if (body.address === "") reject("Empty address");
+      if (body.phone === "") reject("Empty phone");
+
+      // it's ok to start adding the user
+      sql = `
+        INSERT INTO users 
+        (name, address, phone, mail, pic, status) 
+        VALUES (?, ?, ?, ?, ?, 1) `;
+      db_.run(
+        sql,
+        [body.name, body.address, body.phone, body.mail, filename],
+        function (err) {
+          if (err) {
+            reject(err.message);
+          }
+          const currentDate = new Date();
+          registerUserNotes(this.lastID, currentDate, body.notes);
+          resolve(`User ${body.name} added successfully`);
+        }
+      );
+    });
   });
+}
+
+function registerUserNotes(id, date, notes) {
+  if (notes !== "") {
+    const sql = `
+    INSERT INTO user_notes (id, date, notes) 
+    VALUES (?, ?, ?)`;
+
+    db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
+      if (err) {
+        console.log(`Notes coudld not be added to DB`);
+        return;
+      }
+      console.log(`Notes added to DB`);
+    });
+  }
 }
 
 function findUser(body, res) {

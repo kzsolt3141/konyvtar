@@ -128,6 +128,10 @@ function editBook(key) {
       textbox.disabled = true;
     }
 
+    if (cell.id == "notes") {
+      textbox.value = "";
+    }
+
     cell.textContent = "";
     if (cell.id == "genre") {
       creteGenreSelect(cell.id, cell);

@@ -58,8 +58,8 @@ function registerBook(body, newNames) {
     }
 
     const sql = `INSERT INTO books 
-  (isbn, title, author, genre, year, publ, ver)
-  VALUES (?, ?, ?, ?, ?, ?, ?) `;
+      (isbn, title, author, genre, year, publ, ver)
+      VALUES (?, ?, ?, ?, ?, ?, ?) `;
 
     const values = [
       body.isbn,
@@ -102,17 +102,19 @@ function registerBookImgs(id, bookImgs) {
 }
 
 function registerBookNotes(id, date, notes) {
-  const sql = `
-  INSERT INTO book_notes (id, date, notes) 
-  VALUES (?, ?, ?)`;
+  if (notes !== "") {
+    const sql = `
+    INSERT INTO book_notes (id, date, notes) 
+    VALUES (?, ?, ?)`;
 
-  db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
-    if (err) {
-      console.log(`Notes coudld not be added to DB`);
-      return;
-    }
-    console.log(`Notes added to DB`);
-  });
+    db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
+      if (err) {
+        console.log(`Notes coudld not be added to DB`);
+        return;
+      }
+      console.log(`Notes added to DB`);
+    });
+  }
 }
 
 function addGenre(body, res) {
@@ -167,7 +169,6 @@ GROUP BY
       const resp = [];
       rows.forEach((row) => {
         delete row.date;
-        console.log(row);
         resp.push(row);
       });
       res.json(JSON.stringify(resp));

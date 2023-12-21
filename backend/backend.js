@@ -113,7 +113,18 @@ app.post("/book/genres", textMulter.none(), (req, res) => {
 });
 
 app.post("/user/add", upload.single("image"), (req, res) => {
-  database.registerUser(req.body, file.filename, res);
+  // TODO update with meaningful res messages + start using HTTP status codes
+  database
+    .registerUser(req.body, req.file.filename)
+    .then((message) => {
+      res.json(message);
+    })
+    .catch((err) => {
+      fs.unlink(path.join(base_dir, "uploads", req.file.filename), (err) => {
+        if (err) console.log(err.message);
+      });
+      res.json(err);
+    });
 });
 
 app.post("/user/find", upload.none(), (req, res) => {
