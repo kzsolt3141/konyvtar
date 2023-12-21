@@ -1,3 +1,16 @@
+const LabelNames = {
+  id: "Azonosito:",
+  isbn: "ISBN:",
+  title: "Cim:",
+  author: "Szerzo:",
+  genre: "Tipus:",
+  year: "Kiadasi Ev:",
+  publ: "Kiado:",
+  ver: "Kiadas:",
+  status: "Allapot:",
+  notes: "Megjegyzesek:",
+};
+
 import { creteGenreSelect } from "./genre.js";
 
 const addBookBtn = document.getElementById("add_book_btn");
@@ -32,6 +45,12 @@ function searchBook(bookFormData) {
     });
 }
 
+/* all books will be listed in the books_div div element
+ * each book will have its own table
+ * row 0: book information
+ * row 1; book pictures
+ * row 2; button(s)
+ */
 function listBooks(books) {
   const booksDiv = document.querySelector(".books_div");
   booksDiv.innerHTML = "";
@@ -42,25 +61,34 @@ function listBooks(books) {
 
     var tableRow = bookTable.insertRow();
     for (const k in book) {
-      const tableCell = tableRow.insertCell();
-      tableCell.textContent = book[k];
-      tableCell.id = k;
+      const element = document.createElement("input");
+      element.disabled = true;
+      element.id = k;
+      element.value = book[k];
+
+      const label = document.createElement("p");
+      label.textContent = LabelNames[k];
+
+      if (k == "status") {
+        element.type = "checkbox";
+        element.checked = book[k] == 1;
+      }
+
+      tableRow.appendChild(label);
+      tableRow.appendChild(element);
     }
 
     tableRow = bookTable.insertRow();
-
     showBookPics(book.id, tableRow, false);
 
     tableRow = bookTable.insertRow();
-
     const button = document.createElement("button");
     button.textContent = "Szerkesztes";
     button.addEventListener("click", function () {
       editBook(book.id);
     });
 
-    var tableCell = tableRow.insertCell();
-    tableCell.appendChild(button);
+    tableRow.appendChild(button);
 
     booksDiv.appendChild(bookTable);
   });
@@ -108,38 +136,30 @@ function editBook(key) {
   const booktable = document.getElementById(key);
 
   let row = booktable.rows[0];
-  for (let c = 0; c < row.cells.length; c++) {
-    const cell = row.cells[c];
+  for (let c = 0; c < row.children.length; c++) {
+    const cell = row.children[c];
 
-    const label = document.createElement("label");
-    label.setAttribute("for", cell.id);
-    label.textContent = cell.id;
-
-    const textbox = document.createElement("input");
-    textbox.value = cell.textContent;
-    textbox.id = cell.id;
-
-    if (cell.id == "status") {
-      textbox.type = "checkbox";
-      textbox.checked = cell.textContent == 1;
-    }
+    cell.disabled = false;
 
     if (cell.id == "id") {
-      textbox.disabled = true;
+      cell.disabled = true;
     }
 
     if (cell.id == "notes") {
-      textbox.value = "";
+      cell.value = "";
     }
 
-    cell.textContent = "";
-    if (cell.id == "genre") {
-      creteGenreSelect(cell.id, cell);
-    } else {
-      cell.appendChild(label);
-      cell.appendChild(textbox);
+    if (cell.id === "genre") {
+      cell.parentNode.removeChild(cell);
+    }
+
+    if (cell.textContent === "Tipus:") {
+      cell.innerHTML = "";
     }
   }
+
+  // TODO: update to have default value
+  creteGenreSelect("genre", row);
 
   row = booktable.rows[1];
   row.innerHTML = "";
@@ -152,22 +172,21 @@ function editBook(key) {
   changeBtn.addEventListener("click", function () {
     const changeForm = new FormData();
 
-    for (let c = 0; c < booktable.rows[0].cells.length; c++) {
-      const cell = booktable.rows[0].cells[c];
-      for (let i = 0; i < cell.children.length; i++) {
-        const element = cell.children[i];
+    for (let c = 0; c < booktable.rows[0].children.length; c++) {
+      const element = booktable.rows[0].children[c];
 
-        if (element.type === "text") {
-          changeForm.append(element.id, element.value);
-        }
+      if (element.tagName.toLowerCase() === "label") continue;
 
-        if (element.type === "select-one") {
-          changeForm.append("genre", element.value);
-        }
+      if (element.type === "text") {
+        changeForm.append(element.id, element.value);
+      }
 
-        if (element.type === "checkbox") {
-          changeForm.append(element.id, element.checked ? 1 : 0);
-        }
+      if (element.type === "select-one") {
+        changeForm.append("genre", element.value);
+      }
+
+      if (element.type === "checkbox") {
+        changeForm.append(element.id, element.checked ? 1 : 0);
       }
     }
 

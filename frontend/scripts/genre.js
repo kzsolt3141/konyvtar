@@ -1,6 +1,5 @@
 export function creteGenreSelect(id, place) {
-  const selectLabel = document.createElement("label");
-  selectLabel.setAttribute("for", id);
+  const selectLabel = document.createElement("p");
   selectLabel.textContent = "Tipus:";
 
   const genreSelect = document.createElement("select");
