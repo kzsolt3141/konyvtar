@@ -59,7 +59,8 @@ function listBooks(books) {
   const booksDiv = document.querySelector(".books_div");
   booksDiv.innerHTML = "";
 
-  books.forEach((book) => {
+  books.forEach((bookObj) => {
+    const book = bookObj[0];
     const bookTable = document.createElement("table");
     bookTable.id = book.id;
 
@@ -81,6 +82,16 @@ function listBooks(books) {
       tableRow.appendChild(label);
       tableRow.appendChild(element);
     }
+
+    const element = document.createElement("input");
+    bookObj.forEach((notes, index) => {
+      if (index > 0) {
+        element.value += notes.date + ":" + notes.notes + ";";
+      }
+    });
+    element.disabled = true;
+    element.id = "notes";
+    tableRow.appendChild(element);
 
     tableRow = bookTable.insertRow();
     showBookPics(book.id, tableRow, false);
@@ -150,7 +161,7 @@ function editBook(key) {
     }
 
     if (cell.id == "notes") {
-      cell.value = "";
+      cell.value = "Modositva";
     }
 
     if (cell.id == "genre" || cell.textContent == "Tipus:") {

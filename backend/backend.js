@@ -4,6 +4,7 @@ const multer = require("multer");
 const fs = require("fs");
 
 const database = require("./db_common.js");
+const { findBookNotes } = require("./db_books.js");
 
 //----------------------------------------------------------------
 database.init();
@@ -80,8 +81,34 @@ app.post("/book/add", upload.array("images"), (req, res) => {
 });
 
 app.post("/book/find", upload.none(), (req, res) => {
-  database.findBook(req.body, res);
+  findBookHandler(req, res);
 });
+
+async function findBookHandler(req, res) {
+  try {
+    const books = await database.findBook(req.body);
+    result = [];
+
+    const bookPromises = books.map(async function (book) {
+      try {
+        const notes = await findBookNotes(book.id);
+        return [book, ...notes];
+      } catch (err) {
+        throw err; // or handle the error as needed
+      }
+    });
+
+    Promise.all(bookPromises)
+      .then((result) => {
+        res.json(JSON.stringify(result));
+      })
+      .catch((err) => {
+        res.json(err);
+      });
+  } catch (err) {
+    res.json(err);
+  }
+}
 
 app.post("/book/find_book_pic", textMulter.none(), (req, res) => {
   database.findBookPic(req.body, res);

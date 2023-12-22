@@ -16,6 +16,7 @@ module.exports = {
   registerBook: db_books.registerBook,
   findBook: db_books.findBook,
   findBookPic: db_books.findBookPic,
+  findBookNotes: db_books.findBookNotes,
   addGenre: db_books.addGenre,
   getGenres: db_books.getGenres,
   deleteBookPic: db_books.deleteBookPic,

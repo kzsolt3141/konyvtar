@@ -55,6 +55,7 @@ function registerBook(body, newNames) {
     year = getValidYear(body.year, 10);
     if (year.error) {
       reject(`Book ${body.title} has incorrect year: ${body.year}`);
+      return;
     }
 
     const sql = `INSERT INTO books 
@@ -142,40 +143,36 @@ function getGenres(res) {
   });
 }
 
-function findBook(body, res) {
+async function findBook(body) {
   const status = body.status == "on" ? 1 : 0;
   const sql = `
-  SELECT 
-  books.*,
-  replace(GROUP_CONCAT(book_notes.notes, '; '), ',', '') AS notes
-FROM 
-  books 
-LEFT JOIN 
-  book_notes ON books.id = book_notes.id
-WHERE 
-  LOWER(books.${body.type}) LIKE LOWER(?) 
-  AND 
-  books.status = ?
-GROUP BY 
-  books.id;`;
+    SELECT * FROM books WHERE 
+    LOWER(${body.type}) LIKE LOWER(?) 
+    AND 
+    status = ?`;
 
-  db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
-    if (err) {
-      res.json("Database error please try again");
-      console.log(err.message);
-      return;
-    }
-    if (rows) {
-      const resp = [];
-      rows.forEach((row) => {
-        delete row.date;
-        resp.push(row);
-      });
-      res.json(JSON.stringify(resp));
-    } else {
-      console.log("Book not found:", body.type, body.key);
-      res.json("Book not found:", body.type, body.key);
-    }
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
+      if (err) {
+        reject(err.message);
+        return;
+      }
+      resolve(rows);
+    });
+  });
+}
+
+async function findBookNotes(id) {
+  const sql = ` SELECT date, notes FROM book_notes WHERE id = ?`;
+
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [id], (err, rows) => {
+      if (err) {
+        reject(err.message);
+        return;
+      }
+      resolve(rows);
+    });
   });
 }
 
@@ -260,6 +257,7 @@ module.exports = {
   registerBook: registerBook,
   findBook: findBook,
   findBookPic: findBookPic,
+  findBookNotes: findBookNotes,
   addGenre: addGenre,
   getGenres: getGenres,
   deleteBookPic: deleteBookPic,
