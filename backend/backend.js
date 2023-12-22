@@ -29,13 +29,15 @@ app.get("/user", (req, res) => {
   res.sendFile(path.join(base_dir, "frontend/user.html"));
 });
 
-app.get("/lend", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/lend.html"));
-});
+//TODO implement this
+// app.get("/lend", (req, res) => {
+//   res.sendFile(path.join(base_dir, "frontend/lend.html"));
+// });
 
-app.get("/list", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/list.html"));
-});
+//TODO implement this
+// app.get("/list", (req, res) => {
+//   res.sendFile(path.join(base_dir, "frontend/list.html"));
+// });
 
 //----------------------------------------------------------------
 const storage = multer.diskStorage({
@@ -49,11 +51,11 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 const textMulter = multer();
 
+//----------------------------------------------------------------
+
 app.post("/book/add", upload.array("images"), (req, res) => {
-  // get the names from multer.diskStorage after it adds current date and time to it
   newNames = [];
   req.files.forEach((file) => {
     newNames.push(file.filename);
@@ -79,6 +81,8 @@ app.post("/book/add", upload.array("images"), (req, res) => {
       res.json(err);
     });
 });
+
+//----------------------------------------------------------------
 
 app.post("/book/find", upload.none(), (req, res) => {
   findBookHandler(req, res);
@@ -110,10 +114,13 @@ async function findBookHandler(req, res) {
   }
 }
 
+//----------------------------------------------------------------
+
 app.post("/book/find_book_pic", textMulter.none(), (req, res) => {
   database.findBookPic(req.body, res);
 });
 
+//----------------------------------------------------------------
 app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
   const sts = "";
   fs.unlink(path.join(base_dir, "uploads", req.body), (err) => {
@@ -127,9 +134,13 @@ app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
   res.json(sts);
 });
 
+//----------------------------------------------------------------
+
 app.post("/book/change", upload.none(), (req, res) => {
   database.editBook(req.body, res);
 });
+
+//----------------------------------------------------------------
 
 app.post("/book/genres", textMulter.none(), (req, res) => {
   if (Object.keys(req.body).length == 0) {
@@ -138,6 +149,9 @@ app.post("/book/genres", textMulter.none(), (req, res) => {
     database.addGenre(req.body, res);
   }
 });
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
 
 app.post("/user/add", upload.single("image"), (req, res) => {
   // TODO update with meaningful res messages + start using HTTP status codes
@@ -154,14 +168,43 @@ app.post("/user/add", upload.single("image"), (req, res) => {
     });
 });
 
+//----------------------------------------------------------------
 app.post("/user/find", upload.none(), (req, res) => {
-  database.findUser(req.body, res);
+  findUserHandler(req, res);
 });
 
+async function findUserHandler(req, res) {
+  try {
+    const users = await database.findUser(req.body);
+    result = [];
+
+    const userPromises = users.map(async function (user) {
+      try {
+        const notes = await database.findUserNotes(user.id);
+        return [user, ...notes];
+      } catch (err) {
+        throw err; // or handle the error as needed
+      }
+    });
+
+    Promise.all(userPromises)
+      .then((result) => {
+        res.json(JSON.stringify(result));
+      })
+      .catch((err) => {
+        res.json(err);
+      });
+  } catch (err) {
+    res.json(err);
+  }
+}
+
+//----------------------------------------------------------------
+
 // TODO implement
-// app.post("/user/edit", upload.none(), (req, res) => {
-//   database.editUser(req.body, res);
-// });
+app.post("/user/edit", upload.none(), (req, res) => {
+  database.editUser(req.body, res);
+});
 //----------------------------------------------------------------
 app.listen(8080, () => {
   console.log("Server listening on 8080");

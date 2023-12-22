@@ -21,9 +21,10 @@ module.exports = {
   getGenres: db_books.getGenres,
   deleteBookPic: db_books.deleteBookPic,
   editBook: db_books.editBook,
-  deactivateBook: db_books.deactivateBook,
 
   registerUser: db_users.registerUser,
   findUser: db_users.findUser,
+  findUserNotes: db_users.findUserNotes,
   deactivateUser: db_users.deactivateUser,
+  editUser: db_users.editUser,
 };

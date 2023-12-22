@@ -210,8 +210,6 @@ function deleteBookPic(body, sts) {
   });
 }
 
-//----------------------------------------------------------------
-
 function editBook(body, res) {
   sql = `UPDATE books 
   SET 

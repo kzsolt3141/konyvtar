@@ -89,24 +89,35 @@ function registerUserNotes(id, date, notes) {
   }
 }
 
-function findUser(body, res) {
-  const sql = `SELECT * FROM users WHERE ${body.type} LIKE ?`;
-  db_.all(sql, [`%${body.key}%`], (err, rows) => {
-    if (err) {
-      res.json("Database error please try again");
-      console.log(err.message);
-      return;
-    }
-    if (rows) {
-      const resp = [];
-      rows.forEach((row, index) => {
-        resp.push(row);
-      });
-      res.json(JSON.stringify(resp));
-    } else {
-      console.log("User not found:", body.type, body.key);
-      res.json("User not found:", body.type, body.key);
-    }
+async function findUser(body) {
+  const status = body.status == "on" ? 1 : 0;
+  const sql = `SELECT * FROM users WHERE 
+    LOWER(${body.type}) LIKE LOWER(?) 
+    AND 
+    status = ?`;
+
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
+      if (err) {
+        reject(err.message);
+        return;
+      }
+      resolve(rows);
+    });
+  });
+}
+
+async function findUserNotes(id) {
+  const sql = ` SELECT date, notes FROM user_notes WHERE id = ?`;
+
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [id], (err, rows) => {
+      if (err) {
+        reject(err.message);
+        return;
+      }
+      resolve(rows);
+    });
   });
 }
 
@@ -122,9 +133,35 @@ function deactivateUser(body, res) {
   });
 }
 
+function editUser(body, res) {
+  sql = `UPDATE users 
+  SET 
+  name = ?,
+  address = ?,
+  phone = ?,
+  mail = ?,
+  status = ?
+  WHERE id = ?`;
+  db_.run(
+    sql,
+    [body.name, body.address, body.phone, body.mail, body.status, body.id],
+    (err) => {
+      if (err) {
+        res.json(err.message);
+        return;
+      }
+      const currentDate = new Date();
+      registerUserNotes(body.id, currentDate, body.notes);
+      res.json(`User ${body.name} modified successfully`);
+    }
+  );
+}
+
 module.exports = {
   init: init,
   registerUser: registerUser,
   findUser: findUser,
+  findUserNotes: findUserNotes,
   deactivateUser: deactivateUser,
+  editUser: editUser,
 };
