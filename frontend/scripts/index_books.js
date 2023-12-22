@@ -11,7 +11,11 @@ const LabelNames = {
   notes: "Megjegyzesek:",
 };
 
-import { creteGenreSelect } from "./genre.js";
+import {
+  creteGenreSelect,
+  getGenreValue,
+  genreSelectIsValid,
+} from "./genre.js";
 
 const addBookBtn = document.getElementById("add_book_btn");
 addBookBtn.addEventListener("click", async (event) => {
@@ -152,10 +156,6 @@ function editBook(key) {
     if (cell.id === "genre") {
       cell.parentNode.removeChild(cell);
     }
-
-    if (cell.textContent === "Tipus:") {
-      cell.innerHTML = "";
-    }
   }
 
   // TODO: update to have default value
@@ -170,6 +170,9 @@ function editBook(key) {
   const changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
   changeBtn.addEventListener("click", function () {
+    if (!genreSelectIsValid("genre")) {
+      return;
+    }
     const changeForm = new FormData();
 
     for (let c = 0; c < booktable.rows[0].children.length; c++) {
@@ -181,8 +184,8 @@ function editBook(key) {
         changeForm.append(element.id, element.value);
       }
 
-      if (element.type === "select-one") {
-        changeForm.append("genre", element.value);
+      if (element.id === "genre") {
+        changeForm.append(element.id, getGenreValue(element.id));
       }
 
       if (element.type === "checkbox") {

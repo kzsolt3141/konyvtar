@@ -1,5 +1,9 @@
 //import genre related functions
-import { creteGenreSelect, genreSelectIsValid } from "./genre.js";
+import {
+  creteGenreSelect,
+  genreSelectIsValid,
+  getGenreValue,
+} from "./genre.js";
 
 const mainBtn = document.getElementById("main_btn");
 mainBtn.addEventListener("click", async (event) => {
@@ -23,9 +27,9 @@ formBtn.addEventListener("click", async (event) => {
   const form = document.getElementById("add_book");
 
   const formData = new FormData(form);
-  const genre = document.getElementById("genre");
+  const genre = getGenreValue("genre");
 
-  formData.append(genre.id, genre.value);
+  formData.append("genre", genre);
 
   fetch("/book/add", {
     method: "POST",

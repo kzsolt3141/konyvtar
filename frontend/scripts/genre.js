@@ -1,22 +1,33 @@
+// genre select creates a new diw with all the requred elements:
+// - label, ganre drop-down, input fields, buttons
 export function creteGenreSelect(id, place) {
+  const genreDiv = document.createElement("div");
+  genreDiv.id = id;
+  place.appendChild(genreDiv);
+
+  // title of the genre dropdown
   const selectLabel = document.createElement("p");
   selectLabel.textContent = "Tipus:";
 
+  // actual genre dropdown
   const genreSelect = document.createElement("select");
-  genreSelect.id = id;
+  genreSelect.id = id + "_select";
 
-  place.appendChild(selectLabel);
-  place.appendChild(genreSelect);
+  genreDiv.appendChild(selectLabel);
+  genreDiv.appendChild(genreSelect);
 
+  // additional elements if "+" is selected
   genreSelect.addEventListener("change", () => {
-    if (genreSelect.value === "+") addGenre();
+    if (genreSelect.value === "+") addGenre(genreDiv);
   });
 
+  // create additional optin
   const option = document.createElement("option");
   option.value = "down";
   option.text = "\u2193";
   genreSelect.add(option);
 
+  // fetch all known genres and fill the dropdown
   fetch("/book/genres", {
     method: "POST",
   })
@@ -35,8 +46,9 @@ export function creteGenreSelect(id, place) {
     });
 }
 
+// a selected genre is valid if it is not "+" or "down"
 export function genreSelectIsValid(id) {
-  const bookGenre = document.getElementById(id);
+  const bookGenre = document.getElementById(id + "_select");
   if (bookGenre === null) {
     return false;
   }
@@ -47,16 +59,21 @@ export function genreSelectIsValid(id) {
   return true;
 }
 
-function addGenre() {
-  const genreDiv = document.getElementById("genre_div");
+export function getGenreValue(id) {
+  const bookGenre = document.getElementById(id + "_select");
+  return bookGenre.value;
+}
+
+// define a new genre and send it back to the DB
+function addGenre(place) {
   const input = document.createElement("input");
-  genreDiv.appendChild(input);
+  place.appendChild(input);
   const addButton = document.createElement("button");
   addButton.textContent = "Hozzaad";
-  genreDiv.appendChild(addButton);
+  place.appendChild(addButton);
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Megse";
-  genreDiv.appendChild(cancelButton);
+  place.appendChild(cancelButton);
 
   addButton.addEventListener("click", function (event) {
     event.preventDefault();
