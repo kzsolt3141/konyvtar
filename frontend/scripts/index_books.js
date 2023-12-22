@@ -153,8 +153,9 @@ function editBook(key) {
       cell.value = "";
     }
 
-    if (cell.id === "genre") {
-      cell.parentNode.removeChild(cell);
+    if (cell.id == "genre" || cell.textContent == "Tipus:") {
+      cell.remove();
+      c = 0;
     }
   }
 
