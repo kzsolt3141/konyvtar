@@ -27,6 +27,8 @@ addUserBtn.addEventListener("click", async (event) => {
   window.location.href = "/user";
 });
 
+createTypeSelect("book_order", document.getElementById("book_order_div"));
+
 const bookSearchBtn = document.getElementById("search_books_btn");
 
 var BookData = null;
@@ -65,6 +67,13 @@ function listBooks(books) {
     bookTable.id = book.id;
 
     var tableRow = bookTable.insertRow();
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "book_radio";
+    radio.id = book.id;
+    tableRow.appendChild(radio);
+
     for (const k in book) {
       const element = document.createElement("input");
       element.disabled = true;
@@ -224,4 +233,46 @@ function editBook(key) {
     bookSearchBtn.click();
   });
   row.appendChild(revertBtn);
+}
+
+function createTypeSelect(id, place) {
+  const typeSelect = document.createElement("select");
+  typeSelect.id = id;
+
+  const option = document.createElement("option");
+  option.value = "";
+  option.text = "Rendezes";
+  typeSelect.add(option);
+
+  for (const key in LabelNames) {
+    const option = document.createElement("option");
+    option.value = key;
+    option.text = LabelNames[key];
+    typeSelect.add(option);
+  }
+
+  typeSelect.addEventListener("change", () => {
+    if (typeSelect.value !== "Rendezes")
+      reorderBooks(BookData, typeSelect.value);
+  });
+
+  place.appendChild(typeSelect);
+}
+
+function reorderBooks(BookData, prop) {
+  BookData.sort((a, b) => {
+    const propA = a[0][prop]; // Convert to uppercase for case-insensitive comparison
+    const propB = b[0][prop];
+
+    if (propA < propB) {
+      return -1;
+    }
+
+    if (propA > propB) {
+      return 1;
+    }
+
+    return 0;
+  });
+  listBooks(BookData);
 }
