@@ -7,6 +7,8 @@ const LabelNames = {
   status: "Allapot",
 };
 
+let UserData = [];
+
 const userSearchBtn = document.getElementById("search_user");
 userSearchBtn.addEventListener("click", async (event) => {
   const userForm = document.getElementById("search_users");
@@ -15,6 +17,22 @@ userSearchBtn.addEventListener("click", async (event) => {
   searchUser(userFormData);
 });
 
+function createLendButton(place) {
+  const lendDiv = document.getElementById("users_div");
+
+  const button = document.createElement("button");
+  button.textContent = "Kolcsonzes";
+  button.addEventListener("click", function () {
+    var bookRadio = document.querySelector('input[name="book_radio"]:checked');
+    var userRadio = document.querySelector('input[name="user_radio"]:checked');
+    if (bookRadio && userRadio) {
+      console.log(bookRadio.id, userRadio.id);
+    }
+    //check if both radio buttons are selected
+  });
+  lendDiv.appendChild(button);
+}
+
 function searchUser(formData) {
   fetch("/user/find", {
     method: "POST",
@@ -22,8 +40,8 @@ function searchUser(formData) {
   })
     .then((rsp) => rsp.json())
     .then((data) => {
-      const userData = JSON.parse(data);
-      listUsers(userData);
+      UserData = JSON.parse(data);
+      listUsers(UserData);
     });
 }
 
@@ -44,6 +62,13 @@ function listUsers(users) {
     userList.appendChild(userTable);
 
     var tableRow = userTable.insertRow();
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "user_radio";
+    radio.id = user.id;
+    tableRow.appendChild(radio);
+
     for (const k in user) {
       if (k === "pic") continue;
       const element = document.createElement("input");
@@ -93,6 +118,8 @@ function listUsers(users) {
     });
     tableRow.appendChild(button);
   });
+
+  createLendButton(userList);
 }
 
 function showUserPic(link, place, deletion) {
@@ -179,4 +206,46 @@ function editUser(key) {
     userSearchBtn.click();
   });
   row.appendChild(revertBtn);
+}
+
+function createTypeSelect(id, place) {
+  const typeSelect = document.createElement("select");
+  typeSelect.id = id;
+
+  const option = document.createElement("option");
+  option.value = "";
+  option.text = "Rendezes";
+  typeSelect.add(option);
+
+  for (const key in LabelNames) {
+    const option = document.createElement("option");
+    option.value = key;
+    option.text = LabelNames[key];
+    typeSelect.add(option);
+  }
+
+  typeSelect.addEventListener("change", () => {
+    if (typeSelect.value !== "Rendezes")
+      reorderBooks(UserData, typeSelect.value);
+  });
+
+  place.appendChild(typeSelect);
+}
+
+function reorderBooks(UserData, prop) {
+  UserData.sort((a, b) => {
+    const propA = a[0][prop]; // Convert to uppercase for case-insensitive comparison
+    const propB = b[0][prop];
+
+    if (propA < propB) {
+      return -1;
+    }
+
+    if (propA > propB) {
+      return 1;
+    }
+
+    return 0;
+  });
+  listUsers(UserData);
 }
