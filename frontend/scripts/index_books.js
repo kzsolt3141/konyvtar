@@ -9,6 +9,7 @@ const LabelNames = {
   ver: "Kiadas:",
   status: "Allapot:",
   notes: "Megjegyzesek:",
+  available: "Elerheto:",
 };
 
 import {
@@ -94,7 +95,7 @@ function listBooks(books) {
 
     const element = document.createElement("input");
     bookObj.forEach((notes, index) => {
-      if (index > 0) {
+      if (index > 1) {
         element.value += notes.date + ":" + notes.notes + ";";
       }
     });
@@ -114,8 +115,27 @@ function listBooks(books) {
 
     tableRow.appendChild(button);
 
+    const available = bookObj[1];
+    tableRow = bookTable.insertRow();
+    showLendStatus(book.id, available, tableRow);
+
     booksDiv.appendChild(bookTable);
   });
+}
+
+function showLendStatus(id, available, place) {
+  const label = document.createElement("p");
+  label.textContent = LabelNames["available"];
+
+  const element = document.createElement("input");
+  element.disabled = true;
+  element.id = "lend" + id;
+  element.type = "checkbox";
+  element.value = available[1];
+  element.checked = available[0];
+
+  place.appendChild(label);
+  place.appendChild(element);
 }
 
 function showBookPics(id, bookDiv, deletion) {

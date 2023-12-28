@@ -4,7 +4,6 @@ const multer = require("multer");
 const fs = require("fs");
 
 const database = require("./db_common.js");
-const { findBookNotes } = require("./db_books.js");
 
 //----------------------------------------------------------------
 database.init();
@@ -95,8 +94,9 @@ async function findBookHandler(req, res) {
 
     const bookPromises = books.map(async function (book) {
       try {
-        const notes = await findBookNotes(book.id);
-        return [book, ...notes];
+        const notes = await database.findBookNotes(book.id);
+        const available = await database.bookIsAvailable(book.id);
+        return [book, available, ...notes];
       } catch (err) {
         throw err; // or handle the error as needed
       }
@@ -212,5 +212,10 @@ app.listen(8080, () => {
 
 //----------------------------------------------------------------
 app.post("/lend/add", upload.none(), (req, res) => {
-  database.lend(req.body, res);
+  console.log(req.body);
+  if (req.body.type == "true") {
+    database.lend(req.body, res);
+  } else {
+    database.bring(req.body, res);
+  }
 });

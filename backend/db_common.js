@@ -32,4 +32,5 @@ module.exports = {
 
   lend: db_loan.lend,
   bring: db_loan.bring,
+  bookIsAvailable: db_loan.bookIsAvailable,
 };

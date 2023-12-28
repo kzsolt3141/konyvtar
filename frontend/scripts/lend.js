@@ -6,22 +6,26 @@ function createLendButton(place) {
   place.appendChild(title);
   place.appendChild(button);
 
-  title.textContent = "Kolcsonzes";
+  title.textContent = "Aktivitas";
 
-  button.textContent = "Kolcsonzes";
+  button.textContent = "Aktivitas";
   // button.disabled = true;
   button.addEventListener("click", function () {
     var bookRadio = document.querySelector('input[name="book_radio"]:checked');
     var userRadio = document.querySelector('input[name="user_radio"]:checked');
+
+    const statusDiv = document.getElementById("global_status");
+    const message = document.createElement("p");
+    statusDiv.appendChild(message);
+
     if (bookRadio && userRadio) {
       console.log(bookRadio.id, userRadio.id);
-      createLendForm(bookRadio.id, userRadio.id, place);
+      createForm(bookRadio.id, userRadio.id, place, true);
+    } else if (bookRadio) {
+      const usedBook = document.getElementById("lend" + bookRadio.id);
+      createForm(bookRadio.id, usedBook.value, place, false);
     } else {
-      const statusDiv = document.getElementById("global_status");
-      const message = document.createElement("p");
-      message.textContent =
-        "Kolcsonzeshez valass egy konyvet es egy felhasznalot";
-      statusDiv.appendChild(message);
+      message.textContent = "Valassz egy konyvet es/vagy egy felhasznalot";
     }
   });
 }
@@ -31,7 +35,7 @@ const lendDiv = document.getElementById("lend_div");
 createLendButton(lendDiv);
 
 // define a new genre and send it back to the DB
-function createLendForm(bid, uid, place) {
+function createForm(bid, uid, place, isLend) {
   const input = document.createElement("input");
   place.appendChild(input);
   const addButton = document.createElement("button");
@@ -44,9 +48,10 @@ function createLendForm(bid, uid, place) {
   addButton.addEventListener("click", function (event) {
     event.preventDefault();
     const lendForm = new FormData();
+    lendForm.append("type", isLend);
     lendForm.append("bid", bid);
     lendForm.append("uid", uid);
-    lendForm.append("lend_notes", input.value);
+    lendForm.append("notes", input.value);
 
     fetch("/lend/add", {
       method: "POST",
@@ -60,6 +65,6 @@ function createLendForm(bid, uid, place) {
   });
 
   cancelButton.addEventListener("click", function (event) {
-    // location.reload();
+    location.reload();
   });
 }
