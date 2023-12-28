@@ -6,7 +6,7 @@ function createLendButton(place) {
   place.appendChild(title);
   place.appendChild(button);
 
-  title.textContent = "Aktivitas";
+  title.textContent = "Kolcsonzes/Visszahoaz";
 
   button.textContent = "Aktivitas";
   // button.disabled = true;
@@ -60,11 +60,15 @@ function createForm(bid, uid, place, isLend) {
       .then((rsp) => rsp.text())
       .then((data) => {
         console.log(data);
-        // location.reload();
+        input.remove();
+        addButton.remove();
+        cancelButton.remove();
       });
   });
 
   cancelButton.addEventListener("click", function (event) {
-    location.reload();
+    input.remove();
+    addButton.remove();
+    cancelButton.remove();
   });
 }
