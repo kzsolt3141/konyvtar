@@ -3,12 +3,14 @@ const sqlite3 = require("sqlite3");
 
 const db_books = require("./db_books.js");
 const db_users = require("./db_users.js");
+const db_loan = require("./db_loan.js");
 
 const db = new sqlite3.Database(path.join(__dirname, "../database/library.db"));
 
 function init() {
   db_books.init(db);
   db_users.init(db);
+  db_loan.init(db);
 }
 
 module.exports = {
@@ -27,4 +29,7 @@ module.exports = {
   findUserNotes: db_users.findUserNotes,
   deactivateUser: db_users.deactivateUser,
   editUser: db_users.editUser,
+
+  lend: db_loan.lend,
+  bring: db_loan.bring,
 };

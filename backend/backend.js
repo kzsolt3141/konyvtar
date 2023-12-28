@@ -209,3 +209,8 @@ app.post("/user/edit", upload.none(), (req, res) => {
 app.listen(8080, () => {
   console.log("Server listening on 8080");
 });
+
+//----------------------------------------------------------------
+app.post("/lend/add", upload.none(), (req, res) => {
+  database.lend(req.body, res);
+});

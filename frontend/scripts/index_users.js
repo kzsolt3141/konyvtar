@@ -17,22 +17,6 @@ userSearchBtn.addEventListener("click", async (event) => {
   searchUser(userFormData);
 });
 
-function createLendButton(place) {
-  const lendDiv = document.getElementById("users_div");
-
-  const button = document.createElement("button");
-  button.textContent = "Kolcsonzes";
-  button.addEventListener("click", function () {
-    var bookRadio = document.querySelector('input[name="book_radio"]:checked');
-    var userRadio = document.querySelector('input[name="user_radio"]:checked');
-    if (bookRadio && userRadio) {
-      console.log(bookRadio.id, userRadio.id);
-    }
-    //check if both radio buttons are selected
-  });
-  lendDiv.appendChild(button);
-}
-
 function searchUser(formData) {
   fetch("/user/find", {
     method: "POST",
@@ -118,8 +102,6 @@ function listUsers(users) {
     });
     tableRow.appendChild(button);
   });
-
-  createLendButton(userList);
 }
 
 function showUserPic(link, place, deletion) {
