@@ -22,30 +22,32 @@
       <div class="book_search_left">
         <img class="book_search_left_image" src="styles/static/book.png" />
       </div>
-      <div class="book_search_right">
-        <form id="search_books">
-          <input type="text" id="book_key" name="key" value="Clara" required />
+      <form class="search_books" id="search_books">
+        <input type="text" id="book_key" name="key" value="Clara" required />
 
-          <select id="book_type" name="type">
-            <option value="title">Konyvcim</option>
-            <option value="author">Szerzo</option>
-            <option value="type">Tipus</option>
-          </select>
+        <select id="book_type" name="type">
+          <option value="title">Konyvcim</option>
+          <option value="author">Szerzo</option>
+          <option value="type">Tipus</option>
+        </select>
 
-          <div class="book_type_selector">Aktiv konyv?</div>
-          <input
-            class="book_type_checkbox"
-            type="checkbox"
-            id="status"
-            name="status"
-            checked="true"
-          />
+        <div class="book_order_div" id="book_order_div"></div>
 
-          <button type="button" id="search_books_btn">Kereses</button>
-        </form>
-      </div>
+        <img
+          class="book_search_right_image"
+          src="styles/static/kereso.png"
+          id="search_books_btn"
+        />
 
-      <div class="book_order_div" id="book_order_div"></div>
+        <div class="book_type_selector">Aktiv konyv?</div>
+        <input
+          class="book_type_checkbox"
+          type="checkbox"
+          id="status"
+          name="status"
+          checked="true"
+        />
+      </form>
     </div>
 
     <div class="books_div" id="books_div"></div>

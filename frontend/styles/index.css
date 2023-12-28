@@ -104,7 +104,7 @@ select {
 .book_search_main {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   margin-top: 70px;
 }
 
@@ -112,8 +112,18 @@ select {
   display: block;
 }
 
-.book_search_right {
-  display: block;
+.book_search_left_image {
+  width: 30px;
+}
+
+.book_search_right_image {
+  width: 50px;
+}
+
+.search_books {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 /* book search section: end  */
