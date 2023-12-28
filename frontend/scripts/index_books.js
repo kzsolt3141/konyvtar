@@ -59,7 +59,7 @@ function searchBook(bookFormData) {
  * row 2; button(s)
  */
 function listBooks(books) {
-  const booksDiv = document.querySelector(".books_div");
+  const booksDiv = document.getElementById("books_div");
   booksDiv.innerHTML = "";
 
   books.forEach((bookObj) => {

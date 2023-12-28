@@ -2,30 +2,53 @@
 <html>
   <head>
     <title>Berecki konyvtar</title>
+    <link rel="stylesheet" href="styles/index.css" />
   </head>
   <body>
-    <button type="button" id="add_book_btn">Uj Konyv</button>
-    <button type="button" id="add_user_btn">Uj Felhasznalo</button>
-    <h1>Konyv kereses</h1>
-    <form id="search_books">
-      <label for="book_key">Kereses:</label>
-      <input type="text" id="book_key" name="key" value="Clara" required />
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+      </div>
+      <div class="fixed_header_right">
+        <button type="button" id="add_book_btn">+ Konyv</button>
+        <button type="button" id="add_user_btn">+ Felhasznalo</button>
+      </div>
+    </div>
 
-      <label for="book_type">Hol ?</label>
-      <select id="book_type" name="type">
-        <option value="title">Konyvcim</option>
-        <option value="author">Szerzo</option>
-      </select>
+    <div class="book_search_main">
+      <div class="book_search_left">
+        <img class="book_search_left_image" src="styles/static/book.png" />
+      </div>
+      <div class="book_search_right">
+        <form id="search_books">
+          <input type="text" id="book_key" name="key" value="Clara" required />
 
-      <label for="status">Aktiv ?</label>
-      <input type="checkbox" id="status" name="status" checked="true" />
+          <select id="book_type" name="type">
+            <option value="title">Konyvcim</option>
+            <option value="author">Szerzo</option>
+            <option value="type">Tipus</option>
+          </select>
 
-      <button type="button" id="search_books_btn">Kereses</button>
-    </form>
+          <div class="book_type_selector">Aktiv konyv?</div>
+          <input
+            class="book_type_checkbox"
+            type="checkbox"
+            id="status"
+            name="status"
+            checked="true"
+          />
 
-    <div class="book_order_div" id="book_order_div"></div>
+          <button type="button" id="search_books_btn">Kereses</button>
+        </form>
+      </div>
 
-    <div class="books_div"></div>
+      <div class="book_order_div" id="book_order_div"></div>
+    </div>
+
+    <div class="books_div" id="books_div"></div>
 
     <h1>Felhasznalo kereses</h1>
     <form id="search_users">
