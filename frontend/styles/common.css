@@ -72,3 +72,7 @@ select {
   cursor: pointer;
   align-self: center;
 }
+
+input[type="checkbox"]:hover {
+  accent-color: #ff0000;
+}

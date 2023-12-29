@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgb(220, 220, 220);
+  background-color: rgb(199, 221, 199);
   grid-template-columns: 150px 500px 200px;
 }
 
@@ -56,9 +56,16 @@
 .search {
   display: grid;
   grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr;
-  flex-direction: row;
   justify-content: space-between;
   flex: 1;
 }
 
 /* book search section: end  */
+
+/* book list: start  */
+.list_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+/* book list: end  */

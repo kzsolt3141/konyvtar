@@ -7,6 +7,8 @@ const LabelNames = {
   status: "Allapot",
 };
 
+createTypeSelect("user_order", document.getElementById("user_order_div"));
+
 let UserData = [];
 
 const userSearchBtn = document.getElementById("search_user");
@@ -36,7 +38,7 @@ function searchUser(formData) {
  * row 2; button(s)
  */
 function listUsers(users) {
-  const userList = document.querySelector(".users_div");
+  const userList = document.getElementById("users_div");
   userList.innerHTML = "";
 
   users.forEach((userObj) => {
