@@ -12,9 +12,6 @@ button.addEventListener("click", function () {
   if (bookRadio && userRadio) {
     console.log(bookRadio.id, userRadio.id);
     createForm(bookRadio.id, userRadio.id, place, true);
-  } else if (bookRadio) {
-    const usedBook = document.getElementById("lend" + bookRadio.id);
-    createForm(bookRadio.id, usedBook.value, place, false);
   } else {
     message.textContent = "Valassz egy konyvet es/vagy egy felhasznalot";
   }

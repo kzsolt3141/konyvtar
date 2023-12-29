@@ -48,6 +48,9 @@ function listUsers(users) {
     userList.appendChild(userTable);
 
     var tableRow = userTable.insertRow();
+    showUserPic(user.pic, tableRow, false);
+
+    tableRow = userTable.insertRow();
 
     const radio = document.createElement("input");
     radio.type = "radio";
@@ -83,9 +86,6 @@ function listUsers(users) {
     element.disabled = true;
     element.id = "notes";
     tableRow.appendChild(element);
-
-    tableRow = userTable.insertRow();
-    showUserPic(user.pic, tableRow, false);
 
     tableRow = userTable.insertRow();
 

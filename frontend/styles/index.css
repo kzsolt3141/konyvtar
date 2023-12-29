@@ -68,4 +68,8 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.book_table {
+  display: block;
+}
 /* book list: end  */

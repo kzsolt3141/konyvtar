@@ -54,8 +54,8 @@ function searchBook(bookFormData) {
 
 /* all books will be listed in the books_div div element
  * each book will have its own table
- * row 0: book information
- * row 1; book pictures
+ * row 0: book pictures
+ * row 1; book information
  * row 2; button(s)
  */
 function listBooks(books) {
@@ -65,9 +65,14 @@ function listBooks(books) {
   books.forEach((bookObj) => {
     const book = bookObj[0];
     const bookTable = document.createElement("table");
+
     bookTable.id = book.id;
+    bookTable.className = "book_table";
 
     var tableRow = bookTable.insertRow();
+    showBookPics(book.id, tableRow, false);
+
+    tableRow = bookTable.insertRow();
 
     const radio = document.createElement("input");
     radio.type = "radio";
@@ -76,66 +81,73 @@ function listBooks(books) {
     tableRow.appendChild(radio);
 
     for (const k in book) {
-      const element = document.createElement("input");
-      element.disabled = true;
-      element.id = k;
-      element.value = book[k];
+      if (
+        k == "id" ||
+        k == "isbn" ||
+        k == "publ" ||
+        k == "ver" ||
+        k == "status"
+      )
+        continue;
 
-      const label = document.createElement("p");
-      label.textContent = LabelNames[k];
+      const element = document.createElement("p");
+      element.textContent = book[k];
 
-      if (k == "status") {
-        element.type = "checkbox";
-        element.checked = book[k] == 1;
-      }
-
-      tableRow.appendChild(label);
       tableRow.appendChild(element);
     }
 
-    const element = document.createElement("input");
-    bookObj.forEach((notes, index) => {
-      if (index > 1) {
-        element.value += notes.date + ":" + notes.notes + ";";
-      }
-    });
-    element.disabled = true;
-    element.id = "notes";
-    tableRow.appendChild(element);
+    // TODO show notes with other details
+    // TODO add detail option for each book
+    // const element = document.createElement("input");
+    // bookObj.forEach((notes, index) => {
+    //   if (index > 1) {
+    //     element.value += notes.date + ":" + notes.notes + ";";
+    //   }
+    // });
+    // element.disabled = true;
+    // element.id = "notes";
+    // tableRow.appendChild(element);
 
     tableRow = bookTable.insertRow();
-    showBookPics(book.id, tableRow, false);
-
-    tableRow = bookTable.insertRow();
-    const button = document.createElement("button");
-    button.textContent = "Szerkesztes";
-    button.addEventListener("click", function () {
+    var img = document.createElement("img");
+    img.src = "styles/static/edit.png";
+    img.width = 30;
+    img.addEventListener("click", function () {
       editBook(book.id);
     });
+    tableRow.appendChild(img);
 
-    tableRow.appendChild(button);
+    //TODO implement details
+    img = document.createElement("img");
+    img.src = "styles/static/register.png";
+    img.width = 30;
+    img.addEventListener("click", function () {
+      editBook(book.id);
+    });
+    tableRow.appendChild(img);
 
-    const available = bookObj[1];
-    tableRow = bookTable.insertRow();
-    showLendStatus(book.id, available, tableRow);
+    // TODO show this only for unavailable cases
+    // TODO const available = bookObj[1];
+    img = document.createElement("img");
+    img.src = "styles/static/lost.png";
+    img.width = 30;
+    img.addEventListener("click", function () {
+      editBook(book.id);
+    });
+    tableRow.appendChild(img);
+
+    // TODO show this only for unavailable cases
+    // TODO use form from lend.js (already implemented)
+    img = document.createElement("img");
+    img.src = "styles/static/ok.png";
+    img.width = 30;
+    img.addEventListener("click", function () {
+      editBook(book.id);
+    });
+    tableRow.appendChild(img);
 
     booksDiv.appendChild(bookTable);
   });
-}
-
-function showLendStatus(id, available, place) {
-  const label = document.createElement("p");
-  label.textContent = LabelNames["available"];
-
-  const element = document.createElement("input");
-  element.disabled = true;
-  element.id = "lend" + id;
-  element.type = "checkbox";
-  element.value = available[1];
-  element.checked = available[0];
-
-  place.appendChild(label);
-  place.appendChild(element);
 }
 
 function showBookPics(id, bookDiv, deletion) {
