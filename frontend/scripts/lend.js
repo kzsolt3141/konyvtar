@@ -1,38 +1,24 @@
-function createLendButton(place) {
-  const title = document.createElement("h1");
-  const button = document.createElement("button");
-  button.id = "lend_button";
+const button = document.getElementById("lend_button");
+const place = document.getElementById("lend_div");
+// button.disabled = true;
+button.addEventListener("click", function () {
+  var bookRadio = document.querySelector('input[name="book_radio"]:checked');
+  var userRadio = document.querySelector('input[name="user_radio"]:checked');
 
-  place.appendChild(title);
-  place.appendChild(button);
+  const statusDiv = document.getElementById("global_status");
+  const message = document.createElement("p");
+  statusDiv.appendChild(message);
 
-  title.textContent = "Kolcsonzes/Visszahoaz";
-
-  button.textContent = "Aktivitas";
-  // button.disabled = true;
-  button.addEventListener("click", function () {
-    var bookRadio = document.querySelector('input[name="book_radio"]:checked');
-    var userRadio = document.querySelector('input[name="user_radio"]:checked');
-
-    const statusDiv = document.getElementById("global_status");
-    const message = document.createElement("p");
-    statusDiv.appendChild(message);
-
-    if (bookRadio && userRadio) {
-      console.log(bookRadio.id, userRadio.id);
-      createForm(bookRadio.id, userRadio.id, place, true);
-    } else if (bookRadio) {
-      const usedBook = document.getElementById("lend" + bookRadio.id);
-      createForm(bookRadio.id, usedBook.value, place, false);
-    } else {
-      message.textContent = "Valassz egy konyvet es/vagy egy felhasznalot";
-    }
-  });
-}
-
-const lendDiv = document.getElementById("lend_div");
-
-createLendButton(lendDiv);
+  if (bookRadio && userRadio) {
+    console.log(bookRadio.id, userRadio.id);
+    createForm(bookRadio.id, userRadio.id, place, true);
+  } else if (bookRadio) {
+    const usedBook = document.getElementById("lend" + bookRadio.id);
+    createForm(bookRadio.id, usedBook.value, place, false);
+  } else {
+    message.textContent = "Valassz egy konyvet es/vagy egy felhasznalot";
+  }
+});
 
 // define a new genre and send it back to the DB
 function createForm(bid, uid, place, isLend) {

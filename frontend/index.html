@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Berecki konyvtar</title>
+    <link rel="stylesheet" href="styles/common.css" />
     <link rel="stylesheet" href="styles/index.css" />
   </head>
   <body>
@@ -13,68 +14,76 @@
         <h1 class="fixed_header_title">Berecki konyvtar</h1>
       </div>
       <div class="fixed_header_right">
-        <button type="button" id="add_book_btn">+ Konyv</button>
-        <button type="button" id="add_user_btn">+ Felhasznalo</button>
+        <img
+          class="search_button"
+          id="add_book_btn"
+          src="styles/static/book.png"
+        />
+        <img
+          class="search_button"
+          id="add_user_btn"
+          src="styles/static/user.png"
+        />
       </div>
     </div>
 
-    <div class="book_search_main">
-      <div class="book_search_left">
-        <img class="book_search_left_image" src="styles/static/book.png" />
-      </div>
-      <form class="search_books" id="search_books">
-        <input type="text" id="book_key" name="key" value="Clara" required />
-
+    <div class="search_main">
+      <img class="search_icon" src="styles/static/book.png" />
+      <form class="search" id="search_books">
         <select id="book_type" name="type">
           <option value="title">Konyvcim</option>
           <option value="author">Szerzo</option>
           <option value="type">Tipus</option>
         </select>
 
+        <input type="text" id="book_key" name="key" value="Clara" required />
+
         <div class="book_order_div" id="book_order_div"></div>
 
+        <input type="checkbox" id="status" name="status" checked="true" />
+
         <img
-          class="book_search_right_image"
+          class="search_button"
           src="styles/static/kereso.png"
           id="search_books_btn"
-        />
-
-        <div class="book_type_selector">Aktiv konyv?</div>
-        <input
-          class="book_type_checkbox"
-          type="checkbox"
-          id="status"
-          name="status"
-          checked="true"
         />
       </form>
     </div>
 
     <div class="books_div" id="books_div"></div>
 
-    <h1>Felhasznalo kereses</h1>
-    <form id="search_users">
-      <label for="user_key">Kereses:</label>
-      <input type="text" id="user_key" name="key" value="Teljes" required />
+    <div class="search_main">
+      <img class="search_icon" src="styles/static/user.png" />
+      <form class="search" id="search_users">
+        <select id="user_type" name="type">
+          <option value="name">Nev</option>
+          <option value="phone">Telefonszam</option>
+          <option value="mail">e-Mail</option>
+        </select>
+        <input type="text" id="user_key" name="key" value="Teljes" required />
 
-      <label for="user_type">Hol ?</label>
-      <select id="user_type" name="type">
-        <option value="name">Nev</option>
-        <option value="phone">Telefonszam</option>
-        <option value="mail">e-Mail</option>
-      </select>
+        <div class="user_order_div" id="user_order_div"></div>
 
-      <label for="status">Aktiv ?</label>
-      <input type="checkbox" id="status" name="status" checked="true" />
+        <input type="checkbox" id="status" name="status" checked="true" />
 
-      <button type="button" id="search_user">Keres</button>
-    </form>
-
-    <div class="user_order_div" id="user_order_div"></div>
+        <img
+          class="search_button"
+          src="styles/static/kereso.png"
+          id="search_user"
+        />
+      </form>
+    </div>
 
     <div class="users_div" id="users_div"></div>
 
-    <div class="lend_div" id="lend_div"></div>
+    <div class="search_main" id="lend_div">
+      <img class="search_icon" src="styles/static/register.png" />
+      <img
+        class="search_button"
+        src="styles/static/edit.png"
+        id="lend_button"
+      />
+    </div>
 
     <div class="global_status" id="global_status"></div>
   </body>
