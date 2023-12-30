@@ -3,7 +3,8 @@
   <head>
     <title>Berecki konyvtar</title>
     <link rel="stylesheet" href="styles/common.css" />
-    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/index-header.css" />
+    <link rel="stylesheet" href="styles/index-grid.css" />
   </head>
   <body>
     <div class="fixed_header">
@@ -14,16 +15,12 @@
         <h1 class="fixed_header_title">Berecki konyvtar</h1>
       </div>
       <div class="fixed_header_right">
-        <img
-          class="search_button"
-          id="add_book_btn"
-          src="styles/static/book.png"
-        />
-        <img
-          class="search_button"
-          id="add_user_btn"
-          src="styles/static/user.png"
-        />
+        <button class="search_button" id="add_book_btn">
+          <img class="search_button_icon" src="styles/static/book.png" />
+        </button>
+        <button class="search_button" id="add_user_btn">
+          <img class="search_button_icon" src="styles/static/user.svg" />
+        </button>
       </div>
     </div>
 
@@ -41,19 +38,16 @@
         <div class="book_order_div" id="book_order_div"></div>
 
         <input type="checkbox" id="status" name="status" checked="true" />
-
-        <img
-          class="search_button"
-          src="styles/static/kereso.png"
-          id="search_books_btn"
-        />
+        <button class="search_button" id="search_books_btn">
+          <img class="search_button_icon" src="styles/static/kereso.png" />
+        </button>
       </form>
     </div>
 
     <div class="list_div" id="books_div"></div>
 
     <div class="search_main">
-      <img class="search_icon" src="styles/static/user.png" />
+      <img class="search_icon" src="styles/static/user.svg" />
       <form class="search" id="search_users">
         <select id="user_type" name="type">
           <option value="name">Nev</option>
@@ -65,12 +59,9 @@
         <div class="user_order_div" id="user_order_div"></div>
 
         <input type="checkbox" id="status" name="status" checked="true" />
-
-        <img
-          class="search_button"
-          src="styles/static/kereso.png"
-          id="search_user"
-        />
+        <button class="search_button" id="search_user">
+          <img class="search_button_icon" src="styles/static/kereso.png" />
+        </button>
       </form>
     </div>
 
@@ -78,11 +69,9 @@
 
     <div class="search_main" id="lend_div">
       <img class="search_icon" src="styles/static/register.png" />
-      <img
-        class="search_button"
-        src="styles/static/edit.png"
-        id="lend_button"
-      />
+      <button class="search_button" id="lend_button">
+        <img class="search_button_icon" src="styles/static/edit.png" />
+      </button>
     </div>
 
     <div class="global_status" id="global_status"></div>

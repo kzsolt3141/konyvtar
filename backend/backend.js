@@ -38,6 +38,26 @@ app.get("/user", (req, res) => {
 //   res.sendFile(path.join(base_dir, "frontend/list.html"));
 // });
 
+//TODO implement CSV export. Example here:
+/*
+// (A) LOAD REQUIRED MODULES
+// https://www.npmjs.com/package/csv-stringify
+const sqlite = require("sqlite3"),
+fs = require("fs"),
+csv = require("csv-stringify");
+ 
+// (B) EXPORT USERS
+const db = new sqlite.Database("users.db");
+db.all("SELECT * FROM users", (err, rows) => rows.forEach(row => {
+  row = Object.values(row);
+  csv.stringify([row], (err, output) => {
+    console.log(row);
+    fs.appendFileSync("demo.csv", output);
+  });
+})); 
+db.close();
+
+*/
 //----------------------------------------------------------------
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

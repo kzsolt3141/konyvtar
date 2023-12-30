@@ -1,0 +1,26 @@
+.fixed_header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(199, 221, 199);
+  display: grid;
+  grid-template-columns: 150px 500px 200px;
+  justify-content: space-between;
+}
+
+.fixed_header_image {
+  height: 55px;
+  margin-left: 10px;
+}
+
+.fixed_header_title {
+  margin: 0;
+}
+
+.fixed_header_right {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  align-items: center;
+}

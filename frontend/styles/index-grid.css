@@ -1,0 +1,45 @@
+.search_main {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 80px 580px;
+}
+
+.search_icon {
+  width: 50px;
+}
+
+.search_button {
+  width: 60px;
+  transition: background-color 0.5s;
+}
+
+.search_button:hover {
+  background-color: rgb(153, 140, 140);
+}
+
+.search_button_icon {
+  height: 50px;
+}
+
+.search {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 100px 1fr 130px 30px 1fr;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+/* book search section: end  */
+
+/* book list: start  */
+.list_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.book_table {
+  display: block;
+}
+/* book list: end  */
