@@ -123,11 +123,12 @@ function listBooks(books) {
     img.src = "styles/static/details.svg";
     img.width = 30;
     img.addEventListener("click", function () {
-      editBook(book.id);
+      details(book.id);
     });
     tableRow.appendChild(img);
 
     const available = bookObj[1];
+
     if (!available[0]) {
       img = document.createElement("img");
       img.src = "styles/static/broken.svg";
@@ -188,40 +189,40 @@ function deleteBookPic(link) {
     });
 }
 
+function details(key) {
+  const detailsDiv = document.getElementById("details_div");
+  detailsDiv.innerHTML = "";
+
+  const revertBtn = document.createElement("button");
+  detailsDiv.appendChild(revertBtn);
+  revertBtn.textContent = "Bezar";
+  revertBtn.addEventListener("click", function () {
+    detailsDiv.innerHTML = "";
+  });
+
+  for (const element of BookData) {
+    if (element[0].id != key) continue;
+
+    for (const k in element[0]) {
+      const e = document.createElement("p");
+      e.textContent = element[0][k];
+      detailsDiv.appendChild(e);
+    }
+    showBookPics(key, detailsDiv, true);
+    break;
+  }
+}
+
 // TODO transfer edit to the book page, should simplify the things...
 function editBook(key) {
   // table id with all the book data
-  const booktable = document.getElementById(key);
+  const bookTable = document.getElementById("details_div");
+  bookTable.innerHTML = "";
 
-  let row = booktable.rows[0];
-  for (let c = 0; c < row.children.length; c++) {
-    const cell = row.children[c];
+  creteGenreSelect("genre", bookTable);
 
-    cell.disabled = false;
+  showBookPics(key, bookTable, true);
 
-    if (cell.id == "id") {
-      cell.disabled = true;
-    }
-
-    if (cell.id == "notes") {
-      cell.value = "Modositva";
-    }
-
-    if (cell.id == "genre" || cell.textContent == "Tipus:") {
-      cell.remove();
-      c = 0;
-    }
-  }
-
-  // TODO: update to have default value
-  creteGenreSelect("genre", row);
-
-  row = booktable.rows[1];
-  row.innerHTML = "";
-  showBookPics(key, row, true);
-
-  row = booktable.rows[2];
-  row.innerHTML = "";
   const changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
   changeBtn.addEventListener("click", function () {

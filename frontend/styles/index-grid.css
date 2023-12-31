@@ -71,7 +71,9 @@
 
 .details_div {
   position: fixed;
-  opacity: 0.5;
-  height: 100px;
+  display: block;
+  opacity: 0.9;
+  width: 300px;
+
   background-color: blue;
 }
