@@ -34,12 +34,37 @@
 
 /* book list: start  */
 .list_div {
-  display: flex;
-  flex-direction: row;
+  display: grid;
   justify-content: space-between;
+  align-items: center;
+  column-gap: 20px;
 }
 
+@media (max-width: 600px) {
+  .list_div {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 601px) and (max-width: 1050px) {
+  .list_div {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+@media (min-width: 1050px) and (max-width: 1300px) {
+  .list_div {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+@media (min-width: 1301px) {
+  .list_div {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+.book_thumbnail {
+  width: 100%;
+}
 .book_table {
-  display: block;
+  display: grid;
 }
 /* book list: end  */

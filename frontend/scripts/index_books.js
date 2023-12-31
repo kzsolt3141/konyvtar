@@ -119,7 +119,7 @@ function listBooks(books) {
 
     //TODO implement details
     img = document.createElement("img");
-    img.src = "styles/static/register.png";
+    img.src = "styles/static/details.svg";
     img.width = 30;
     img.addEventListener("click", function () {
       editBook(book.id);
@@ -129,7 +129,7 @@ function listBooks(books) {
     // TODO show this only for unavailable cases
     // TODO const available = bookObj[1];
     img = document.createElement("img");
-    img.src = "styles/static/lost.png";
+    img.src = "styles/static/broken.svg";
     img.width = 30;
     img.addEventListener("click", function () {
       editBook(book.id);
@@ -139,7 +139,7 @@ function listBooks(books) {
     // TODO show this only for unavailable cases
     // TODO use form from lend.js (already implemented)
     img = document.createElement("img");
-    img.src = "styles/static/ok.png";
+    img.src = "styles/static/ok.svg";
     img.width = 30;
     img.addEventListener("click", function () {
       editBook(book.id);
@@ -162,7 +162,7 @@ function showBookPics(id, bookDiv, deletion) {
       JSON.parse(data).forEach((pic) => {
         const img = document.createElement("img");
         img.src = "/" + pic.link;
-        img.width = 100;
+        img.className = "book_thumbnail";
         if (deletion) {
           img.addEventListener("click", () => {
             deleteBookPic(pic.link);
