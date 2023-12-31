@@ -13,6 +13,7 @@ let UserData = [];
 
 const userSearchBtn = document.getElementById("search_user");
 userSearchBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
   const userForm = document.getElementById("search_users");
   const userFormData = new FormData(userForm);
   event.preventDefault();

@@ -68,3 +68,10 @@
   display: grid;
 }
 /* book list: end  */
+
+.details_div {
+  position: fixed;
+  opacity: 0.5;
+  height: 100px;
+  background-color: blue;
+}

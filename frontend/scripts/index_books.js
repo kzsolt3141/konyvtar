@@ -35,6 +35,7 @@ const bookSearchBtn = document.getElementById("search_books_btn");
 var BookData = null;
 
 bookSearchBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
   const bookForm = document.getElementById("search_books");
   const bookFormData = new FormData(bookForm);
   searchBook(bookFormData);
@@ -126,25 +127,26 @@ function listBooks(books) {
     });
     tableRow.appendChild(img);
 
-    // TODO show this only for unavailable cases
-    // TODO const available = bookObj[1];
-    img = document.createElement("img");
-    img.src = "styles/static/broken.svg";
-    img.width = 30;
-    img.addEventListener("click", function () {
-      editBook(book.id);
-    });
-    tableRow.appendChild(img);
+    const available = bookObj[1];
+    if (!available[0]) {
+      img = document.createElement("img");
+      img.src = "styles/static/broken.svg";
+      img.width = 30;
+      img.addEventListener("click", function () {
+        editBook(book.id);
+      });
+      tableRow.appendChild(img);
 
-    // TODO show this only for unavailable cases
-    // TODO use form from lend.js (already implemented)
-    img = document.createElement("img");
-    img.src = "styles/static/ok.svg";
-    img.width = 30;
-    img.addEventListener("click", function () {
-      editBook(book.id);
-    });
-    tableRow.appendChild(img);
+      // TODO show this only for unavailable cases
+      // TODO use form from lend.js (already implemented)
+      img = document.createElement("img");
+      img.src = "styles/static/ok.svg";
+      img.width = 30;
+      img.addEventListener("click", function () {
+        editBook(book.id);
+      });
+      tableRow.appendChild(img);
+    }
 
     booksDiv.appendChild(bookTable);
   });
