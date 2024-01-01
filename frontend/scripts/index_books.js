@@ -65,6 +65,8 @@ function listBooks(books) {
 
   books.forEach((bookObj) => {
     const book = bookObj[0];
+    const available = bookObj[1];
+
     const bookTable = document.createElement("table");
 
     bookTable.id = book.id;
@@ -79,6 +81,7 @@ function listBooks(books) {
     radio.type = "radio";
     radio.name = "book_radio";
     radio.id = book.id;
+    radio.disabled = !available[0];
     tableRow.appendChild(radio);
 
     for (const k in book) {
@@ -126,8 +129,6 @@ function listBooks(books) {
       details(book.id);
     });
     tableRow.appendChild(img);
-
-    const available = bookObj[1];
 
     if (!available[0]) {
       img = document.createElement("img");
