@@ -197,6 +197,7 @@ async function details(key) {
   const revertBtn = document.createElement("button");
   detailsDiv.appendChild(revertBtn);
   revertBtn.textContent = "Bezar";
+  revertBtn.className = "revert_btn";
   revertBtn.addEventListener("click", function () {
     detailsDiv.innerHTML = "";
   });
@@ -205,11 +206,25 @@ async function details(key) {
     if (element[0].id != key) continue;
     await showBookPics(key, detailsDiv, false);
 
+    var detailText = document.createElement("div");
+
     for (const k in element[0]) {
       const e = document.createElement("p");
       e.textContent = LabelNames[k] + element[0][k];
-      detailsDiv.appendChild(e);
+      detailText.appendChild(e);
     }
+
+    detailsDiv.appendChild(detailText);
+
+    detailText = document.createElement("div");
+
+    element.slice(2).map((item) => {
+      const e = document.createElement("p");
+      e.textContent = item.date + ": " + item.notes;
+      detailText.appendChild(e);
+    });
+
+    detailsDiv.appendChild(detailText);
     break;
   }
 }

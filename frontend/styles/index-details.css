@@ -1,12 +1,10 @@
 .details_div {
-  display: block;
+  display: grid;
+  grid-template-columns: 300px 200px;
   position: fixed;
   left: 100px;
   opacity: 1;
-  width: 300px;
-  background-color: #e0e0e0;
-  border: 2px solid red;
-  border-radius: 20px;
+  background-color: #d1dbcd;
 }
 
 .detail_options {
@@ -20,4 +18,8 @@
 
 .detail_options:hover {
   background-color: rgb(153, 140, 140);
+}
+
+.revert_btn {
+  position: absolute;
 }
