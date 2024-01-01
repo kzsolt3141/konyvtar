@@ -112,7 +112,7 @@ function listBooks(books) {
     tableRow = bookTable.insertRow();
     var img = document.createElement("img");
     img.src = "styles/static/edit.png";
-    img.width = 30;
+    img.className = "detail_options";
     img.addEventListener("click", function () {
       editBook(book.id);
     });
@@ -121,7 +121,7 @@ function listBooks(books) {
     //TODO implement details
     img = document.createElement("img");
     img.src = "styles/static/details.svg";
-    img.width = 30;
+    img.className = "detail_options";
     img.addEventListener("click", function () {
       details(book.id);
     });
@@ -132,7 +132,7 @@ function listBooks(books) {
     if (!available[0]) {
       img = document.createElement("img");
       img.src = "styles/static/broken.svg";
-      img.width = 30;
+      img.className = "detail_options";
       img.addEventListener("click", function () {
         editBook(book.id);
       });
@@ -142,7 +142,7 @@ function listBooks(books) {
       // TODO use form from lend.js (already implemented)
       img = document.createElement("img");
       img.src = "styles/static/ok.svg";
-      img.width = 30;
+      img.className = "detail_options";
       img.addEventListener("click", function () {
         editBook(book.id);
       });
@@ -153,28 +153,29 @@ function listBooks(books) {
   });
 }
 
-function showBookPics(id, bookDiv, deletion) {
-  fetch("/book/find_book_pic", {
+async function showBookPics(id, bookDiv, deletion) {
+  const rsp = await fetch("/book/find_book_pic", {
     method: "POST",
     body: id,
-  })
-    .then((rsp) => rsp.json())
-    .then((data) => {
-      const picDiv = document.createElement("div");
-      picDiv.id = "pic" + id;
-      JSON.parse(data).forEach((pic) => {
-        const img = document.createElement("img");
-        img.src = "/" + pic.link;
-        img.className = "book_thumbnail";
-        if (deletion) {
-          img.addEventListener("click", () => {
-            deleteBookPic(pic.link);
-          });
-        }
-        picDiv.appendChild(img);
+  });
+
+  const data = await rsp.json();
+
+  const picDiv = document.createElement("div");
+  picDiv.id = "pic" + id;
+  JSON.parse(data).forEach((pic) => {
+    const img = document.createElement("img");
+    img.src = "/" + pic.link;
+    img.className = "book_thumbnail";
+    if (deletion) {
+      img.addEventListener("click", () => {
+        deleteBookPic(pic.link);
       });
-      bookDiv.appendChild(picDiv);
-    });
+    }
+    picDiv.appendChild(img);
+  });
+  bookDiv.appendChild(picDiv);
+  return 0;
 }
 
 function deleteBookPic(link) {
@@ -189,7 +190,7 @@ function deleteBookPic(link) {
     });
 }
 
-function details(key) {
+async function details(key) {
   const detailsDiv = document.getElementById("details_div");
   detailsDiv.innerHTML = "";
 
@@ -202,13 +203,13 @@ function details(key) {
 
   for (const element of BookData) {
     if (element[0].id != key) continue;
+    await showBookPics(key, detailsDiv, false);
 
     for (const k in element[0]) {
       const e = document.createElement("p");
-      e.textContent = element[0][k];
+      e.textContent = LabelNames[k] + element[0][k];
       detailsDiv.appendChild(e);
     }
-    showBookPics(key, detailsDiv, true);
     break;
   }
 }

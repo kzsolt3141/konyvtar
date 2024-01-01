@@ -67,13 +67,3 @@
 .book_table {
   display: grid;
 }
-/* book list: end  */
-
-.details_div {
-  position: fixed;
-  display: block;
-  opacity: 0.9;
-  width: 300px;
-
-  background-color: blue;
-}
