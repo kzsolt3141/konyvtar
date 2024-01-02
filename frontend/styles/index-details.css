@@ -20,6 +20,11 @@
   background-color: rgb(153, 140, 140);
 }
 
+.approve_btn {
+  left: 50px;
+  position: absolute;
+}
+
 .revert_btn {
   position: absolute;
 }

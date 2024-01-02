@@ -231,40 +231,42 @@ async function details(key) {
 }
 
 // TODO transfer edit to the book page, should simplify the things...
-function editBook(key) {
+async function editBook(key) {
   // table id with all the book data
   const bookTable = document.getElementById("details_div");
   bookTable.innerHTML = "";
 
-  creteGenreSelect("genre", bookTable);
+  await showBookPics(key, bookTable, true);
 
-  showBookPics(key, bookTable, true);
+  var detailText = document.createElement("div");
+
+  creteGenreSelect("genre", detailText);
+
+  bookTable.appendChild(detailText);
+
+  for (const element of BookData) {
+    if (element[0].id != key) continue;
+
+    for (const k in element[0]) {
+      const e = document.createElement("input");
+      e.textContent = LabelNames[k] + element[0][k];
+      e.value = element[0][k];
+      detailText.appendChild(e);
+    }
+
+    bookTable.appendChild(detailText);
+
+    break;
+  }
 
   const changeBtn = document.createElement("button");
   changeBtn.textContent = "Modositas";
+  changeBtn.className = "approve_btn";
   changeBtn.addEventListener("click", function () {
     if (!genreSelectIsValid("genre")) {
       return;
     }
     const changeForm = new FormData();
-
-    for (let c = 0; c < booktable.rows[0].children.length; c++) {
-      const element = booktable.rows[0].children[c];
-
-      if (element.tagName.toLowerCase() === "label") continue;
-
-      if (element.type === "text") {
-        changeForm.append(element.id, element.value);
-      }
-
-      if (element.id === "genre") {
-        changeForm.append(element.id, getGenreValue(element.id));
-      }
-
-      if (element.type === "checkbox") {
-        changeForm.append(element.id, element.checked ? 1 : 0);
-      }
-    }
 
     fetch("/book/change", {
       method: "POST",
@@ -277,14 +279,15 @@ function editBook(key) {
     );
   });
 
-  row.appendChild(changeBtn);
+  bookTable.appendChild(changeBtn);
 
   const revertBtn = document.createElement("button");
   revertBtn.textContent = "Megse";
+  revertBtn.className = "revert_btn";
   revertBtn.addEventListener("click", function () {
-    bookSearchBtn.click();
+    bookTable.innerHTML = "";
   });
-  row.appendChild(revertBtn);
+  bookTable.appendChild(revertBtn);
 }
 
 function createTypeSelect(id, place) {
