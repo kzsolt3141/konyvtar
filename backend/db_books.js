@@ -176,6 +176,18 @@ async function findBookNotes(id) {
   });
 }
 
+function getBookNameById(body, res) {
+  const sql = ` SELECT title FROM books WHERE id = ?`;
+
+  db_.all(sql, [body.id], (err, rows) => {
+    if (err) {
+      res.json(err.message);
+      return;
+    }
+    res.json(rows[0]);
+  });
+}
+
 function findBookPic(body, res) {
   const sql = `SELECT link FROM book_pics WHERE id = ?`;
   db_.all(sql, [body], (err, rows) => {
@@ -210,13 +222,13 @@ function deleteBookPic(body, sts) {
   });
 }
 
-function updateBook(body, res) {
-  switch (body.update) {
+function updateBook(req, res) {
+  switch (req.body.update) {
     case "bulk":
-      editBook(body, res);
+      editBook(req, res);
       break;
     case "status":
-      toggleBookStatus(body, res);
+      toggleBookStatus(req.body, res);
       break;
     default:
       res.json(`unknown instruction: ${body.update}`);
@@ -249,7 +261,12 @@ function toggleBookStatus(body, res) {
   });
 }
 
-function editBook(body, res) {
+function editBook(req, res) {
+  body = req.body;
+  file = [req.file.filename];
+
+  console.log(req.body, req.file.filename);
+
   sql = `UPDATE books 
   SET 
     isbn = ?,
@@ -280,6 +297,7 @@ function editBook(body, res) {
       }
       const currentDate = new Date();
       registerBookNotes(body.id, currentDate, body.notes);
+      registerBookImgs(body.id, file);
       console.log(`Book ${body.title} modified successfully`);
       // update book pic table
       res.json(`Book ${body.title} modified successfully`);
@@ -293,6 +311,7 @@ module.exports = {
   findBook: findBook,
   findBookPic: findBookPic,
   findBookNotes: findBookNotes,
+  getBookNameById: getBookNameById,
   addGenre: addGenre,
   getGenres: getGenres,
   deleteBookPic: deleteBookPic,

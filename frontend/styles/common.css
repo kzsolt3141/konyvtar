@@ -3,36 +3,28 @@ body {
   padding-top: 70px;
 }
 
-div {
-}
-
-button {
-}
-
-button:hover {
-}
-
-button:active {
-}
-
-label {
-}
-
-input {
-}
-
-input:disabled {
-}
-
 h1 {
   margin: 0;
 }
 
-p {
+.ok_btn {
+  width: 30px;
+  right: 50px;
+  bottom: 10px;
+  position: absolute;
 }
 
-select {
+.ok_btn:hover {
+  background-color: rgb(153, 140, 140);
 }
 
-input[type="checkbox"]:hover {
+.cancel_btn {
+  width: 30px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.cancel_btn:hover {
+  background-color: rgb(153, 140, 140);
 }

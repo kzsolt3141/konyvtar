@@ -66,6 +66,18 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.book_thumbnail_red {
+  width: 100%;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.book_thumbnail_red:hover {
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.8);
+}
+
 .book_div {
   display: grid;
   height: 300px;

@@ -19,7 +19,13 @@ import {
 } from "./genre.js";
 
 import { getUserNameById } from "./index_users.js";
-import { createForm } from "./lend.js";
+import { lendBook } from "./lend.js";
+import { initDetailDiv } from "./common.js";
+
+const detailsDiv = document.getElementById("details_div");
+function clearPlace(place) {
+  place.innerHTML = "";
+}
 
 const addBookBtn = document.getElementById("add_book_btn");
 addBookBtn.addEventListener("click", async (event) => {
@@ -41,6 +47,7 @@ bookSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const bookForm = document.getElementById("search_books");
   const bookFormData = new FormData(bookForm);
+  bookFormData.append("search", "bulk");
   searchBook(bookFormData);
 });
 
@@ -134,45 +141,23 @@ async function listBooks(books) {
     img.className = "detail_options";
     img.id = "lend_" + book.id;
     img.addEventListener("click", function () {
-      toggleStatus(book.id, book.title);
+      toggleStatus(book.id, book.title, book.status);
     });
     thirdLineDiv.appendChild(img);
 
     if (!available[0]) {
-      // TODO show this only for unavailable cases
-      // TODO use form from lend.js (already implemented)
       img = document.createElement("img");
       img.src = "styles/static/ok.svg";
       img.className = "detail_options";
       img.addEventListener("click", function () {
-        lendBook(book.id, available[1]);
+        lendBook(book.id, available[1], detailsDiv, false);
       });
       thirdLineDiv.appendChild(img);
     }
   });
 }
 
-async function lendBook(bid, uid) {
-  const bookTable = document.getElementById("details_div");
-  bookTable.innerHTML = "";
-
-  await showBookPics(bid, bookTable, false);
-
-  const lendDiv = document.createElement("div");
-  bookTable.appendChild(lendDiv);
-
-  createForm(bid, uid, lendDiv, false);
-
-  const revertBtn = document.createElement("img");
-  bookTable.appendChild(revertBtn);
-  revertBtn.src = "/styles/static/x.svg";
-  revertBtn.className = "revert_btn";
-  revertBtn.addEventListener("click", function () {
-    bookTable.innerHTML = "";
-  });
-}
-
-async function showBookPics(id, bookDiv, deletion) {
+export async function showBookPics(id, bookDiv, deletion, showOne = true) {
   const rsp = await fetch("/book/find_book_pic", {
     method: "POST",
     body: id,
@@ -182,16 +167,22 @@ async function showBookPics(id, bookDiv, deletion) {
 
   const picDiv = document.createElement("div");
   picDiv.id = "pic" + id;
-  JSON.parse(data).forEach((pic) => {
+
+  JSON.parse(data).every((pic) => {
     const img = document.createElement("img");
     img.src = "/" + pic.link;
     img.className = "book_thumbnail";
     if (deletion) {
+      img.className = "book_thumbnail_red";
       img.addEventListener("click", () => {
         deleteBookPic(pic.link);
       });
     }
     picDiv.appendChild(img);
+    if (showOne) {
+      return false;
+    }
+    return true;
   });
 
   if (picDiv.childElementCount == 0) {
@@ -212,25 +203,17 @@ function deleteBookPic(link) {
     .then((rsp) => rsp.json())
     .then((data) => {
       console.log(data);
+      detailsDiv.innerHTML = "";
       bookSearchBtn.click();
     });
 }
 
 async function details(key) {
-  const detailsDiv = document.getElementById("details_div");
-  detailsDiv.innerHTML = "";
-
-  const revertBtn = document.createElement("img");
-  detailsDiv.appendChild(revertBtn);
-  revertBtn.src = "/styles/static/x.svg";
-  revertBtn.className = "revert_btn";
-  revertBtn.addEventListener("click", function () {
-    detailsDiv.innerHTML = "";
-  });
+  initDetailDiv(detailsDiv, clearPlace);
 
   for (const element of BookData) {
     if (element[0].id != key) continue;
-    await showBookPics(key, detailsDiv, false);
+    await showBookPics(key, detailsDiv, false, false);
 
     var detailText = document.createElement("div");
 
@@ -265,32 +248,31 @@ async function details(key) {
   }
 }
 
-async function toggleStatus(id, name) {
-  const bookTable = document.getElementById("details_div");
-  bookTable.innerHTML = "";
+async function toggleStatus(id, name, status) {
+  initDetailDiv(detailsDiv, okFunction);
+  await showBookPics(id, detailsDiv, false);
 
-  await showBookPics(id, bookTable, false);
+  const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
+  const nextStatus = status == 1 ? "Elveszett" : "Aktiv";
 
-  var detailText = document.createElement("div");
+  const detailText = document.createElement("div");
+  detailsDiv.appendChild(detailText);
 
-  const p = document.createElement("h2");
-  p.textContent = name + " allapot valtoztatas";
+  const p = document.createElement("p");
+  p.textContent = `${name} allapot valtoztatasa ${currentStatus} -rol ${nextStatus} -ra`;
 
   const l = document.createElement("label");
   l.textContent = "Allapot valtoztatas oka:";
+
   const e = document.createElement("input");
   e.value = "";
   e.id = "notes";
+
   detailText.appendChild(p);
   detailText.appendChild(l);
   detailText.appendChild(e);
 
-  bookTable.appendChild(detailText);
-
-  const changeBtn = document.createElement("button");
-  changeBtn.textContent = "Modositas";
-  changeBtn.className = "approve_btn";
-  changeBtn.addEventListener("click", function () {
+  function okFunction() {
     const changeForm = new FormData();
     changeForm.append("update", "status");
     changeForm.append("id", id);
@@ -302,76 +284,71 @@ async function toggleStatus(id, name) {
     }).then((rsp) =>
       rsp.json().then((data) => {
         console.log(data);
-        bookTable.innerHTML = "";
+        detailsDiv.innerHTML = "";
       })
     );
-  });
-
-  bookTable.appendChild(changeBtn);
-
-  const revertBtn = document.createElement("img");
-  bookTable.appendChild(revertBtn);
-  revertBtn.src = "/styles/static/x.svg";
-  revertBtn.className = "revert_btn";
-  revertBtn.addEventListener("click", function () {
-    bookTable.innerHTML = "";
-  });
+  }
 }
 
-// TODO transfer edit to the book page, should simplify the things...
 async function editBook(key) {
-  // table id with all the book data
-  const bookTable = document.getElementById("details_div");
-  bookTable.innerHTML = "";
+  var element = null;
+  for (const e of BookData) {
+    if (e[0].id == key) {
+      element = e;
+      break;
+    }
+  }
 
-  await showBookPics(key, bookTable, true);
+  initDetailDiv(detailsDiv, okFunction);
+  await showBookPics(key, detailsDiv, true, false);
 
   var detailText = document.createElement("div");
+  detailsDiv.appendChild(detailText);
 
   creteGenreSelect("changeForm", detailText);
 
-  bookTable.appendChild(detailText);
+  element[0].notes = "";
 
-  for (const element of BookData) {
-    if (element[0].id != key) continue;
-    element[0].notes = "";
-
-    for (const k in element[0]) {
-      if (k == "id" || k == "status" || k == "genre") continue;
-      const l = document.createElement("label");
-      l.textContent = LabelNames[k];
-      const e = document.createElement("input");
-      e.value = element[0][k];
-      e.id = k;
-      detailText.appendChild(l);
-      detailText.appendChild(e);
-    }
-
-    bookTable.appendChild(detailText);
-
-    break;
+  for (const k in element[0]) {
+    if (k == "id" || k == "status" || k == "genre") continue;
+    const l = document.createElement("label");
+    l.textContent = LabelNames[k];
+    const e = document.createElement("input");
+    e.value = element[0][k];
+    e.id = k;
+    detailText.appendChild(l);
+    detailText.appendChild(e);
   }
 
-  const changeBtn = document.createElement("button");
-  changeBtn.textContent = "Modositas";
-  changeBtn.className = "approve_btn";
-  changeBtn.addEventListener("click", function () {
+  const pic = document.createElement("input");
+  pic.type = "file";
+  pic.name = "image";
+  detailText.appendChild(pic);
+
+  detailsDiv.appendChild(detailText);
+
+  function okFunction() {
     if (!genreSelectIsValid("changeForm")) {
+      console.log("Please select genre!");
       return;
     }
     const changeForm = new FormData();
     changeForm.append("update", "bulk");
+    changeForm.append("genre", getGenreValue("changeForm"));
+    changeForm.append("id", key);
+    changeForm.append("image", pic.files[0]);
 
     for (var i = 0; i < detailText.children.length; i++) {
       const currentElement = detailText.children[i];
 
       if (currentElement.tagName.toLowerCase() == "input") {
+        if (currentElement.type == "file") {
+          console.log(currentElement.value);
+          continue;
+        }
         changeForm.append(currentElement.id, currentElement.value);
       }
     }
-
-    changeForm.append("genre", getGenreValue("changeForm"));
-    changeForm.append("id", key);
 
     fetch("/book/change", {
       method: "POST",
@@ -379,21 +356,11 @@ async function editBook(key) {
     }).then((rsp) =>
       rsp.json().then((data) => {
         console.log(data);
-        bookTable.innerHTML = "";
+        detailsDiv.innerHTML = "";
         bookSearchBtn.click();
       })
     );
-  });
-
-  bookTable.appendChild(changeBtn);
-
-  const revertBtn = document.createElement("img");
-  bookTable.appendChild(revertBtn);
-  revertBtn.src = "/styles/static/x.svg";
-  revertBtn.className = "revert_btn";
-  revertBtn.addEventListener("click", function () {
-    bookTable.innerHTML = "";
-  });
+  }
 }
 
 function createTypeSelect(id, place) {
@@ -406,6 +373,7 @@ function createTypeSelect(id, place) {
   typeSelect.add(option);
 
   for (const key in LabelNames) {
+    if (key == "available" || key == "notes" || key == "status") continue;
     const option = document.createElement("option");
     option.value = key;
     option.text = LabelNames[key];
@@ -436,4 +404,17 @@ function reorderBooks(BookData, prop) {
     return 0;
   });
   listBooks(BookData);
+}
+
+export async function getBookTitleById(bid) {
+  const frm = new FormData();
+  frm.append("id", bid);
+  frm.append("search", "single");
+
+  const rsp = await fetch("/book/find", {
+    method: "POST",
+    body: frm,
+  });
+  const title = await rsp.json();
+  return title.title;
 }

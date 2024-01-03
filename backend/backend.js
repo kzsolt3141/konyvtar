@@ -104,7 +104,16 @@ app.post("/book/add", upload.array("images"), (req, res) => {
 //----------------------------------------------------------------
 
 app.post("/book/find", upload.none(), (req, res) => {
-  findBookHandler(req, res);
+  switch (req.body.search) {
+    case "single":
+      database.getBookNameById(req.body, res);
+      break;
+    case "bulk":
+      findBookHandler(req, res);
+      break;
+    default:
+      res.json("failed");
+  }
 });
 
 async function findBookHandler(req, res) {
@@ -156,8 +165,9 @@ app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
 
 //----------------------------------------------------------------
 
-app.post("/book/change", upload.none(), (req, res) => {
-  database.updateBook(req.body, res);
+app.post("/book/change", upload.single("image"), (req, res) => {
+  console.log(req.body, req.file.filename);
+  database.updateBook(req, res);
 });
 
 //----------------------------------------------------------------
