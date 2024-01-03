@@ -166,18 +166,22 @@ function deactivateUser(body, res) {
   });
 }
 
-function editUser(body, res) {
+function editUser(req, res) {
+  const body = req.body;
+  const filename = req.file.filename;
+
+  console.log(body, filename);
+
   sql = `UPDATE users 
   SET 
   name = ?,
   address = ?,
   phone = ?,
-  mail = ?,
-  status = ?
+  mail = ?
   WHERE id = ?`;
   db_.run(
     sql,
-    [body.name, body.address, body.phone, body.mail, body.status, body.id],
+    [body.name, body.address, body.phone, body.mail, body.id],
     (err) => {
       if (err) {
         res.json(err.message);

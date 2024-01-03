@@ -5,6 +5,7 @@ const LabelNames = {
   phone: "Telefonszam:",
   mail: "E-Mail:",
   status: "Allapot:",
+  notes: "Megjegyzesek:",
 };
 
 import { initDetailDiv } from "./common.js";
@@ -181,8 +182,6 @@ async function details(id) {
     element.textContent = book;
     detailText.appendChild(element);
   }
-
-  //TODO list all active books
 }
 
 async function getLendedBookList(uid) {
@@ -200,43 +199,54 @@ async function getLendedBookList(uid) {
 }
 
 function editUser(key) {
-  const usertable = document.getElementById(key);
-
-  let row = usertable.rows[0];
-  for (let c = 0; c < row.children.length; c++) {
-    const cell = row.children[c];
-
-    cell.disabled = false;
-
-    if (cell.id == "id") {
-      cell.disabled = true;
-    }
-
-    if (cell.id == "notes") {
-      cell.value = "Modositva";
+  var element = null;
+  for (const e of UserData) {
+    if (e[0].id == key) {
+      element = e;
+      break;
     }
   }
+  initDetailDiv(detailsDiv, okFunction);
+  showUserPic(key, detailsDiv, true);
 
-  // TODO edit profile picture
+  var detailText = document.createElement("div");
+  detailText.className = "detail_text";
+  detailsDiv.appendChild(detailText);
 
-  row = usertable.rows[2];
-  row.innerHTML = "";
-  const changeBtn = document.createElement("button");
-  changeBtn.textContent = "Modositas";
-  changeBtn.addEventListener("click", function () {
+  element[0].notes = "";
+
+  for (const k in element[0]) {
+    if (k == "id" || k == "status" || k == "pic") continue;
+    const l = document.createElement("label");
+    l.textContent = LabelNames[k];
+    const e = document.createElement("input");
+    e.value = element[0][k];
+    e.id = k;
+    detailText.appendChild(l);
+    detailText.appendChild(e);
+  }
+
+  const pic = document.createElement("input");
+  pic.type = "file";
+  pic.name = "image";
+  detailText.appendChild(pic);
+
+  detailsDiv.appendChild(detailText);
+
+  function okFunction() {
     const changeForm = new FormData();
+    changeForm.append("update", "bulk");
+    changeForm.append("id", key);
+    changeForm.append("image", pic.files[0]);
 
-    for (let c = 0; c < usertable.rows[0].children.length; c++) {
-      const element = usertable.rows[0].children[c];
+    for (var i = 0; i < detailText.children.length; i++) {
+      const currentElement = detailText.children[i];
 
-      if (element.tagName.toLowerCase() === "label") continue;
-
-      if (element.type === "text") {
-        changeForm.append(element.id, element.value);
-      }
-
-      if (element.type === "checkbox") {
-        changeForm.append(element.id, element.checked ? 1 : 0);
+      if (currentElement.tagName.toLowerCase() == "input") {
+        if (currentElement.type == "file") {
+          continue;
+        }
+        changeForm.append(currentElement.id, currentElement.value);
       }
     }
 
@@ -246,19 +256,11 @@ function editUser(key) {
     }).then((rsp) =>
       rsp.json().then((data) => {
         console.log(data);
-        userSearchBtn.click();
+        detailsDiv.innerHTML = "";
+        bookSearchBtn.click();
       })
     );
-  });
-
-  row.appendChild(changeBtn);
-
-  const revertBtn = document.createElement("button");
-  revertBtn.textContent = "Megse";
-  revertBtn.addEventListener("click", function () {
-    userSearchBtn.click();
-  });
-  row.appendChild(revertBtn);
+  }
 }
 
 function createTypeSelect(id, place) {

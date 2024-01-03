@@ -346,7 +346,6 @@ async function editBook(key) {
 
       if (currentElement.tagName.toLowerCase() == "input") {
         if (currentElement.type == "file") {
-          console.log(currentElement.value);
           continue;
         }
         changeForm.append(currentElement.id, currentElement.value);

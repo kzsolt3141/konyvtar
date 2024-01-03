@@ -244,8 +244,8 @@ async function findUserHandler(req, res) {
 //----------------------------------------------------------------
 
 // TODO implement
-app.post("/user/edit", upload.none(), (req, res) => {
-  database.editUser(req.body, res);
+app.post("/user/edit", upload.single("image"), (req, res) => {
+  database.editUser(req, res);
 });
 //----------------------------------------------------------------
 app.listen(8080, "192.168.0.107", () => {
