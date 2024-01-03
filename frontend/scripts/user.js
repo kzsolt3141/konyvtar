@@ -3,8 +3,13 @@ mainBtn.addEventListener("click", async (event) => {
   window.location.href = "/";
 });
 
+const addBookBtn = document.getElementById("add_book_btn");
+addBookBtn.addEventListener("click", async (event) => {
+  window.location.href = "/book";
+});
+
 const form = document.getElementById("add_user");
-form.addEventListener("submit", async (event) => {
+form.addEventListener("click", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);

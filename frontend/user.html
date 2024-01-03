@@ -2,30 +2,69 @@
 <html>
   <head>
     <title>Berecki konyvtar</title>
+    <link rel="stylesheet" href="styles/common.css" />
+    <link rel="stylesheet" href="styles/index-header.css" />
+    <link rel="stylesheet" href="styles/index-grid.css" />
+    <link rel="stylesheet" href="styles/index-details.css" />
+    <link rel="stylesheet" href="styles/book.css" />
   </head>
   <body>
-    <button type="button" id="main_btn">Fooldal</button>
-    <h1>Uj kliens hozzaadasa az adatbazishoz</h1>
-    <form id="add_user">
-      <label for="name">Nev:</label>
-      <input type="text" id="name" name="name" value="Teljes Nev" required />
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+      </div>
+      <div class="fixed_header_right">
+        <button class="search_button" id="main_btn">
+          <img class="search_button_icon" src="styles/static/home.svg" />
+        </button>
+        <button class="search_button" id="add_book_btn">
+          <img class="search_button_icon" src="styles/static/book.svg" />
+        </button>
+      </div>
+    </div>
 
-      <label for="address">Lakcim:</label>
-      <input type="text" id="address" name="address" value="Lakcim" required />
+    <img class="search_icon" src="styles/static/user.svg" />
+    <form id="add_user" class="book_form_div">
+      <div class="book_form_line">
+        <label for="name">Nev:</label>
+        <input type="text" id="name" name="name" value="Teljes Nev" required />
+      </div>
 
-      <label for="phone">Telefonszam:</label>
-      <input type="text" id="phone" name="phone" value="0123456789" />
+      <div class="book_form_line">
+        <label for="address">Lakcim:</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          value="Lakcim"
+          required
+        />
+      </div>
 
-      <label for="mail">e-mail:</label>
-      <input type="text" id="mail" name="mail" value="email@cim" />
+      <div class="book_form_line">
+        <label for="phone">Telefonszam:</label>
+        <input type="text" id="phone" name="phone" value="0123456789" />
+      </div>
 
-      <label for="notes">Megjegyzes:</label>
-      <input type="text" id="notes" name="notes" value="Init" />
+      <div class="book_form_line">
+        <label for="mail">e-mail:</label>
+        <input type="text" id="mail" name="mail" value="email@cim" />
+      </div>
 
-      <label for="image">Kep hozzasadasa:</label>
-      <input type="file" id="image" name="image" accept="image/*" />
+      <div class="book_form_line">
+        <label for="notes">Megjegyzes:</label>
+        <input type="text" id="notes" name="notes" value="Init" />
+      </div>
 
-      <button type="submit" id="add">Mentes</button>
+      <div class="book_form_line">
+        <label for="image">Kep hozzasadasa:</label>
+        <input type="file" id="image" name="image" accept="image/*" />
+      </div>
+
+      <img src="styles/static/ok.svg" id="add_button" class="search_button" />
     </form>
     <div class="submit_status">Status</div>
   </body>

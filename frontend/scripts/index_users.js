@@ -257,7 +257,7 @@ function editUser(key) {
       rsp.json().then((data) => {
         console.log(data);
         detailsDiv.innerHTML = "";
-        bookSearchBtn.click();
+        userSearchBtn.click();
       })
     );
   }

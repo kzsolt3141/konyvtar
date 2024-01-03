@@ -10,6 +10,11 @@ mainBtn.addEventListener("click", async (event) => {
   window.location.href = "/";
 });
 
+const addUserBtn = document.getElementById("add_user_btn");
+addUserBtn.addEventListener("click", async (event) => {
+  window.location.href = "/user";
+});
+
 //create genre selection drop-down
 const genreDiv = document.getElementById("genre_div");
 creteGenreSelect("genre", genreDiv);

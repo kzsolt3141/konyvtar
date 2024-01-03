@@ -2,40 +2,80 @@
 <html>
   <head>
     <title>Berecki konyvtar</title>
+    <link rel="stylesheet" href="styles/common.css" />
+    <link rel="stylesheet" href="styles/index-header.css" />
+    <link rel="stylesheet" href="styles/index-grid.css" />
+    <link rel="stylesheet" href="styles/index-details.css" />
+    <link rel="stylesheet" href="styles/book.css" />
   </head>
   <body>
-    <button type="button" id="main_btn">Fooldal</button>
-    <h1>Uj konyv hozzaadasa az adatbazishoz</h1>
-    <form id="add_book">
-      <div id="genre_div"></div>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+      </div>
+      <div class="fixed_header_right">
+        <button class="search_button" id="main_btn">
+          <img class="search_button_icon" src="styles/static/home.svg" />
+        </button>
+        <button class="search_button" id="add_user_btn">
+          <img class="search_button_icon" src="styles/static/user.svg" />
+        </button>
+      </div>
+    </div>
 
-      <label for="isbn">ISBN</label>
-      <input type="text" id="isbn" name="isbn" value="012-3-45" required />
+    <img class="search_icon" src="styles/static/book.svg" />
+    <form id="add_book" class="book_form_div">
+      <div id="genre_div" class="book_form_line">
+        <label for="isbn">Tipus</label>
+      </div>
+      <div class="book_form_line">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" value="012-3-45" required />
+      </div>
 
-      <label for="title">Cim:</label>
-      <input type="text" id="title" name="title" value="Clara" required />
+      <div class="book_form_line">
+        <label for="title">Cim:</label>
+        <input type="text" id="title" name="title" value="Clara" required />
+      </div>
 
-      <label for="author">Szerzo</label>
-      <input type="text" id="author" name="author" value="Szerzo" required />
+      <div class="book_form_line">
+        <label for="author">Szerzo</label>
+        <input type="text" id="author" name="author" value="Szerzo" required />
+      </div>
 
-      <label for="year">Kiadas eve</label>
-      <input type="text" id="year" name="year" value="2023" required />
-
-      <label for="publ">Kiado:</label>
-      <input type="text" id="publ" name="publ" value="Kiado" />
-
-      <label for="ver">Kiadas</label>
-      <input type="text" id="ver" name="ver" value="Kiadas" />
-
-      <label for="notes">Megjegyes</label>
-      <input type="text" id="notes" name="notes" value="Init" />
-
-      <label for="images">Kep(ek) hozzasadasa:</label>
-      <input type="file" id="images" name="images" accept="image/*" multiple />
-
-      <button type="button" id="add_button">Mentes</button>
+      <div class="book_form_line">
+        <label for="year">Kiadas eve</label>
+        <input type="text" id="year" name="year" value="2023" required />
+      </div>
+      <div class="book_form_line">
+        <label for="publ">Kiado:</label>
+        <input type="text" id="publ" name="publ" value="Kiado" />
+      </div>
+      <div class="book_form_line">
+        <label for="ver">Kiadas</label>
+        <input type="text" id="ver" name="ver" value="Kiadas" />
+      </div>
+      <div class="book_form_line">
+        <label for="notes">Megjegyes</label>
+        <input type="text" id="notes" name="notes" value="Init" />
+      </div>
+      <div class="book_form_line">
+        <label for="images">Kep(ek) hozzasadasa:</label>
+        <input
+          type="file"
+          id="images"
+          name="images"
+          accept="image/*"
+          multiple
+        />
+      </div>
+      <img src="styles/static/ok.svg" id="add_button" class="search_button" />
     </form>
-    <div class="submit_status">Status</div>
+
+    <div id="submit_status" class="global_status"></div>
   </body>
 
   <script type="module" src="scripts/genre.js"></script>

@@ -1,0 +1,16 @@
+.book_form_div {
+  display: grid;
+  grid-template-columns: 360px;
+  column-gap: 20px;
+  row-gap: 10px;
+  position: fixed;
+  left: 100px;
+  opacity: 1;
+  background-color: #d1dbcd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book_form_line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

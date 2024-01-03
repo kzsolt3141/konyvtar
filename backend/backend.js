@@ -166,7 +166,6 @@ app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
 //----------------------------------------------------------------
 
 app.post("/book/change", upload.single("image"), (req, res) => {
-  console.log(req.body, req.file.filename);
   database.updateBook(req, res);
 });
 

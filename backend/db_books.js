@@ -262,10 +262,11 @@ function toggleBookStatus(body, res) {
 }
 
 function editBook(req, res) {
-  body = req.body;
-  file = [req.file.filename];
-
-  console.log(req.body, req.file.filename);
+  const body = req.body;
+  var file = [];
+  if (req.file != null) {
+    file = [req.file.filename];
+  }
 
   sql = `UPDATE books 
   SET 

@@ -168,20 +168,22 @@ function deactivateUser(body, res) {
 
 function editUser(req, res) {
   const body = req.body;
-  const filename = req.file.filename;
-
-  console.log(body, filename);
+  var file = null;
+  if (req.file != null) {
+    file = [req.file.filename];
+  }
 
   sql = `UPDATE users 
   SET 
   name = ?,
   address = ?,
   phone = ?,
-  mail = ?
+  mail = ?,
+  pic = COALESCE(?, pic)
   WHERE id = ?`;
   db_.run(
     sql,
-    [body.name, body.address, body.phone, body.mail, body.id],
+    [body.name, body.address, body.phone, body.mail, file, body.id],
     (err) => {
       if (err) {
         res.json(err.message);

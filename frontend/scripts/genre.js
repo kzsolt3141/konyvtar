@@ -5,15 +5,10 @@ export function creteGenreSelect(id, place) {
   genreDiv.id = id;
   place.appendChild(genreDiv);
 
-  // title of the genre dropdown
-  const selectLabel = document.createElement("p");
-  selectLabel.textContent = "Tipus:";
-
   // actual genre dropdown
   const genreSelect = document.createElement("select");
   genreSelect.id = id + "_select";
 
-  genreDiv.appendChild(selectLabel);
   genreDiv.appendChild(genreSelect);
 
   // additional elements if "+" is selected
