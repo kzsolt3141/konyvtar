@@ -226,7 +226,7 @@ app.post("/user/edit", upload.none(), (req, res) => {
   database.editUser(req.body, res);
 });
 //----------------------------------------------------------------
-app.listen(8080, () => {
+app.listen(8080, "192.168.0.107", () => {
   console.log("Server listening on 8080");
 });
 
