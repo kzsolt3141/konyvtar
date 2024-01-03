@@ -121,6 +121,18 @@ async function findUserNotes(id) {
   });
 }
 
+function getUserNameById(body, res) {
+  const sql = ` SELECT name FROM users WHERE id = ?`;
+
+  db_.all(sql, [body.id], (err, rows) => {
+    if (err) {
+      res.json(err.message);
+      return;
+    }
+    res.json(rows[0]);
+  });
+}
+
 function deactivateUser(body, res) {
   const sql = `UPDATE users SET status = "inactive" WHERE id = ?`;
   db_.run(sql, [body], (err) => {
@@ -162,6 +174,7 @@ module.exports = {
   registerUser: registerUser,
   findUser: findUser,
   findUserNotes: findUserNotes,
+  getUserNameById: getUserNameById,
   deactivateUser: deactivateUser,
   editUser: editUser,
 };

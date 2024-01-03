@@ -16,6 +16,7 @@ userSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const userForm = document.getElementById("search_users");
   const userFormData = new FormData(userForm);
+  userFormData.append("search", "bulk");
   event.preventDefault();
   searchUser(userFormData);
 });
@@ -30,6 +31,20 @@ function searchUser(formData) {
       UserData = JSON.parse(data);
       listUsers(UserData);
     });
+}
+
+export async function getUserNameById(uid) {
+  const frm = new FormData();
+  frm.append("id", uid);
+  frm.append("search", "single");
+
+  const rsp = await fetch("/user/find", {
+    method: "POST",
+    body: frm,
+  });
+  const name = await rsp.json();
+
+  return name.name;
 }
 
 /* all users will be listed in the users_div div element

@@ -18,7 +18,7 @@ button.addEventListener("click", function () {
 });
 
 // define a new genre and send it back to the DB
-function createForm(bid, uid, place, isLend) {
+export function createForm(bid, uid, place, isLend) {
   const input = document.createElement("input");
   place.appendChild(input);
   const addButton = document.createElement("button");

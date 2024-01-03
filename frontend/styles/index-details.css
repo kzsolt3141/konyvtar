@@ -1,6 +1,7 @@
 .details_div {
   display: grid;
   grid-template-columns: 300px 200px;
+  column-gap: 20px;
   position: fixed;
   left: 100px;
   opacity: 1;
@@ -28,4 +29,5 @@
 
 .revert_btn {
   position: absolute;
+  width: 30px;
 }

@@ -18,6 +18,8 @@ import {
   genreSelectIsValid,
 } from "./genre.js";
 
+import { getUserNameById } from "./index_users.js";
+
 const addBookBtn = document.getElementById("add_book_btn");
 addBookBtn.addEventListener("click", async (event) => {
   window.location.href = "/book";
@@ -126,22 +128,23 @@ async function listBooks(books) {
     });
     thirdLineDiv.appendChild(img);
 
-    if (!available[0]) {
-      img = document.createElement("img");
-      img.src = "styles/static/broken.svg";
-      img.className = "detail_options";
-      img.addEventListener("click", function () {
-        toggleStatus(book.id);
-      });
-      thirdLineDiv.appendChild(img);
+    img = document.createElement("img");
+    img.src = "styles/static/broken.svg";
+    img.className = "detail_options";
+    img.id = "lend_" + book.id;
+    img.addEventListener("click", function () {
+      toggleStatus(book.id, book.title);
+    });
+    thirdLineDiv.appendChild(img);
 
+    if (!available[0]) {
       // TODO show this only for unavailable cases
       // TODO use form from lend.js (already implemented)
       img = document.createElement("img");
       img.src = "styles/static/ok.svg";
       img.className = "detail_options";
       img.addEventListener("click", function () {
-        editBook(book.id);
+        lendBook(book.id);
       });
       thirdLineDiv.appendChild(img);
     }
@@ -196,9 +199,9 @@ async function details(key) {
   const detailsDiv = document.getElementById("details_div");
   detailsDiv.innerHTML = "";
 
-  const revertBtn = document.createElement("button");
+  const revertBtn = document.createElement("img");
   detailsDiv.appendChild(revertBtn);
-  revertBtn.textContent = "Bezar";
+  revertBtn.src = "/styles/static/x.svg";
   revertBtn.className = "revert_btn";
   revertBtn.addEventListener("click", function () {
     detailsDiv.innerHTML = "";
@@ -227,11 +230,21 @@ async function details(key) {
     });
 
     detailsDiv.appendChild(detailText);
+
+    detailText = document.createElement("div");
+    detailsDiv.appendChild(detailText);
+
+    if (element[1][1] != null) {
+      const p = document.createElement("p");
+      p.textContent = "Kiadva: " + (await getUserNameById(element[1][1]));
+      detailText.appendChild(p);
+    }
+
     break;
   }
 }
 
-async function toggleStatus(id) {
+async function toggleStatus(id, name) {
   const bookTable = document.getElementById("details_div");
   bookTable.innerHTML = "";
 
@@ -239,11 +252,15 @@ async function toggleStatus(id) {
 
   var detailText = document.createElement("div");
 
+  const p = document.createElement("h2");
+  p.textContent = name + " allapot valtoztatas";
+
   const l = document.createElement("label");
-  l.textContent = "Megjegyzes";
+  l.textContent = "Allapot valtoztatas oka:";
   const e = document.createElement("input");
   e.value = "";
   e.id = "notes";
+  detailText.appendChild(p);
   detailText.appendChild(l);
   detailText.appendChild(e);
 
@@ -271,13 +288,13 @@ async function toggleStatus(id) {
 
   bookTable.appendChild(changeBtn);
 
-  const revertBtn = document.createElement("button");
-  revertBtn.textContent = "Megse";
+  const revertBtn = document.createElement("img");
+  bookTable.appendChild(revertBtn);
+  revertBtn.src = "/styles/static/x.svg";
   revertBtn.className = "revert_btn";
   revertBtn.addEventListener("click", function () {
     bookTable.innerHTML = "";
   });
-  bookTable.appendChild(revertBtn);
 }
 // TODO transfer edit to the book page, should simplify the things...
 async function editBook(key) {
@@ -348,13 +365,13 @@ async function editBook(key) {
 
   bookTable.appendChild(changeBtn);
 
-  const revertBtn = document.createElement("button");
-  revertBtn.textContent = "Megse";
+  const revertBtn = document.createElement("img");
+  bookTable.appendChild(revertBtn);
+  revertBtn.src = "/styles/static/x.svg";
   revertBtn.className = "revert_btn";
   revertBtn.addEventListener("click", function () {
     bookTable.innerHTML = "";
   });
-  bookTable.appendChild(revertBtn);
 }
 
 function createTypeSelect(id, place) {

@@ -190,7 +190,16 @@ app.post("/user/add", upload.single("image"), (req, res) => {
 
 //----------------------------------------------------------------
 app.post("/user/find", upload.none(), (req, res) => {
-  findUserHandler(req, res);
+  switch (req.body.search) {
+    case "single":
+      database.getUserNameById(req.body, res);
+      break;
+    case "bulk":
+      findUserHandler(req, res);
+      break;
+    default:
+      res.json("failed to look up user");
+  }
 });
 
 async function findUserHandler(req, res) {

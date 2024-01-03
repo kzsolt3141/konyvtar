@@ -27,6 +27,7 @@ module.exports = {
   registerUser: db_users.registerUser,
   findUser: db_users.findUser,
   findUserNotes: db_users.findUserNotes,
+  getUserNameById: db_users.getUserNameById,
   deactivateUser: db_users.deactivateUser,
   editUser: db_users.editUser,
 
