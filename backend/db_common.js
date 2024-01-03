@@ -22,7 +22,7 @@ module.exports = {
   addGenre: db_books.addGenre,
   getGenres: db_books.getGenres,
   deleteBookPic: db_books.deleteBookPic,
-  editBook: db_books.editBook,
+  updateBook: db_books.updateBook,
 
   registerUser: db_users.registerUser,
   findUser: db_users.findUser,

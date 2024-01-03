@@ -210,6 +210,45 @@ function deleteBookPic(body, sts) {
   });
 }
 
+function updateBook(body, res) {
+  switch (body.update) {
+    case "bulk":
+      editBook(body, res);
+      break;
+    case "status":
+      toggleBookStatus(body, res);
+      break;
+    default:
+      res.json(`unknown instruction: ${body.update}`);
+  }
+}
+
+//TODO implement status toggling
+function toggleBookStatus(body, res) {
+  console.log(body);
+  sql = `
+  UPDATE books 
+  SET status = 
+    CASE 
+      WHEN status = 0 
+        THEN 1 
+        ELSE 0
+      END 
+  WHERE id = ?`;
+  db_.run(sql, [body.id], (err) => {
+    if (err) {
+      console.log(err);
+      res.json(`Book ${body.title} could not be modified`);
+      return;
+    }
+    const currentDate = new Date();
+    registerBookNotes(body.id, currentDate, body.notes);
+    console.log(`Book ${body.id} modified successfully`);
+    // update book pic table
+    res.json(`Book ${body.id} modified successfully`);
+  });
+}
+
 function editBook(body, res) {
   sql = `UPDATE books 
   SET 
@@ -219,8 +258,7 @@ function editBook(body, res) {
     genre = ?,
     year = ?,
     publ = ?,
-    ver = ?,
-    status = ?
+    ver = ?
   WHERE id = ?`;
   db_.run(
     sql,
@@ -232,7 +270,6 @@ function editBook(body, res) {
       body.year,
       body.publ,
       body.ver,
-      body.status,
       body.id,
     ],
     (err) => {
@@ -259,5 +296,5 @@ module.exports = {
   addGenre: addGenre,
   getGenres: getGenres,
   deleteBookPic: deleteBookPic,
-  editBook: editBook,
+  updateBook: updateBook,
 };

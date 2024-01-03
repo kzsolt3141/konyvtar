@@ -100,18 +100,6 @@ function listBooks(books) {
       tableRow.appendChild(element);
     }
 
-    // TODO show notes with other details
-    // TODO add detail option for each book
-    // const element = document.createElement("input");
-    // bookObj.forEach((notes, index) => {
-    //   if (index > 1) {
-    //     element.value += notes.date + ":" + notes.notes + ";";
-    //   }
-    // });
-    // element.disabled = true;
-    // element.id = "notes";
-    // tableRow.appendChild(element);
-
     tableRow = bookTable.insertRow();
     var img = document.createElement("img");
     img.src = "styles/static/edit.png";
@@ -121,7 +109,6 @@ function listBooks(books) {
     });
     tableRow.appendChild(img);
 
-    //TODO implement details
     img = document.createElement("img");
     img.src = "styles/static/details.svg";
     img.className = "detail_options";
@@ -135,7 +122,7 @@ function listBooks(books) {
       img.src = "styles/static/broken.svg";
       img.className = "detail_options";
       img.addEventListener("click", function () {
-        editBook(book.id);
+        toggleStatus(book.id);
       });
       tableRow.appendChild(img);
 
@@ -230,6 +217,54 @@ async function details(key) {
   }
 }
 
+async function toggleStatus(id) {
+  const bookTable = document.getElementById("details_div");
+  bookTable.innerHTML = "";
+
+  await showBookPics(id, bookTable, false);
+
+  var detailText = document.createElement("div");
+
+  const l = document.createElement("label");
+  l.textContent = "Megjegyzes";
+  const e = document.createElement("input");
+  e.value = "";
+  e.id = "notes";
+  detailText.appendChild(l);
+  detailText.appendChild(e);
+
+  bookTable.appendChild(detailText);
+
+  const changeBtn = document.createElement("button");
+  changeBtn.textContent = "Modositas";
+  changeBtn.className = "approve_btn";
+  changeBtn.addEventListener("click", function () {
+    const changeForm = new FormData();
+    changeForm.append("update", "status");
+    changeForm.append("id", id);
+    changeForm.append("notes", e.value);
+
+    fetch("/book/change", {
+      method: "POST",
+      body: changeForm,
+    }).then((rsp) =>
+      rsp.json().then((data) => {
+        console.log(data);
+        bookTable.innerHTML = "";
+      })
+    );
+  });
+
+  bookTable.appendChild(changeBtn);
+
+  const revertBtn = document.createElement("button");
+  revertBtn.textContent = "Megse";
+  revertBtn.className = "revert_btn";
+  revertBtn.addEventListener("click", function () {
+    bookTable.innerHTML = "";
+  });
+  bookTable.appendChild(revertBtn);
+}
 // TODO transfer edit to the book page, should simplify the things...
 async function editBook(key) {
   // table id with all the book data
@@ -240,17 +275,22 @@ async function editBook(key) {
 
   var detailText = document.createElement("div");
 
-  creteGenreSelect("genre", detailText);
+  creteGenreSelect("changeForm", detailText);
 
   bookTable.appendChild(detailText);
 
   for (const element of BookData) {
     if (element[0].id != key) continue;
+    element[0].notes = "";
 
     for (const k in element[0]) {
+      if (k == "id" || k == "status" || k == "genre") continue;
+      const l = document.createElement("label");
+      l.textContent = LabelNames[k];
       const e = document.createElement("input");
-      e.textContent = LabelNames[k] + element[0][k];
       e.value = element[0][k];
+      e.id = k;
+      detailText.appendChild(l);
       detailText.appendChild(e);
     }
 
@@ -263,10 +303,22 @@ async function editBook(key) {
   changeBtn.textContent = "Modositas";
   changeBtn.className = "approve_btn";
   changeBtn.addEventListener("click", function () {
-    if (!genreSelectIsValid("genre")) {
+    if (!genreSelectIsValid("changeForm")) {
       return;
     }
     const changeForm = new FormData();
+    changeForm.append("update", "bulk");
+
+    for (var i = 0; i < detailText.children.length; i++) {
+      const currentElement = detailText.children[i];
+
+      if (currentElement.tagName.toLowerCase() == "input") {
+        changeForm.append(currentElement.id, currentElement.value);
+      }
+    }
+
+    changeForm.append("genre", getGenreValue("changeForm"));
+    changeForm.append("id", key);
 
     fetch("/book/change", {
       method: "POST",
@@ -274,6 +326,7 @@ async function editBook(key) {
     }).then((rsp) =>
       rsp.json().then((data) => {
         console.log(data);
+        bookTable.innerHTML = "";
         bookSearchBtn.click();
       })
     );

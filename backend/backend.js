@@ -157,7 +157,7 @@ app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
 //----------------------------------------------------------------
 
 app.post("/book/change", upload.none(), (req, res) => {
-  database.editBook(req.body, res);
+  database.updateBook(req.body, res);
 });
 
 //----------------------------------------------------------------
