@@ -19,6 +19,7 @@ import {
 } from "./genre.js";
 
 import { getUserNameById } from "./index_users.js";
+import { createForm } from "./lend.js";
 
 const addBookBtn = document.getElementById("add_book_btn");
 addBookBtn.addEventListener("click", async (event) => {
@@ -144,10 +145,30 @@ async function listBooks(books) {
       img.src = "styles/static/ok.svg";
       img.className = "detail_options";
       img.addEventListener("click", function () {
-        lendBook(book.id);
+        lendBook(book.id, available[1]);
       });
       thirdLineDiv.appendChild(img);
     }
+  });
+}
+
+async function lendBook(bid, uid) {
+  const bookTable = document.getElementById("details_div");
+  bookTable.innerHTML = "";
+
+  await showBookPics(bid, bookTable, false);
+
+  const lendDiv = document.createElement("div");
+  bookTable.appendChild(lendDiv);
+
+  createForm(bid, uid, lendDiv, false);
+
+  const revertBtn = document.createElement("img");
+  bookTable.appendChild(revertBtn);
+  revertBtn.src = "/styles/static/x.svg";
+  revertBtn.className = "revert_btn";
+  revertBtn.addEventListener("click", function () {
+    bookTable.innerHTML = "";
   });
 }
 
@@ -296,6 +317,7 @@ async function toggleStatus(id, name) {
     bookTable.innerHTML = "";
   });
 }
+
 // TODO transfer edit to the book page, should simplify the things...
 async function editBook(key) {
   // table id with all the book data
