@@ -110,7 +110,9 @@ async function listBooks(books) {
     const secondLineDiv = document.createElement("div");
     secondLineDiv.className = "book_second_line";
     boodDetailsDiv.appendChild(secondLineDiv);
+
     const secondLine = [book.publ, book.ver, book.year];
+
     for (const k of secondLine) {
       const element = document.createElement("p");
       element.textContent = k;
@@ -303,6 +305,7 @@ async function editBook(key) {
   await showBookPics(key, detailsDiv, true, false);
 
   var detailText = document.createElement("div");
+  detailText.className = "detail_text";
   detailsDiv.appendChild(detailText);
 
   creteGenreSelect("changeForm", detailText);

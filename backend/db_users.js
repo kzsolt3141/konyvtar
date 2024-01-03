@@ -133,6 +133,27 @@ function getUserNameById(body, res) {
   });
 }
 
+function getLendedBooks(body, res) {
+  const sql = `
+    SELECT books.title
+    FROM loan
+    JOIN books 
+      ON loan.bid = books.id
+    WHERE loan.uid = ? AND loan.back_date IS NULL;`;
+
+  db_.all(sql, [body.id], (err, rows) => {
+    if (err) {
+      res.json(err.message);
+      return;
+    }
+    list = [];
+    rows.forEach((element) => {
+      list.push(element.title);
+    });
+    res.json(list);
+  });
+}
+
 function deactivateUser(body, res) {
   const sql = `UPDATE users SET status = "inactive" WHERE id = ?`;
   db_.run(sql, [body], (err) => {
@@ -175,6 +196,7 @@ module.exports = {
   findUser: findUser,
   findUserNotes: findUserNotes,
   getUserNameById: getUserNameById,
+  getLendedBooks: getLendedBooks,
   deactivateUser: deactivateUser,
   editUser: editUser,
 };

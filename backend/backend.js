@@ -207,6 +207,9 @@ app.post("/user/find", upload.none(), (req, res) => {
     case "bulk":
       findUserHandler(req, res);
       break;
+    case "lend":
+      database.getLendedBooks(req.body, res);
+      break;
     default:
       res.json("failed to look up user");
   }

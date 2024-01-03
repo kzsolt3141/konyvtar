@@ -4,8 +4,15 @@ const LabelNames = {
   address: "Cim:",
   phone: "Telefonszam:",
   mail: "E-Mail:",
-  status: "Allapot",
+  status: "Allapot:",
 };
+
+import { initDetailDiv } from "./common.js";
+
+const detailsDiv = document.getElementById("details_div");
+function clearPlace(place) {
+  place.innerHTML = "";
+}
 
 createTypeSelect("user_order", document.getElementById("user_order_div"));
 
@@ -33,117 +40,163 @@ function searchUser(formData) {
     });
 }
 
-export async function getUserNameById(uid) {
-  const frm = new FormData();
-  frm.append("id", uid);
-  frm.append("search", "single");
-
-  const rsp = await fetch("/user/find", {
-    method: "POST",
-    body: frm,
-  });
-  const name = await rsp.json();
-
-  return name.name;
-}
-
-/* all users will be listed in the users_div div element
- * each user will have its own table
- * row 0: user information
- * row 1; user profile picture pictures
- * row 2; button(s)
- */
 function listUsers(users) {
-  const userList = document.getElementById("users_div");
-  userList.innerHTML = "";
+  const usersDiv = document.getElementById("users_div");
+  usersDiv.innerHTML = "";
 
   users.forEach((userObj) => {
     const user = userObj[0];
-    const userTable = document.createElement("table");
-    userTable.id = user.id;
-    userList.appendChild(userTable);
 
-    var tableRow = userTable.insertRow();
-    showUserPic(user.pic, tableRow, false);
+    const userDiv = document.createElement("div");
+    usersDiv.appendChild(userDiv);
+    userDiv.id = user.id;
+    userDiv.className = "book_div";
 
-    tableRow = userTable.insertRow();
+    showUserPic(user.id, userDiv, false);
+
+    const userDetailsDiv = document.createElement("div");
+    userDiv.appendChild(userDetailsDiv);
+
+    const firstLineDiv = document.createElement("div");
+    firstLineDiv.className = "book_first_line";
+    userDetailsDiv.appendChild(firstLineDiv);
 
     const radio = document.createElement("input");
     radio.type = "radio";
     radio.name = "user_radio";
     radio.id = user.id;
-    tableRow.appendChild(radio);
+    firstLineDiv.appendChild(radio);
 
-    for (const k in user) {
-      if (k === "pic") continue;
-      const element = document.createElement("input");
-      element.disabled = true;
-      element.id = k;
-      element.value = user[k];
-
-      const label = document.createElement("p");
-      label.textContent = LabelNames[k];
-
-      if (k == "status") {
-        element.type = "checkbox";
-        element.checked = user[k] == 1;
-      }
-
-      tableRow.appendChild(label);
-      tableRow.appendChild(element);
+    const firstLine = [user.name, user.address];
+    for (const k of firstLine) {
+      const element = document.createElement("p");
+      element.textContent = k;
+      firstLineDiv.appendChild(element);
     }
 
-    const element = document.createElement("input");
-    userObj.forEach((notes, index) => {
-      if (index > 0) {
-        element.value += notes.date + ":" + notes.notes + ";";
-      }
-    });
-    element.disabled = true;
-    element.id = "notes";
-    tableRow.appendChild(element);
+    const secondLineDiv = document.createElement("div");
+    secondLineDiv.className = "book_second_line";
+    userDetailsDiv.appendChild(secondLineDiv);
 
-    tableRow = userTable.insertRow();
+    const secondLine = [user.phone, user.mail];
 
-    // var button = document.createElement("button");
-    // button.textContent = "Deaktivalas";
-    // button.addEventListener("click", function () {
-    //   // TODO: Add textbox to leave deactivation notes
-    //   deactivateUser(value.id);
-    // });
-    // tableRow.appendChild(button);
+    for (const k of secondLine) {
+      const element = document.createElement("p");
+      element.textContent = k;
+      secondLineDiv.appendChild(element);
+    }
 
-    const button = document.createElement("button");
-    button.textContent = "Szerkesztes";
-    button.addEventListener("click", function () {
+    const thirdLineDiv = document.createElement("div");
+    thirdLineDiv.className = "book_third_line";
+    userDetailsDiv.appendChild(thirdLineDiv);
+    var img = document.createElement("img");
+    img.src = "styles/static/edit.png";
+    img.className = "detail_options";
+    img.addEventListener("click", function () {
       editUser(user.id);
     });
-    tableRow.appendChild(button);
+    thirdLineDiv.appendChild(img);
+
+    img = document.createElement("img");
+    img.src = "styles/static/details.svg";
+    img.className = "detail_options";
+    img.addEventListener("click", function () {
+      details(user.id);
+    });
+    thirdLineDiv.appendChild(img);
+
+    img = document.createElement("img");
+    img.src = "styles/static/broken.svg";
+    img.className = "detail_options";
+    img.addEventListener("click", function () {
+      toggleStatus(user.id, user.name, user.status);
+    });
+    thirdLineDiv.appendChild(img);
   });
 }
 
-function showUserPic(link, place, deletion) {
+function showUserPic(id, place, deletion) {
+  const picDiv = document.createElement("div");
+  place.appendChild(picDiv);
+
+  var user = null;
+  for (const element of UserData) {
+    if (element[0].id == id) {
+      user = element[0];
+      break;
+    }
+  }
+
   const img = document.createElement("img");
-  img.src = "/" + link;
-  img.width = 100;
+  img.src = "/" + user.pic;
+  img.className = "book_thumbnail";
   if (deletion) {
+    img.className = "book_thumbnail_red";
     img.addEventListener("click", () => {
-      deleteBookPic(link);
+      deleteBookPic(user.pic);
     });
   }
-  place.appendChild(img);
+  picDiv.appendChild(img);
 }
 
-function deactivateUser(key) {
-  fetch("/user/deactivate", {
+async function details(id) {
+  var element = null;
+  for (const e of UserData) {
+    if (e[0].id != id) {
+      element = e;
+      break;
+    }
+  }
+
+  initDetailDiv(detailsDiv, clearPlace);
+
+  showUserPic(id, detailsDiv, false);
+
+  var detailText = document.createElement("div");
+
+  for (const k in element[0]) {
+    if (k == "pic") continue;
+    const e = document.createElement("p");
+    e.textContent = LabelNames[k] + " " + element[0][k];
+    detailText.appendChild(e);
+  }
+
+  detailsDiv.appendChild(detailText);
+
+  detailText = document.createElement("div");
+
+  element.slice(1).map((item) => {
+    const e = document.createElement("p");
+    e.textContent = item.date + ": " + item.notes;
+    detailText.appendChild(e);
+  });
+
+  detailsDiv.appendChild(detailText);
+
+  detailText = document.createElement("div");
+  detailsDiv.appendChild(detailText);
+  const list = await getLendedBookList(id);
+  for (const book of list) {
+    const element = document.createElement("p");
+    element.textContent = book;
+    detailText.appendChild(element);
+  }
+
+  //TODO list all active books
+}
+
+async function getLendedBookList(uid) {
+  const frm = new FormData();
+  frm.append("id", uid);
+  frm.append("search", "lend");
+
+  const rsp = await fetch("/user/find", {
     method: "POST",
-    body: key,
-  }).then((rsp) =>
-    rsp.json().then((data) => {
-      console.log(data);
-      userSearchBtn.click();
-    })
-  );
+    body: frm,
+  });
+  const bookList = await rsp.json();
+
+  return bookList;
 }
 
 function editUser(key) {
@@ -232,6 +285,18 @@ function createTypeSelect(id, place) {
   place.appendChild(typeSelect);
 }
 
+function deactivateUser(key) {
+  fetch("/user/deactivate", {
+    method: "POST",
+    body: key,
+  }).then((rsp) =>
+    rsp.json().then((data) => {
+      console.log(data);
+      userSearchBtn.click();
+    })
+  );
+}
+
 function reorderBooks(UserData, prop) {
   UserData.sort((a, b) => {
     const propA = a[0][prop]; // Convert to uppercase for case-insensitive comparison
@@ -248,4 +313,18 @@ function reorderBooks(UserData, prop) {
     return 0;
   });
   listUsers(UserData);
+}
+
+export async function getUserNameById(uid) {
+  const frm = new FormData();
+  frm.append("id", uid);
+  frm.append("search", "single");
+
+  const rsp = await fetch("/user/find", {
+    method: "POST",
+    body: frm,
+  });
+  const name = await rsp.json();
+
+  return name.name;
 }

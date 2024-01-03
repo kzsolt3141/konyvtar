@@ -29,6 +29,7 @@ module.exports = {
   findUser: db_users.findUser,
   findUserNotes: db_users.findUserNotes,
   getUserNameById: db_users.getUserNameById,
+  getLendedBooks: db_users.getLendedBooks,
   deactivateUser: db_users.deactivateUser,
   editUser: db_users.editUser,
 

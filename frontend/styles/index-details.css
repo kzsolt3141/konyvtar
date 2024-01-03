@@ -21,3 +21,7 @@
 .detail_options:hover {
   background-color: rgb(153, 140, 140);
 }
+
+.detail_text {
+  min-height: 420px;
+}
