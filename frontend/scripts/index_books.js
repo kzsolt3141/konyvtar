@@ -55,59 +55,68 @@ function searchBook(bookFormData) {
 
 /* all books will be listed in the books_div div element
  * each book will have its own table
- * row 0: book pictures
- * row 1; book information
- * row 2; button(s)
  */
-function listBooks(books) {
+async function listBooks(books) {
   const booksDiv = document.getElementById("books_div");
   booksDiv.innerHTML = "";
 
-  books.forEach((bookObj) => {
+  books.forEach(async function (bookObj) {
     const book = bookObj[0];
     const available = bookObj[1];
 
-    const bookTable = document.createElement("table");
+    const bookDiv = document.createElement("div");
+    booksDiv.appendChild(bookDiv);
+    bookDiv.id = book.id;
+    bookDiv.className = "book_div";
 
-    bookTable.id = book.id;
-    bookTable.className = "book_table";
+    if (!available[0]) {
+      bookDiv.style.backgroundColor = "#f0c0c0";
+    }
 
-    var tableRow = bookTable.insertRow();
-    showBookPics(book.id, tableRow, false);
+    await showBookPics(book.id, bookDiv, false);
 
-    tableRow = bookTable.insertRow();
+    const boodDetailsDiv = document.createElement("div");
+    bookDiv.appendChild(boodDetailsDiv);
+
+    const firstLineDiv = document.createElement("div");
+    firstLineDiv.className = "book_first_line";
+    boodDetailsDiv.appendChild(firstLineDiv);
 
     const radio = document.createElement("input");
     radio.type = "radio";
     radio.name = "book_radio";
     radio.id = book.id;
     radio.disabled = !available[0];
-    tableRow.appendChild(radio);
+    firstLineDiv.appendChild(radio);
 
-    for (const k in book) {
-      if (
-        k == "id" ||
-        k == "isbn" ||
-        k == "publ" ||
-        k == "ver" ||
-        k == "status"
-      )
-        continue;
+    const firstLine = [book.title, book.author];
 
+    for (const k of firstLine) {
       const element = document.createElement("p");
-      element.textContent = book[k];
-
-      tableRow.appendChild(element);
+      element.textContent = k;
+      firstLineDiv.appendChild(element);
     }
 
-    tableRow = bookTable.insertRow();
+    const secondLineDiv = document.createElement("div");
+    secondLineDiv.className = "book_second_line";
+    boodDetailsDiv.appendChild(secondLineDiv);
+    const secondLine = [book.publ, book.ver, book.year];
+    for (const k of secondLine) {
+      const element = document.createElement("p");
+      element.textContent = k;
+      secondLineDiv.appendChild(element);
+    }
+
+    const thirdLineDiv = document.createElement("div");
+    thirdLineDiv.className = "book_third_line";
+    boodDetailsDiv.appendChild(thirdLineDiv);
     var img = document.createElement("img");
     img.src = "styles/static/edit.png";
     img.className = "detail_options";
     img.addEventListener("click", function () {
       editBook(book.id);
     });
-    tableRow.appendChild(img);
+    thirdLineDiv.appendChild(img);
 
     img = document.createElement("img");
     img.src = "styles/static/details.svg";
@@ -115,7 +124,7 @@ function listBooks(books) {
     img.addEventListener("click", function () {
       details(book.id);
     });
-    tableRow.appendChild(img);
+    thirdLineDiv.appendChild(img);
 
     if (!available[0]) {
       img = document.createElement("img");
@@ -124,7 +133,7 @@ function listBooks(books) {
       img.addEventListener("click", function () {
         toggleStatus(book.id);
       });
-      tableRow.appendChild(img);
+      thirdLineDiv.appendChild(img);
 
       // TODO show this only for unavailable cases
       // TODO use form from lend.js (already implemented)
@@ -134,10 +143,8 @@ function listBooks(books) {
       img.addEventListener("click", function () {
         editBook(book.id);
       });
-      tableRow.appendChild(img);
+      thirdLineDiv.appendChild(img);
     }
-
-    booksDiv.appendChild(bookTable);
   });
 }
 
@@ -162,6 +169,13 @@ async function showBookPics(id, bookDiv, deletion) {
     }
     picDiv.appendChild(img);
   });
+
+  if (picDiv.childElementCount == 0) {
+    const img = document.createElement("img");
+    img.src = "/styles/static/default_book.png";
+    img.className = "book_thumbnail";
+    picDiv.appendChild(img);
+  }
   bookDiv.appendChild(picDiv);
   return 0;
 }

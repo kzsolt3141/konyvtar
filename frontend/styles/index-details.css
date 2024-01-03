@@ -5,6 +5,7 @@
   left: 100px;
   opacity: 1;
   background-color: #d1dbcd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .detail_options {
