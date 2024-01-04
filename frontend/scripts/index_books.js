@@ -192,6 +192,7 @@ async function details(key) {
     var detailText = document.createElement("div");
 
     for (const k in element[0]) {
+      if (k == "pic") continue;
       const e = document.createElement("p");
       e.textContent = LabelNames[k] + element[0][k];
       detailText.appendChild(e);
@@ -285,7 +286,7 @@ async function editBook(key) {
   element[0].notes = "";
 
   for (const k in element[0]) {
-    if (k == "id" || k == "status" || k == "genre") continue;
+    if (k == "id" || k == "status" || k == "genre" || k == "pic") continue;
     const l = document.createElement("label");
     l.textContent = LabelNames[k];
     const e = document.createElement("input");

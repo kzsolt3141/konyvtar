@@ -96,7 +96,7 @@ function registerBookNotes(id, date, notes) {
         console.log(`Notes coudld not be added to DB`);
         return;
       }
-      console.log(`Notes added to DB`);
+      console.log(`Notes added to Books DB`);
     });
   }
 }
@@ -184,9 +184,7 @@ function updateBook(req, res) {
   }
 }
 
-//TODO implement status toggling
 function toggleBookStatus(body, res) {
-  console.log(body);
   sql = `
   UPDATE books 
   SET status = 

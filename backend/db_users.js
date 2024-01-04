@@ -101,7 +101,7 @@ function registerUserNotes(id, date, notes) {
         console.log(`Notes coudld not be added to DB`);
         return;
       }
-      console.log(`Notes added to DB`);
+      console.log(`Notes added to User DB`);
     });
   }
 }
@@ -171,15 +171,41 @@ function getLendedBooks(body, res) {
   });
 }
 
-function deactivateUser(body, res) {
-  const sql = `UPDATE users SET status = "inactive" WHERE id = ?`;
-  db_.run(sql, [body], (err) => {
+function updateUser(req, res) {
+  switch (req.body.update) {
+    case "bulk":
+      editUser(req, res);
+      break;
+    case "status":
+      toggleUserStatus(req.body, res);
+      break;
+    default:
+      res.json(`unknown instruction: ${body.update}`);
+  }
+}
+
+function toggleUserStatus(body, res) {
+  console.log(body);
+  sql = `
+  UPDATE users 
+  SET status = 
+    CASE 
+      WHEN status = 0 
+        THEN 1 
+        ELSE 0
+      END 
+  WHERE id = ?`;
+  db_.run(sql, [body.id], (err) => {
     if (err) {
-      console.error(err.message);
-      res.json(`User id ${body} could not be deactivated`);
+      console.log(err);
+      res.json(`User ${body.id} could not be modified`);
       return;
     }
-    res.json(`User id ${body} was deactivated`);
+    const currentDate = new Date();
+    registerUserNotes(body.id, currentDate, body.notes);
+    console.log(`User ${body.id} modified successfully`);
+    // update book pic table
+    res.json(`User ${body.id} modified successfully`);
   });
 }
 
@@ -220,6 +246,5 @@ module.exports = {
   findUserNotes: findUserNotes,
   getUserNameById: getUserNameById,
   getLendedBooks: getLendedBooks,
-  deactivateUser: deactivateUser,
-  editUser: editUser,
+  updateUser: updateUser,
 };

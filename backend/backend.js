@@ -219,10 +219,10 @@ async function findUserHandler(req, res) {
 
 //----------------------------------------------------------------
 
-// TODO implement
 app.post("/user/edit", upload.single("image"), (req, res) => {
-  database.editUser(req, res);
+  database.updateUser(req, res);
 });
+
 //----------------------------------------------------------------
 app.listen(8080, "192.168.0.107", () => {
   console.log("Server listening on 8080");

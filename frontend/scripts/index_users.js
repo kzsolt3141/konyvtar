@@ -197,6 +197,48 @@ async function getLendedBookList(uid) {
   return bookList;
 }
 
+async function toggleStatus(id, name, status) {
+  initDetailDiv(detailsDiv, okFunction);
+  showBookPic(id, detailsDiv, false);
+
+  const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
+  const nextStatus = status == 1 ? "Elveszett" : "Aktiv";
+
+  const detailText = document.createElement("div");
+  detailsDiv.appendChild(detailText);
+
+  const p = document.createElement("p");
+  p.textContent = `${name} allapot valtoztatasa ${currentStatus} -rol ${nextStatus} -ra`;
+
+  const l = document.createElement("label");
+  l.textContent = "Allapot valtoztatas oka:";
+
+  const e = document.createElement("input");
+  e.value = "";
+  e.id = "notes";
+
+  detailText.appendChild(p);
+  detailText.appendChild(l);
+  detailText.appendChild(e);
+
+  function okFunction() {
+    const changeForm = new FormData();
+    changeForm.append("update", "status");
+    changeForm.append("id", id);
+    changeForm.append("notes", e.value);
+
+    fetch("/user/edit", {
+      method: "POST",
+      body: changeForm,
+    }).then((rsp) =>
+      rsp.json().then((data) => {
+        console.log(data);
+        detailsDiv.innerHTML = "";
+      })
+    );
+  }
+}
+
 function editUser(key) {
   var element = null;
   for (const e of UserData) {
@@ -284,18 +326,6 @@ function createTypeSelect(id, place) {
   });
 
   place.appendChild(typeSelect);
-}
-
-function deactivateUser(key) {
-  fetch("/user/deactivate", {
-    method: "POST",
-    body: key,
-  }).then((rsp) =>
-    rsp.json().then((data) => {
-      console.log(data);
-      userSearchBtn.click();
-    })
-  );
 }
 
 function reorderBooks(UserData, prop) {

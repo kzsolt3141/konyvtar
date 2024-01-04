@@ -28,8 +28,7 @@ module.exports = {
   findUserNotes: db_users.findUserNotes,
   getUserNameById: db_users.getUserNameById,
   getLendedBooks: db_users.getLendedBooks,
-  deactivateUser: db_users.deactivateUser,
-  editUser: db_users.editUser,
+  updateUser: db_users.updateUser,
 
   lend: db_loan.lend,
   bring: db_loan.bring,
