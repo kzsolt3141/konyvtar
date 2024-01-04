@@ -40,21 +40,33 @@ function registerUser(req) {
   var filename = null;
   if (req.file) filename = req.file.filename;
 
+  // TODO check how should Promise work (probably without return ?)
   return new Promise((resolve, reject) => {
     // seach for incopatible user data (phone and mail both used by other user)
     var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
     db_.all(sql, [body.phone, body.mail], (err, rows) => {
       if (err) {
         reject(err.message);
+        return;
       }
       if (rows && rows.length > 0) {
         reject(`Phone:${body.phone} AND mail:${body.mail} used`);
+        return;
       }
 
       // additional check for user validation
-      if (body.name === "") reject("Empty name");
-      if (body.address === "") reject("Empty address");
-      if (body.phone === "") reject("Empty phone");
+      if (body.name === "") {
+        reject("Empty name");
+        return;
+      }
+      if (body.address === "") {
+        reject("Empty address");
+        return;
+      }
+      if (body.phone === "") {
+        reject("Empty phone");
+        return;
+      }
 
       // it's ok to start adding the user
       sql = `
@@ -67,6 +79,7 @@ function registerUser(req) {
         function (err) {
           if (err) {
             reject(err.message);
+            return;
           }
           const currentDate = new Date();
           registerUserNotes(this.lastID, currentDate, body.notes);

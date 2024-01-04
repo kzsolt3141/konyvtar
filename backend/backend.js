@@ -190,9 +190,11 @@ app.post("/user/add", upload.single("image"), (req, res) => {
       res.json(message);
     })
     .catch((err) => {
-      fs.unlink(path.join(base_dir, "uploads", req.file.filename), (err) => {
-        if (err) console.log(err.message);
-      });
+      if (req.file) {
+        fs.unlink(path.join(base_dir, "uploads", req.file.filename), (err) => {
+          if (err) console.log(err.message);
+        });
+      }
       res.json(err);
     });
 });
