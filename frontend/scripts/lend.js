@@ -1,5 +1,5 @@
 import { initDetailDiv } from "./common.js";
-import { getBookTitleById, showBookPics } from "./index_books.js";
+import { getBookTitleById, showBookPic } from "./index_books.js";
 import { getUserNameById } from "./index_users.js";
 
 const button = document.getElementById("lend_button");
@@ -30,7 +30,7 @@ export async function lendBook(bid, uid, place, isLend) {
   const userName = await getUserNameById(uid);
 
   initDetailDiv(place, okFunction);
-  await showBookPics(bid, place, false);
+  showBookPic(bid, place, false);
 
   const textDiv = document.createElement("div");
   place.appendChild(textDiv);

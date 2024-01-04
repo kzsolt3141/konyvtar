@@ -116,7 +116,7 @@ function listUsers(users) {
   });
 }
 
-function showUserPic(id, place, deletion) {
+function showUserPic(id, place) {
   const picDiv = document.createElement("div");
   place.appendChild(picDiv);
 
@@ -135,13 +135,6 @@ function showUserPic(id, place, deletion) {
     img.src = "/styles/static/default_book.png";
   } else {
     img.src = "/" + user.pic;
-
-    if (deletion) {
-      img.className = "book_thumbnail_red";
-      img.addEventListener("click", () => {
-        deleteBookPic(user.pic);
-      });
-    }
   }
   picDiv.appendChild(img);
 }

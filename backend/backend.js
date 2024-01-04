@@ -74,29 +74,24 @@ const textMulter = multer();
 
 //----------------------------------------------------------------
 
-app.post("/book/add", upload.array("images"), (req, res) => {
-  newNames = [];
-  req.files.forEach((file) => {
-    newNames.push(file.filename);
-  });
-
+app.post("/book/add", upload.single("image"), (req, res) => {
   // TODO update with meaningful res messages + start using HTTP status codes
   database
-    .registerBook(req.body, newNames)
+    .registerBook(req)
     .then((message) => {
       res.json(message);
     })
     .catch((err) => {
-      newNames.forEach((newName) => {
-        fs.unlink(path.join(base_dir, "uploads", newName), (err) => {
+      if (req.file) {
+        fs.unlink(path.join(base_dir, "uploads", req.file.filename), (err) => {
           if (err) {
             console.log(err.message);
             sts = `Could not delete picture: ${req.body}`;
           } else {
-            console.log("deleted:", newName);
+            console.log("deleted:", req.file.filename);
           }
         });
-      });
+      }
       res.json(err);
     });
 });

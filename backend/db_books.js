@@ -14,15 +14,8 @@ function init(db) {
         year INTEGER,
         publ TEXT,
         ver TEXT,
+        pic TEXT,
         status INTEGER DEFAULT 1 NOT NULL
-    )
-  `);
-
-  db_.run(`
-    CREATE TABLE IF NOT EXISTS book_pics (
-        id INTEGER,
-        link TEXT,
-        type INTEGER DEFAULT 1 NOT NULL
     )
   `);
 
@@ -50,7 +43,11 @@ function getValidYear(textyear) {
   return { value: year };
 }
 
-function registerBook(body, newNames) {
+function registerBook(req) {
+  const body = req.body;
+  var file = null;
+  if (req.file != null) file = req.file.filename;
+
   return new Promise((resolve, reject) => {
     year = getValidYear(body.year, 10);
     if (year.error) {
@@ -59,8 +56,8 @@ function registerBook(body, newNames) {
     }
 
     const sql = `INSERT INTO books 
-      (isbn, title, author, genre, year, publ, ver)
-      VALUES (?, ?, ?, ?, ?, ?, ?) `;
+      (isbn, title, author, genre, year, publ, ver, pic)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
 
     const values = [
       body.isbn,
@@ -70,6 +67,7 @@ function registerBook(body, newNames) {
       year.value,
       body.publ,
       body.ver,
+      file,
     ];
 
     db_.run(sql, values, function (err) {
@@ -80,24 +78,9 @@ function registerBook(body, newNames) {
       }
       resolve(this.lastID);
 
-      registerBookImgs(this.lastID, newNames);
       body.notes = body.notes === "" ? "Init" : body.notes;
       const currentDate = new Date();
       registerBookNotes(this.lastID, currentDate, body.notes);
-    });
-  });
-}
-
-function registerBookImgs(id, bookImgs) {
-  const sql = `INSERT INTO book_pics (id, link, type) VALUES (?, ?, ?)`;
-
-  bookImgs.forEach((bookImg, idx) => {
-    db_.run(sql, [id, bookImg, idx == 0 ? 1 : 0], (err) => {
-      if (err) {
-        console.log(`Image ${bookImg} for ID:${id} was not added to DB`);
-        return;
-      }
-      console.log(`Image ${bookImg} for ID:${id} was  added to DB`);
     });
   });
 }
@@ -263,9 +246,9 @@ function toggleBookStatus(body, res) {
 
 function editBook(req, res) {
   const body = req.body;
-  var file = [];
+  var file = null;
   if (req.file != null) {
-    file = [req.file.filename];
+    file = req.file.filename;
   }
 
   sql = `UPDATE books 
@@ -276,7 +259,8 @@ function editBook(req, res) {
     genre = ?,
     year = ?,
     publ = ?,
-    ver = ?
+    ver = ?,
+    pic = COALESCE(?, pic)
   WHERE id = ?`;
   db_.run(
     sql,
@@ -288,6 +272,7 @@ function editBook(req, res) {
       body.year,
       body.publ,
       body.ver,
+      file,
       body.id,
     ],
     (err) => {
@@ -298,9 +283,6 @@ function editBook(req, res) {
       }
       const currentDate = new Date();
       registerBookNotes(body.id, currentDate, body.notes);
-      registerBookImgs(body.id, file);
-      console.log(`Book ${body.title} modified successfully`);
-      // update book pic table
       res.json(`Book ${body.title} modified successfully`);
     }
   );

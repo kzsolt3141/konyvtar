@@ -83,7 +83,7 @@ async function listBooks(books) {
       bookDiv.style.backgroundColor = "#f0c0c0";
     }
 
-    await showBookPics(book.id, bookDiv, false);
+    showBookPic(book.id, bookDiv, false);
 
     const boodDetailsDiv = document.createElement("div");
     bookDiv.appendChild(boodDetailsDiv);
@@ -159,55 +159,27 @@ async function listBooks(books) {
   });
 }
 
-export async function showBookPics(id, bookDiv, deletion, showOne = true) {
-  const rsp = await fetch("/book/find_book_pic", {
-    method: "POST",
-    body: id,
-  });
-
-  const data = await rsp.json();
-
+export function showBookPic(id, bookDiv, deletion) {
   const picDiv = document.createElement("div");
-  picDiv.id = "pic" + id;
-
-  JSON.parse(data).every((pic) => {
-    const img = document.createElement("img");
-    img.src = "/" + pic.link;
-    img.className = "book_thumbnail";
-    if (deletion) {
-      img.className = "book_thumbnail_red";
-      img.addEventListener("click", () => {
-        deleteBookPic(pic.link);
-      });
-    }
-    picDiv.appendChild(img);
-    if (showOne) {
-      return false;
-    }
-    return true;
-  });
-
-  if (picDiv.childElementCount == 0) {
-    const img = document.createElement("img");
-    img.src = "/styles/static/default_book.png";
-    img.className = "book_thumbnail";
-    picDiv.appendChild(img);
-  }
   bookDiv.appendChild(picDiv);
-  return 0;
-}
 
-function deleteBookPic(link) {
-  fetch("/book/delete_book_pic", {
-    method: "POST",
-    body: link,
-  })
-    .then((rsp) => rsp.json())
-    .then((data) => {
-      console.log(data);
-      detailsDiv.innerHTML = "";
-      bookSearchBtn.click();
-    });
+  var book = null;
+  for (const element of BookData) {
+    if (element[0].id == id) {
+      book = element[0];
+      break;
+    }
+  }
+
+  const img = document.createElement("img");
+  img.className = "book_thumbnail";
+
+  if (book.pic == null) {
+    img.src = "/styles/static/default_book.png";
+  } else {
+    img.src = "/" + book.pic;
+  }
+  picDiv.appendChild(img);
 }
 
 async function details(key) {
@@ -215,7 +187,7 @@ async function details(key) {
 
   for (const element of BookData) {
     if (element[0].id != key) continue;
-    await showBookPics(key, detailsDiv, false, false);
+    showBookPic(key, detailsDiv, false);
 
     var detailText = document.createElement("div");
 
@@ -252,7 +224,7 @@ async function details(key) {
 
 async function toggleStatus(id, name, status) {
   initDetailDiv(detailsDiv, okFunction);
-  await showBookPics(id, detailsDiv, false);
+  showBookPic(id, detailsDiv, false);
 
   const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
   const nextStatus = status == 1 ? "Elveszett" : "Aktiv";
@@ -302,7 +274,7 @@ async function editBook(key) {
   }
 
   initDetailDiv(detailsDiv, okFunction);
-  await showBookPics(key, detailsDiv, true, false);
+  showBookPic(key, detailsDiv, true);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";

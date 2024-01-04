@@ -187,7 +187,7 @@ function editUser(req, res) {
   const body = req.body;
   var file = null;
   if (req.file != null) {
-    file = [req.file.filename];
+    file = req.file.filename;
   }
 
   sql = `UPDATE users 
