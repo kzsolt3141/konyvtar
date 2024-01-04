@@ -140,26 +140,6 @@ async function findBookHandler(req, res) {
 
 //----------------------------------------------------------------
 
-app.post("/book/find_book_pic", textMulter.none(), (req, res) => {
-  database.findBookPic(req.body, res);
-});
-
-//----------------------------------------------------------------
-app.post("/book/delete_book_pic", textMulter.none(), (req, res) => {
-  const sts = "";
-  fs.unlink(path.join(base_dir, "uploads", req.body), (err) => {
-    if (err) {
-      console.log(err.message);
-      sts = `Could not delete picture: ${req.body}`;
-    } else {
-      database.deleteBookPic(req.body, sts);
-    }
-  });
-  res.json(sts);
-});
-
-//----------------------------------------------------------------
-
 app.post("/book/change", upload.single("image"), (req, res) => {
   database.updateBook(req, res);
 });

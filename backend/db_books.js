@@ -171,40 +171,6 @@ function getBookNameById(body, res) {
   });
 }
 
-function findBookPic(body, res) {
-  const sql = `SELECT link FROM book_pics WHERE id = ?`;
-  db_.all(sql, [body], (err, rows) => {
-    if (err) {
-      res.json("Database error please try again");
-      console.log(err.message);
-      return;
-    }
-    if (rows) {
-      const resp = [];
-      rows.forEach((row) => {
-        resp.push(row);
-      });
-      res.json(JSON.stringify(resp));
-    } else {
-      console.log("Book pics not found:", body);
-      res.json("Book not found:", body);
-    }
-  });
-}
-
-function deleteBookPic(body, sts) {
-  const sql = `DELETE FROM book_pics WHERE link = ?`;
-  db_.all(sql, [body], (err, rows) => {
-    if (err) {
-      sts = "Database error please try again";
-      console.log(err.message);
-      return;
-    }
-    console.log("Book pic deleted:", body);
-    sts = `Book pic deleted: ${body}`;
-  });
-}
-
 function updateBook(req, res) {
   switch (req.body.update) {
     case "bulk":
@@ -292,11 +258,9 @@ module.exports = {
   init: init,
   registerBook: registerBook,
   findBook: findBook,
-  findBookPic: findBookPic,
   findBookNotes: findBookNotes,
   getBookNameById: getBookNameById,
   addGenre: addGenre,
   getGenres: getGenres,
-  deleteBookPic: deleteBookPic,
   updateBook: updateBook,
 };

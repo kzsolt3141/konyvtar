@@ -17,12 +17,10 @@ module.exports = {
   init: init,
   registerBook: db_books.registerBook,
   findBook: db_books.findBook,
-  findBookPic: db_books.findBookPic,
   findBookNotes: db_books.findBookNotes,
   getBookNameById: db_books.getBookNameById,
   addGenre: db_books.addGenre,
   getGenres: db_books.getGenres,
-  deleteBookPic: db_books.deleteBookPic,
   updateBook: db_books.updateBook,
 
   registerUser: db_users.registerUser,
