@@ -129,13 +129,19 @@ function showUserPic(id, place, deletion) {
   }
 
   const img = document.createElement("img");
-  img.src = "/" + user.pic;
   img.className = "book_thumbnail";
-  if (deletion) {
-    img.className = "book_thumbnail_red";
-    img.addEventListener("click", () => {
-      deleteBookPic(user.pic);
-    });
+
+  if (user.pic == null) {
+    img.src = "/styles/static/default_book.png";
+  } else {
+    img.src = "/" + user.pic;
+
+    if (deletion) {
+      img.className = "book_thumbnail_red";
+      img.addEventListener("click", () => {
+        deleteBookPic(user.pic);
+      });
+    }
   }
   picDiv.appendChild(img);
 }
@@ -143,7 +149,7 @@ function showUserPic(id, place, deletion) {
 async function details(id) {
   var element = null;
   for (const e of UserData) {
-    if (e[0].id != id) {
+    if (e[0].id == id) {
       element = e;
       break;
     }

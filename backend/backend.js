@@ -185,7 +185,7 @@ app.post("/book/genres", textMulter.none(), (req, res) => {
 app.post("/user/add", upload.single("image"), (req, res) => {
   // TODO update with meaningful res messages + start using HTTP status codes
   database
-    .registerUser(req.body, req.file.filename)
+    .registerUser(req)
     .then((message) => {
       res.json(message);
     })

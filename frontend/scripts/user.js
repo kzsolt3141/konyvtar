@@ -8,9 +8,11 @@ addBookBtn.addEventListener("click", async (event) => {
   window.location.href = "/book";
 });
 
-const form = document.getElementById("add_user");
-form.addEventListener("click", async (event) => {
+const addButton = document.getElementById("add");
+addButton.addEventListener("click", async (event) => {
   event.preventDefault();
+
+  const form = document.getElementById("add_user");
 
   const formData = new FormData(form);
 
@@ -23,5 +25,5 @@ form.addEventListener("click", async (event) => {
 });
 
 function updateStatus(data) {
-  document.querySelector(".submit_status").textContent = data;
+  document.getElementById("submit_status").textContent = data;
 }

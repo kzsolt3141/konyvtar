@@ -45,5 +45,5 @@ formBtn.addEventListener("click", async (event) => {
 });
 
 function updateStatus(data) {
-  document.querySelector(".submit_status").textContent = data;
+  document.getElementById("submit_status").textContent = data;
 }

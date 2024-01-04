@@ -28,3 +28,10 @@ h1 {
 .cancel_btn:hover {
   background-color: rgb(153, 140, 140);
 }
+
+.global_status {
+  background-color: rgb(238, 129, 129);
+  position: fixed;
+  right: 20%;
+  top: 80px;
+}

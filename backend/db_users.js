@@ -35,7 +35,11 @@ CREATE TABLE IF NOT EXISTS user_notes (
 
 //--------------------------
 
-function registerUser(body, filename) {
+function registerUser(req) {
+  const body = req.body;
+  var filename = null;
+  if (req.file) filename = req.file.filename;
+
   return new Promise((resolve, reject) => {
     // seach for incopatible user data (phone and mail both used by other user)
     var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;

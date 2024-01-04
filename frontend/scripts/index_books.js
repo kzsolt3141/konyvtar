@@ -189,7 +189,7 @@ export async function showBookPics(id, bookDiv, deletion, showOne = true) {
 
   if (picDiv.childElementCount == 0) {
     const img = document.createElement("img");
-    img.src = "/styles/static/default_book.svg";
+    img.src = "/styles/static/default_book.png";
     img.className = "book_thumbnail";
     picDiv.appendChild(img);
   }
