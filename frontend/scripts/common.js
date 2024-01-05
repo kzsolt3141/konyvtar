@@ -21,3 +21,10 @@ export function initDetailDiv(place, okFunction, title = "") {
     place.innerHTML = "";
   });
 }
+
+export function updateStatus(data) {
+  document.getElementById("global_status").textContent = data;
+  setTimeout(() => {
+    document.getElementById("global_status").innerHTML = "";
+  }, 5000);
+}

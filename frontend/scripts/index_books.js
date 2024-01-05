@@ -8,6 +8,7 @@ const LabelNames = {
   publ: "Kiado:",
   ver: "Kiadas:",
   status: "Allapot:",
+  keys: "Kulcsszavak",
   notes: "Megjegyzesek:",
   available: "Elerheto:",
 };
@@ -20,7 +21,7 @@ import {
 
 import { getUserNameById } from "./index_users.js";
 import { lendBook } from "./lend.js";
-import { initDetailDiv } from "./common.js";
+import { initDetailDiv, updateStatus } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -337,7 +338,7 @@ async function editBook(key) {
 
   function okFunction() {
     if (!genreSelectIsValid("changeForm")) {
-      console.log("Please select genre!");
+      updateStatus("Kerlek valasz megfelelo TIPUS-t");
       return;
     }
     const changeForm = new FormData();

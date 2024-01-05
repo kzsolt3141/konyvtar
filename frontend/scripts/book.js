@@ -5,6 +5,8 @@ import {
   getGenreValue,
 } from "./genre.js";
 
+import { updateStatus } from "./common.js";
+
 const mainBtn = document.getElementById("main_btn");
 mainBtn.addEventListener("click", async (event) => {
   window.location.href = "/";
@@ -43,11 +45,3 @@ formBtn.addEventListener("click", async (event) => {
     .then((rsp) => rsp.text())
     .then((data) => updateStatus(data));
 });
-
-function updateStatus(data) {
-  document.getElementById("submit_status").textContent = data;
-
-  setTimeout(() => {
-    document.getElementById("submit_status").innerHTML = "";
-  }, 5000);
-}

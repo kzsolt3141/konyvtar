@@ -15,6 +15,7 @@ function init(db) {
         publ TEXT,
         ver TEXT,
         pic TEXT,
+        keys TEXT,
         status INTEGER DEFAULT 1 NOT NULL
     )
   `);
@@ -56,8 +57,8 @@ function registerBook(req) {
     }
 
     const sql = `INSERT INTO books 
-      (isbn, title, author, genre, year, publ, ver, pic)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+      (isbn, title, author, genre, year, publ, ver, keys, pic)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
 
     const values = [
       body.isbn,
@@ -67,6 +68,7 @@ function registerBook(req) {
       year.value,
       body.publ,
       body.ver,
+      body.keys,
       file,
     ];
 
@@ -225,6 +227,7 @@ function editBook(req, res) {
     year = ?,
     publ = ?,
     ver = ?,
+    keys = ?,
     pic = COALESCE(?, pic)
   WHERE id = ?`;
   db_.run(
@@ -237,6 +240,7 @@ function editBook(req, res) {
       body.year,
       body.publ,
       body.ver,
+      body.keys,
       file,
       body.id,
     ],

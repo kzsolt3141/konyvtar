@@ -21,13 +21,18 @@
           <img class="search_button_icon" src="styles/static/home.svg" />
         </button>
         <button class="search_button" id="add_user_btn">
-          <img class="search_button_icon" src="styles/static/user.svg" />
+          <img class="search_button_icon" src="styles/static/user-plus.svg" />
         </button>
       </div>
     </div>
 
     <img class="search_icon" src="styles/static/book.svg" />
+
     <form id="add_book" class="book_form_div">
+      <div class="book_form_line">
+        <h2>Uj Konyv</h2>
+      </div>
+
       <div id="genre_div" class="book_form_line">
         <label for="isbn">Tipus</label>
       </div>
@@ -59,6 +64,10 @@
         <input type="text" id="ver" name="ver" value="Kiadas" />
       </div>
       <div class="book_form_line">
+        <label for="keys">Kulcsszavak</label>
+        <input type="text" id="keys" name="keys" value="" />
+      </div>
+      <div class="book_form_line">
         <label for="notes">Megjegyes</label>
         <input type="text" id="notes" name="notes" value="Init" />
       </div>
@@ -66,10 +75,17 @@
         <label for="image">Kep hozzasadasa:</label>
         <input type="file" id="image" name="image" accept="image/*" />
       </div>
-      <img src="styles/static/ok.svg" id="add_button" class="search_button" />
+      <div class="book_form_line">
+        <div></div>
+        <img
+          src="styles/static/ok.svg"
+          id="add_button"
+          class="search_button book_form_button"
+        />
+      </div>
     </form>
 
-    <div id="submit_status" class="global_status"></div>
+    <div id="global_status" class="global_status"></div>
   </body>
 
   <script type="module" src="scripts/genre.js"></script>

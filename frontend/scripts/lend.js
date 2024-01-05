@@ -1,4 +1,4 @@
-import { initDetailDiv } from "./common.js";
+import { initDetailDiv, updateStatus } from "./common.js";
 import { getBookTitleById, showBookPic } from "./index_books.js";
 import { getUserNameById } from "./index_users.js";
 

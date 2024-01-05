@@ -21,13 +21,16 @@
           <img class="search_button_icon" src="styles/static/home.svg" />
         </button>
         <button class="search_button" id="add_book_btn">
-          <img class="search_button_icon" src="styles/static/book.svg" />
+          <img class="search_button_icon" src="styles/static/book-plus.svg" />
         </button>
       </div>
     </div>
 
     <img class="search_icon" src="styles/static/user.svg" />
     <form id="add_user" class="book_form_div">
+      <div class="book_form_line">
+        <h2>Uj Felhasznalo</h2>
+      </div>
       <div class="book_form_line">
         <label for="name">Nev:</label>
         <input type="text" id="name" name="name" value="Teljes Nev" required />
@@ -66,7 +69,7 @@
 
       <img src="styles/static/ok.svg" id="add" class="search_button" />
     </form>
-    <div class="global_status" id="submit_status"></div>
+    <div class="global_status" id="global_status"></div>
   </body>
 
   <script src="scripts/user.js"></script>
