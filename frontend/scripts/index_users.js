@@ -129,7 +129,7 @@ function showUserPic(id, place) {
   }
 
   const img = document.createElement("img");
-  img.className = "book_thumbnail";
+  img.className = "user_thumbnail";
 
   if (user.pic == null) {
     img.src = "/styles/static/default_book.png";

@@ -111,7 +111,8 @@ async function findUser(body) {
   const sql = `SELECT * FROM users WHERE 
     LOWER(${body.type}) LIKE LOWER(?) 
     AND 
-    status = ?`;
+    status = ?
+    LIMIT 100`;
 
   return new Promise((resolve, reject) => {
     db_.all(sql, [`%${body.key}%`, status], (err, rows) => {

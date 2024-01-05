@@ -3,10 +3,18 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgb(199, 221, 199);
   display: grid;
   grid-template-columns: 150px 400px 200px;
-  justify-content: space-between;
+  justify-content: center;
+  background: rgb(178, 255, 186);
+  background: linear-gradient(
+    90deg,
+    rgb(133, 194, 139) 0%,
+    rgb(182, 248, 188) 50%,
+    rgb(136, 196, 142) 100%
+  );
+  border-radius: 20px;
+  box-shadow: 8px 8px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
 .fixed_header_image {

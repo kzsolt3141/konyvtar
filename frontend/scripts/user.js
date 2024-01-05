@@ -26,4 +26,7 @@ addButton.addEventListener("click", async (event) => {
 
 function updateStatus(data) {
   document.getElementById("submit_status").textContent = data;
+  setTimeout(() => {
+    document.getElementById("submit_status").innerHTML = "";
+  }, 5000);
 }

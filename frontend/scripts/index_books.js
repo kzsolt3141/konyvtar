@@ -86,6 +86,7 @@ async function listBooks(books) {
     showBookPic(book.id, bookDiv, false);
 
     const boodDetailsDiv = document.createElement("div");
+    boodDetailsDiv.className = "book_details_div";
     bookDiv.appendChild(boodDetailsDiv);
 
     const firstLineDiv = document.createElement("div");
@@ -149,7 +150,7 @@ async function listBooks(books) {
 
     if (!available[0]) {
       img = document.createElement("img");
-      img.src = "styles/static/ok.svg";
+      img.src = "styles/static/bring.svg";
       img.className = "detail_options";
       img.addEventListener("click", function () {
         lendBook(book.id, available[1], detailsDiv, false);
