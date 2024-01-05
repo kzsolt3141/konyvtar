@@ -103,6 +103,8 @@
   align-items: center;
   border-radius: 20px;
   border: 2px solid rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .book_details_div {
@@ -113,12 +115,18 @@
 
 .book_first_line {
   display: grid;
+  align-items: center;
   grid-template-columns: 30px 1fr 1fr;
 }
 
 .book_second_line {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+.book_second_line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .book_third_line {

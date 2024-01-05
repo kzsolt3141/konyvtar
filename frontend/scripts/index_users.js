@@ -56,6 +56,7 @@ function listUsers(users) {
     showUserPic(user.id, userDiv, false);
 
     const userDetailsDiv = document.createElement("div");
+    userDetailsDiv.className = "book_details_div";
     userDiv.appendChild(userDetailsDiv);
 
     const firstLineDiv = document.createElement("div");
@@ -66,6 +67,7 @@ function listUsers(users) {
     radio.type = "radio";
     radio.name = "user_radio";
     radio.id = user.id;
+    radio.disabled = user.status == 0;
     firstLineDiv.appendChild(radio);
 
     const firstLine = [user.name, user.address];
