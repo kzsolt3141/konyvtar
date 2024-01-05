@@ -13,8 +13,114 @@ function init() {
   db_loan.init(db);
 }
 
+csv = require("csv-stringify");
+
+async function saveAllTables(fs, res) {
+  let date = new Date();
+  date = date.toISOString().split("T")[0];
+  await saveBooks(fs, date);
+  await saveBookGenres(fs, date);
+  await saveBookNotes(fs, date);
+  await saveLoan(fs, date);
+  await saveUsers(fs, date);
+  await saveUserNotes(fs, date);
+  res.json("Adatbazis exportalva!");
+}
+
+async function saveBooks(fs, date) {
+  fs.writeFileSync(`${date}-konyvek.csv`, "");
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM books", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-konyvek.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+async function saveBookGenres(fs, date) {
+  fs.writeFileSync(`${date}-konyv-tipusok.csv`, "");
+
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM book_genres", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-konyv-tipusok.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+async function saveBookNotes(fs, date) {
+  fs.writeFileSync(`${date}-konyv-jegyzetek.csv`, "");
+
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM book_notes", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-konyv-jegyzetek.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+async function saveLoan(fs, date) {
+  fs.writeFileSync(`${date}-kolcsonzesek.csv`, "");
+
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM loan", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-kolcsonzesek.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+async function saveUsers(fs, date) {
+  fs.writeFileSync(`${date}-felhasznalok.csv`, "");
+
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM users", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-felhasznalok.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+async function saveUserNotes(fs, date) {
+  fs.writeFileSync(`${date}-felh-jegyzetek.csv`, "");
+
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM book_notes", (err, rows) => {
+      rows.forEach((row) => {
+        row = Object.values(row);
+        csv.stringify([row], (err, output) => {
+          fs.appendFileSync(`${date}-felh-jegyzetek.csv`, output);
+        });
+      });
+      resolve("");
+    });
+  });
+}
+
 module.exports = {
   init: init,
+  saveAllTables: saveAllTables,
+
   registerBook: db_books.registerBook,
   findBook: db_books.findBook,
   findBookNotes: db_books.findBookNotes,

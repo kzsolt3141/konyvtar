@@ -288,7 +288,7 @@ async function toggleStatus(id, name, status) {
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        console.log(data);
+        updateStatus(data);
         detailsDiv.innerHTML = "";
       })
     );
@@ -363,7 +363,7 @@ async function editBook(key) {
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        console.log(data);
+        updateStatus(data);
         detailsDiv.innerHTML = "";
         bookSearchBtn.click();
       })

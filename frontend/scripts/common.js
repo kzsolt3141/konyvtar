@@ -28,3 +28,14 @@ export function updateStatus(data) {
     document.getElementById("global_status").innerHTML = "";
   }, 5000);
 }
+
+const backupBtn = document.getElementById("backup_btn");
+backupBtn.addEventListener("click", async (event) => {
+  fetch("/backup", {
+    method: "POST",
+  })
+    .then((rsp) => rsp.json())
+    .then((data) => {
+      updateStatus(data);
+    });
+});

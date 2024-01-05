@@ -50,12 +50,6 @@ function registerBook(req) {
   if (req.file != null) file = req.file.filename;
 
   return new Promise((resolve, reject) => {
-    year = getValidYear(body.year, 10);
-    if (year.error) {
-      reject(`Book ${body.title} has incorrect year: ${body.year}`);
-      return;
-    }
-
     const sql = `INSERT INTO books 
       (isbn, title, author, genre, year, publ, ver, keys, pic)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
@@ -65,7 +59,7 @@ function registerBook(req) {
       body.title,
       body.author,
       body.genre,
-      year.value,
+      body.year,
       body.publ,
       body.ver,
       body.keys,
@@ -75,10 +69,12 @@ function registerBook(req) {
     db_.run(sql, values, function (err) {
       if (err) {
         console.log(err.message);
-        reject(err.message);
+        reject("Konyv hozzaadasa SIKERTELEN (egyedi ISBN szukseges)");
         return;
       }
-      resolve(this.lastID);
+      resolve(
+        `Konyv sikeresen hozzaadva az adatbazishoz, azonosito:${this.lastID}`
+      );
 
       body.notes = body.notes === "" ? "Init" : body.notes;
       const currentDate = new Date();
@@ -109,10 +105,10 @@ function addGenre(body, res) {
   db_.all(sql, [body], (err, rows) => {
     if (err) {
       console.log(err.message);
-      res.json(`Genre ${body} could not be added`);
+      res.json(`Tipus ${body} hozzaadasa sikertelen`);
       return;
     }
-    res.json(`Genre ${body} added successfully`);
+    res.json(`Tipus ${body} hozzaadva`);
   });
 }
 
@@ -120,8 +116,8 @@ function getGenres(res) {
   var sql = `SELECT * FROM book_genres ORDER BY genre ASC`;
   db_.all(sql, [], (err, rows) => {
     if (err) {
-      console.log(err);
-      res.json(`Genres could not be listed`);
+      console.log(err.message);
+      res.json(`Hiba!`);
       return;
     }
     res.json(rows);
@@ -140,7 +136,8 @@ async function findBook(body) {
   return new Promise((resolve, reject) => {
     db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
       if (err) {
-        reject(err.message);
+        console.log(err.message);
+        reject("Hiba!");
         return;
       }
       resolve(rows);
@@ -154,7 +151,8 @@ async function findBookNotes(id) {
   return new Promise((resolve, reject) => {
     db_.all(sql, [id], (err, rows) => {
       if (err) {
-        reject(err.message);
+        console.log(err.message);
+        reject("Hiba!");
         return;
       }
       resolve(rows);
@@ -167,7 +165,8 @@ function getBookNameById(body, res) {
 
   db_.all(sql, [body.id], (err, rows) => {
     if (err) {
-      res.json(err.message);
+      console.log(err.message);
+      reject("Hiba!");
       return;
     }
     res.json(rows[0]);

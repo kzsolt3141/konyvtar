@@ -28,36 +28,6 @@ app.get("/user", (req, res) => {
   res.sendFile(path.join(base_dir, "frontend/user.html"));
 });
 
-//TODO implement this
-// app.get("/lend", (req, res) => {
-//   res.sendFile(path.join(base_dir, "frontend/lend.html"));
-// });
-
-//TODO implement this
-// app.get("/list", (req, res) => {
-//   res.sendFile(path.join(base_dir, "frontend/list.html"));
-// });
-
-//TODO implement CSV export. Example here:
-/*
-// (A) LOAD REQUIRED MODULES
-// https://www.npmjs.com/package/csv-stringify
-const sqlite = require("sqlite3"),
-fs = require("fs"),
-csv = require("csv-stringify");
- 
-// (B) EXPORT USERS
-const db = new sqlite.Database("users.db");
-db.all("SELECT * FROM users", (err, rows) => rows.forEach(row => {
-  row = Object.values(row);
-  csv.stringify([row], (err, output) => {
-    console.log(row);
-    fs.appendFileSync("demo.csv", output);
-  });
-})); 
-db.close();
-
-*/
 //----------------------------------------------------------------
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -75,18 +45,16 @@ const textMulter = multer();
 //----------------------------------------------------------------
 
 app.post("/book/add", upload.single("image"), (req, res) => {
-  // TODO update with meaningful res messages + start using HTTP status codes
   database
     .registerBook(req)
     .then((message) => {
-      res.json(message);
+      res.json({ message });
     })
     .catch((err) => {
       if (req.file) {
         fs.unlink(path.join(base_dir, "uploads", req.file.filename), (err) => {
           if (err) {
-            console.log(err.message);
-            sts = `Could not delete picture: ${req.body}`;
+            console.log(err);
           } else {
             console.log("deleted:", req.file.filename);
           }
@@ -236,4 +204,8 @@ app.post("/lend/add", upload.none(), (req, res) => {
   } else {
     database.bring(req.body, res);
   }
+});
+
+app.post("/backup", (req, res) => {
+  database.saveAllTables(fs, res);
 });

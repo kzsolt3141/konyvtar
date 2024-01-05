@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   display: grid;
-  grid-template-columns: 150px 400px 200px;
+  grid-template-columns: 150px 400px 300px;
   justify-content: center;
   background: rgb(178, 255, 186);
   background: linear-gradient(
@@ -28,7 +28,7 @@
 
 .fixed_header_right {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
   align-items: center;
 }
