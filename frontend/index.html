@@ -41,8 +41,14 @@
 
         <div class="book_order_div" id="book_order_div"></div>
 
-        <input type="checkbox" id="avl" name="avl" checked="avl" />
-        <input type="checkbox" id="status" name="status" checked="true" />
+        <div class="avl_tool">
+          <input type="checkbox" id="avl" name="avl" checked="true" />
+          <div class="tooltip">Raktaron</div>
+        </div>
+        <div class="book_sts_tool">
+          <input type="checkbox" id="status" name="status" checked="true" />
+          <div class="tooltip">Aktiv</div>
+        </div>
         <button class="search_button" id="search_books_btn">
           <img class="search_button_icon" src="styles/static/kereso.png" />
         </button>
@@ -63,7 +69,10 @@
 
         <div class="user_order_div" id="user_order_div"></div>
 
-        <input type="checkbox" id="status" name="status" checked="true" />
+        <div class="user_sts_tool">
+          <input type="checkbox" id="status" name="status" checked="true" />
+          <div class="tooltip">Aktiv</div>
+        </div>
         <button class="search_button" id="search_user">
           <img class="search_button_icon" src="styles/static/kereso.png" />
         </button>

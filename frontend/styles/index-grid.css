@@ -130,3 +130,26 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.avl_tool,
+.book_sts_tool,
+.user_sts_tool {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: lightgray;
+  opacity: 0;
+  top: 50px;
+  border-radius: 5px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+}
+
+.avl_tool:hover .tooltip,
+.book_sts_tool:hover .tooltip,
+.user_sts_tool:hover .tooltip {
+  opacity: 1;
+}

@@ -70,9 +70,13 @@ async function listBooks(books) {
   const booksDiv = document.getElementById("books_div");
   booksDiv.innerHTML = "";
 
+  const avlCheck = document.getElementById("avl");
+
   books.forEach(async function (bookObj) {
     const book = bookObj[0];
     const available = bookObj[1];
+
+    if (available[0] != avlCheck.checked) return;
 
     const bookDiv = document.createElement("div");
     booksDiv.appendChild(bookDiv);
