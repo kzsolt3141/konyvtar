@@ -48,7 +48,7 @@ app.post("/book/add", upload.single("image"), (req, res) => {
   database
     .registerBook(req)
     .then((message) => {
-      res.json({ message });
+      res.json(message);
     })
     .catch((err) => {
       if (req.file) {

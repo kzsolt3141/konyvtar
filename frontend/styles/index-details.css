@@ -1,6 +1,6 @@
 .details_div {
   display: grid;
-  grid-template-columns: 300px 300px;
+  grid-template-columns: 300px 350px;
   column-gap: 20px;
   position: fixed;
   left: 100px;
@@ -36,7 +36,7 @@
 
 .detail_text {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.7fr 1.3fr;
   align-items: center;
   font-weight: bold;
   font-size: 18px;
@@ -48,7 +48,7 @@
   display: grid;
   font-weight: bold;
   font-size: 18px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 .detail_text_red {
   font-weight: bold;
