@@ -3,7 +3,7 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
-const database = require("./db_common.js");
+const database = require("./backend/db_common.js");
 
 //----------------------------------------------------------------
 database.init();
@@ -14,14 +14,14 @@ app.use(express.static("frontend"));
 app.use(express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
-const base_dir = path.join(__dirname, "../");
+const base_dir = path.join(__dirname, "./");
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(base_dir, "frontend/index.html"));
 });
 
 app.get("/book", (req, res) => {
-  res.sendFile(path.join(base_dir, "frontend/book.html"));
+  res.sendFile(path.join(base_dir, "./frontend/book.html"));
 });
 
 app.get("/user", (req, res) => {
