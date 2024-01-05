@@ -4,7 +4,7 @@
   "description": "",
   "main": "backend.js",
   "scripts": {
-    "start": "node --watch ./backend.js"
+    "start": "node --watch ./entrypoint.js"
   },
   "keywords": [],
   "author": "",
