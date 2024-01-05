@@ -188,24 +188,34 @@ export function showBookPic(id, bookDiv, deletion) {
 }
 
 async function details(key) {
-  initDetailDiv(detailsDiv, clearPlace);
+  initDetailDiv(detailsDiv, clearPlace, "Reszletek");
 
   for (const element of BookData) {
     if (element[0].id != key) continue;
     showBookPic(key, detailsDiv, false);
 
     var detailText = document.createElement("div");
+    detailText.className = "detail_text";
 
     for (const k in element[0]) {
       if (k == "pic") continue;
+      if (k == "notes") continue;
       const e = document.createElement("p");
-      e.textContent = LabelNames[k] + element[0][k];
+      e.textContent = LabelNames[k];
       detailText.appendChild(e);
+      const e2 = document.createElement("p");
+      e2.textContent = element[0][k];
+      detailText.appendChild(e2);
     }
 
     detailsDiv.appendChild(detailText);
 
     detailText = document.createElement("div");
+    detailText.className = "detail_text2";
+
+    const e = document.createElement("p");
+    e.textContent = "Megjegyzesek:";
+    detailText.appendChild(e);
 
     element.slice(2).map((item) => {
       const e = document.createElement("p");
@@ -216,12 +226,17 @@ async function details(key) {
     detailsDiv.appendChild(detailText);
 
     detailText = document.createElement("div");
+    detailText.className = "detail_text2";
     detailsDiv.appendChild(detailText);
 
+    const p = document.createElement("p");
+    detailText.appendChild(p);
     if (element[1][1] != null) {
-      const p = document.createElement("p");
       p.textContent = "Kiadva: " + (await getUserNameById(element[1][1]));
-      detailText.appendChild(p);
+      detailText.className = "detail_text_red";
+    } else {
+      p.textContent = "Jelengel Raktaron van";
+      detailText.className = "detail_text_green";
     }
 
     break;
@@ -229,7 +244,7 @@ async function details(key) {
 }
 
 async function toggleStatus(id, name, status) {
-  initDetailDiv(detailsDiv, okFunction);
+  initDetailDiv(detailsDiv, okFunction, "Elveszett/Megkerult");
   showBookPic(id, detailsDiv, false);
 
   const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
@@ -237,9 +252,19 @@ async function toggleStatus(id, name, status) {
 
   const detailText = document.createElement("div");
   detailsDiv.appendChild(detailText);
+  detailText.className = "detail_text2";
 
-  const p = document.createElement("p");
-  p.textContent = `${name} allapot valtoztatasa ${currentStatus} -rol ${nextStatus} -ra`;
+  var p = document.createElement("p");
+  p.textContent = name + " Cimu konyv allapotanak megvaltoztatasa:";
+  detailText.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = currentStatus + "-rol";
+  detailText.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = nextStatus + "-ra(e)";
+  detailText.appendChild(p);
 
   const l = document.createElement("label");
   l.textContent = "Allapot valtoztatas oka:";
@@ -248,7 +273,6 @@ async function toggleStatus(id, name, status) {
   e.value = "";
   e.id = "notes";
 
-  detailText.appendChild(p);
   detailText.appendChild(l);
   detailText.appendChild(e);
 
@@ -279,13 +303,16 @@ async function editBook(key) {
     }
   }
 
-  initDetailDiv(detailsDiv, okFunction);
+  initDetailDiv(detailsDiv, okFunction, "Konyv Szerkesztese");
   showBookPic(key, detailsDiv, true);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
   detailsDiv.appendChild(detailText);
 
+  const l = document.createElement("label");
+  detailText.appendChild(l);
+  l.textContent = LabelNames["genre"];
   creteGenreSelect("changeForm", detailText);
 
   element[0].notes = "";

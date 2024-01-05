@@ -148,22 +148,28 @@ async function details(id) {
     }
   }
 
-  initDetailDiv(detailsDiv, clearPlace);
+  initDetailDiv(detailsDiv, clearPlace, "Reszletek");
 
   showUserPic(id, detailsDiv, false);
 
   var detailText = document.createElement("div");
+  detailText.className = "detail_text";
 
   for (const k in element[0]) {
     if (k == "pic") continue;
+    if (k == "notes") continue;
     const e = document.createElement("p");
-    e.textContent = LabelNames[k] + " " + element[0][k];
+    e.textContent = LabelNames[k];
     detailText.appendChild(e);
+    const e2 = document.createElement("p");
+    e2.textContent = element[0][k];
+    detailText.appendChild(e2);
   }
 
   detailsDiv.appendChild(detailText);
 
   detailText = document.createElement("div");
+  detailText.className = "detail_text2";
 
   element.slice(1).map((item) => {
     const e = document.createElement("p");
@@ -175,12 +181,28 @@ async function details(id) {
 
   detailText = document.createElement("div");
   detailsDiv.appendChild(detailText);
+  detailText.className = "detail_text2";
+
+  var e = document.createElement("p");
+  e.textContent = "Kikolcsonzott konyvek listaja:";
+  detailText.appendChild(e);
+
+  const d = document.createElement("div");
   const list = await getLendedBookList(id);
-  for (const book of list) {
-    const element = document.createElement("p");
-    element.textContent = book;
-    detailText.appendChild(element);
+  if (list.length == 0) {
+    const e = document.createElement("p");
+    e.textContent = "Jelenleg nincs kikolcsonzott konyv";
+    d.className = "detail_text_green";
+    d.appendChild(e);
+  } else {
+    d.className = "detail_text_red";
+    for (const book of list) {
+      const e = document.createElement("p");
+      e.textContent += book;
+      d.appendChild(e);
+    }
   }
+  detailText.appendChild(d);
 }
 
 async function getLendedBookList(uid) {
@@ -198,17 +220,27 @@ async function getLendedBookList(uid) {
 }
 
 async function toggleStatus(id, name, status) {
-  initDetailDiv(detailsDiv, okFunction);
-  showBookPic(id, detailsDiv, false);
+  initDetailDiv(detailsDiv, okFunction, "Felhasznalo Deaktivalas/Aktivalas");
+  showUserPic(id, detailsDiv, false);
 
-  const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
-  const nextStatus = status == 1 ? "Elveszett" : "Aktiv";
+  const currentStatus = status == 1 ? "Aktiv" : "Inaktiv";
+  const nextStatus = status == 1 ? "Inaktiv" : "Aktiv";
 
   const detailText = document.createElement("div");
+  detailText.className = "detail_text2";
   detailsDiv.appendChild(detailText);
 
-  const p = document.createElement("p");
-  p.textContent = `${name} allapot valtoztatasa ${currentStatus} -rol ${nextStatus} -ra`;
+  var p = document.createElement("p");
+  p.textContent = name + " nevul felhasznalo allapot valtoztatasa";
+  detailText.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = currentStatus + "-rol";
+  detailText.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = nextStatus + "-ra";
+  detailText.appendChild(p);
 
   const l = document.createElement("label");
   l.textContent = "Allapot valtoztatas oka:";
@@ -217,7 +249,6 @@ async function toggleStatus(id, name, status) {
   e.value = "";
   e.id = "notes";
 
-  detailText.appendChild(p);
   detailText.appendChild(l);
   detailText.appendChild(e);
 
@@ -247,7 +278,7 @@ function editUser(key) {
       break;
     }
   }
-  initDetailDiv(detailsDiv, okFunction);
+  initDetailDiv(detailsDiv, okFunction, "Profil Szerkesztes");
   showUserPic(key, detailsDiv, true);
 
   var detailText = document.createElement("div");

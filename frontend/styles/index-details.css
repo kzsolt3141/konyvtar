@@ -1,12 +1,28 @@
 .details_div {
   display: grid;
-  grid-template-columns: 300px 200px;
+  grid-template-columns: 300px 300px;
   column-gap: 20px;
   position: fixed;
   left: 100px;
+  top: 150px;
+  background-color: #b2b9af;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 100;
   opacity: 1;
-  background-color: #d1dbcd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.detail_title {
+  position: absolute;
+  text-align: center;
+  align-items: center;
+  width: 600px;
+  height: 40px;
+  top: -70px;
+  left: 10px;
+  background-color: #b2b9af;
+  border-radius: 10px;
+  align-self: center;
 }
 
 .detail_options {
@@ -18,10 +34,31 @@
   background-color: rgb(153, 140, 140);
 }
 
-.detail_options:hover {
-  background-color: rgb(153, 140, 140);
+.detail_text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 500px;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
-.detail_text {
-  min-height: 420px;
+.detail_text2 {
+  display: grid;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+.detail_text_red {
+  font-weight: bold;
+  font-size: 18px;
+  color: red;
+}
+.detail_text_green {
+  font-weight: bold;
+  font-size: 18px;
+  color: green;
 }

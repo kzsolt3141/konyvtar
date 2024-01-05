@@ -29,18 +29,23 @@ export async function lendBook(bid, uid, place, isLend) {
   const bookName = await getBookTitleById(bid);
   const userName = await getUserNameById(uid);
 
-  initDetailDiv(place, okFunction);
+  initDetailDiv(place, okFunction, "Visszahozott konyv");
   showBookPic(bid, place, false);
 
   const textDiv = document.createElement("div");
   place.appendChild(textDiv);
+  textDiv.className = "detail_text2";
 
-  const p = document.createElement("p");
-  p.className = "lend_title";
-  p.textContent =
-    bookName +
-    (isLend == true ? " \t kiveszi: " : " visszahozza: \t") +
-    userName;
+  var p = document.createElement("p");
+  p.textContent = bookName + " cimu konyvet";
+  textDiv.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = isLend == true ? "kiveszi " : " visszahozza";
+  textDiv.appendChild(p);
+
+  p = document.createElement("p");
+  p.textContent = userName + " nevu felhasznalo";
   textDiv.appendChild(p);
 
   const input = document.createElement("input");

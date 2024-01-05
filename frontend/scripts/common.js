@@ -1,5 +1,9 @@
-export function initDetailDiv(place, okFunction) {
+export function initDetailDiv(place, okFunction, title = "") {
   place.innerHTML = "";
+  const h2 = document.createElement("h2");
+  h2.className = "detail_title";
+  h2.textContent = title;
+  place.appendChild(h2);
 
   const okButton = document.createElement("img");
   place.appendChild(okButton);
