@@ -14,14 +14,15 @@ app.use(express.static("frontend"));
 app.use(express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
-const base_dir = path.join(__dirname, "./");
+
+const base_dir = process.cwd();
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(base_dir, "frontend/index.html"));
 });
 
 app.get("/book", (req, res) => {
-  res.sendFile(path.join(base_dir, "./frontend/book.html"));
+  res.sendFile(path.join(base_dir, "frontend/book.html"));
 });
 
 app.get("/user", (req, res) => {

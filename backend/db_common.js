@@ -5,7 +5,7 @@ const db_books = require("./db_books.js");
 const db_users = require("./db_users.js");
 const db_loan = require("./db_loan.js");
 
-const db = new sqlite3.Database(path.join(__dirname, "../database/library.db"));
+const db = new sqlite3.Database("./database/library.db");
 
 function init() {
   db_books.init(db);
