@@ -84,8 +84,8 @@
 }
 
 .book_thumbnail {
-  max-height: 300px;
-  max-width: 200px;
+  align-self: center;
+  width: 100%;
   border-radius: 30px;
   margin-right: 10px;
 }
