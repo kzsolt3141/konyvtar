@@ -39,3 +39,18 @@ backupBtn.addEventListener("click", async (event) => {
       updateStatus(data);
     });
 });
+
+function showVersion(file = "VERSION") {
+  const ver = document.getElementById("version");
+  fetch(file)
+    .then((response) => response.text())
+    .then((version) => {
+      // Display the version at the bottom of the page
+      const versionElement = document.createElement("p");
+      versionElement.innerText = "Version: " + version;
+      ver.appendChild(versionElement);
+    })
+    .catch((error) => console.error("Error fetching version:", error));
+}
+
+showVersion();

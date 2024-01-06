@@ -50,3 +50,12 @@ p {
   left: 300px;
   top: 80px;
 }
+
+.version {
+  /* position: absolute; */
+  bottom: 0;
+  left: 10;
+  width: 100%;
+  text-align: right;
+  color: rgb(167, 165, 165);
+}
