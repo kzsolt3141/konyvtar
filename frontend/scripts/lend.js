@@ -1,4 +1,9 @@
-import { initDetailDiv, updateStatus } from "./common.js";
+import {
+  initDetailDiv,
+  updateStatus,
+  disableMain,
+  enableMain,
+} from "./common.js";
 import { getBookTitleById, showBookPic } from "./index_books.js";
 import { getUserNameById } from "./index_users.js";
 
@@ -56,7 +61,7 @@ export async function lendBook(bid, uid, place, isLend) {
     lendForm.append("bid", bid);
     lendForm.append("uid", uid);
     lendForm.append("notes", input.value);
-
+    disableMain();
     fetch("/lend/add", {
       method: "POST",
       body: lendForm,
@@ -64,6 +69,7 @@ export async function lendBook(bid, uid, place, isLend) {
       .then((rsp) => rsp.text())
       .then((data) => {
         place.innerHTML = "";
+        enableMain();
         location.reload();
       });
   }
