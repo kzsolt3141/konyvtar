@@ -21,7 +21,12 @@ import {
 
 import { getUserNameById } from "./index_users.js";
 import { lendBook } from "./lend.js";
-import { initDetailDiv, updateStatus } from "./common.js";
+import {
+  initDetailDiv,
+  updateStatus,
+  disableMain,
+  enableMain,
+} from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -53,6 +58,7 @@ bookSearchBtn.addEventListener("click", async (event) => {
 });
 
 function searchBook(bookFormData) {
+  disableMain();
   fetch("/book/find", {
     method: "POST",
     body: bookFormData,
@@ -61,6 +67,7 @@ function searchBook(bookFormData) {
     .then((data) => {
       BookData = JSON.parse(data);
       listBooks(BookData);
+      enableMain();
     });
 }
 
@@ -283,13 +290,17 @@ async function toggleStatus(id, name, status) {
     changeForm.append("id", id);
     changeForm.append("notes", e.value);
 
+    disableMain();
+
     fetch("/book/change", {
       method: "POST",
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
         updateStatus(data);
+        bookSearchBtn.click();
         detailsDiv.innerHTML = "";
+        enableMain();
       })
     );
   }
@@ -357,6 +368,7 @@ async function editBook(key) {
         changeForm.append(currentElement.id, currentElement.value);
       }
     }
+    disableMain();
 
     fetch("/book/change", {
       method: "POST",
@@ -365,6 +377,7 @@ async function editBook(key) {
       rsp.json().then((data) => {
         updateStatus(data);
         detailsDiv.innerHTML = "";
+        enableMain();
         bookSearchBtn.click();
       })
     );

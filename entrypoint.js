@@ -193,13 +193,12 @@ app.post("/user/edit", upload.single("image"), (req, res) => {
 });
 
 //----------------------------------------------------------------
-app.listen(8080, "192.168.0.107", () => {
+app.listen(8080, "localhost", () => {
   console.log("Server listening on 8080");
 });
 
 //----------------------------------------------------------------
 app.post("/lend/add", upload.none(), (req, res) => {
-  console.log(req.body);
   if (req.body.type == "true") {
     database.lend(req.body, res);
   } else {

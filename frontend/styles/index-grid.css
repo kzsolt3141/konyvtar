@@ -84,8 +84,8 @@
 }
 
 .book_thumbnail {
-  width: 100%;
   max-height: 300px;
+  max-width: 200px;
   border-radius: 30px;
   margin-left: 10px;
   margin-right: 10px;
@@ -112,6 +112,7 @@
   display: grid;
   gap: 30px;
   margin-right: 20px;
+  margin-left: 20px;
 }
 
 .book_first_line {

@@ -16,7 +16,6 @@ button.addEventListener("click", function () {
   statusDiv.appendChild(message);
 
   if (bookRadio && userRadio) {
-    console.log(bookRadio.id, userRadio.id);
     lendBook(bookRadio.id, userRadio.id, place, true);
   } else {
     // TODO show this to the global status DIV
@@ -64,7 +63,6 @@ export async function lendBook(bid, uid, place, isLend) {
     })
       .then((rsp) => rsp.text())
       .then((data) => {
-        console.log(data);
         place.innerHTML = "";
         location.reload();
       });

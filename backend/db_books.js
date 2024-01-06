@@ -91,7 +91,7 @@ function registerBookNotes(id, date, notes) {
 
     db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
       if (err) {
-        console.log(`Notes coudld not be added to DB`);
+        console.log(`Notes could not be added to DB`);
         return;
       }
       console.log(`Notes added to Books DB`);
@@ -100,7 +100,6 @@ function registerBookNotes(id, date, notes) {
 }
 
 function addGenre(body, res) {
-  console.log(body);
   var sql = `INSERT INTO book_genres (genre) VALUES (?)`;
   db_.all(sql, [body], (err, rows) => {
     if (err) {
@@ -198,13 +197,12 @@ function toggleBookStatus(body, res) {
   WHERE id = ?`;
   db_.run(sql, [body.id], (err) => {
     if (err) {
-      console.log(err);
+      console.log(err.message);
       res.json(`Book ${body.title} could not be modified`);
       return;
     }
     const currentDate = new Date();
     registerBookNotes(body.id, currentDate, body.notes);
-    console.log(`Book ${body.id} modified successfully`);
     // update book pic table
     res.json(`Book ${body.id} modified successfully`);
   });

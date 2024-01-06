@@ -54,3 +54,25 @@ function showVersion(file = "VERSION") {
 }
 
 showVersion();
+
+export function disableMain() {
+  const div = document.getElementById("disable_div");
+  div.className = "disable_div";
+
+  const p = document.createElement("p");
+  p.textContent = "Kerlek varj...";
+  p.className = "disable_text";
+
+  const img = document.createElement("img");
+  img.src = "styles/static/progress.svg";
+  img.className = "disable_thumbnail";
+
+  div.appendChild(p);
+  div.appendChild(img);
+}
+
+export function enableMain() {
+  const div = document.getElementById("disable_div");
+  div.className = "enable_div";
+  div.innerHTML = "";
+}

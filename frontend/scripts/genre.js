@@ -1,3 +1,5 @@
+import { disableMain, enableMain } from "./common.js";
+
 // genre select creates a new diw with all the requred elements:
 // - label, ganre drop-down, input fields, buttons
 export function creteGenreSelect(id, place) {
@@ -76,13 +78,15 @@ function addGenre(place) {
       console.log("Input field empty");
       return;
     }
+    disableMain();
+
     fetch("/book/genres", {
       method: "POST",
       body: input.value,
     })
       .then((rsp) => rsp.text())
       .then((data) => {
-        console.log(data);
+        enableMain();
         location.reload();
       });
   });

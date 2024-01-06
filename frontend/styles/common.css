@@ -59,3 +59,38 @@ p {
   text-align: right;
   color: rgb(167, 165, 165);
 }
+
+.disable_div {
+  position: fixed;
+  display: grid;
+  justify-content: center;
+  grid-template-rows: 1fr 1fr;
+  background-color: rgb(126, 126, 126);
+
+  opacity: 0.8;
+
+  left: 50px;
+  right: 50px;
+  top: 80px;
+  bottom: 80px;
+
+  z-index: 200;
+
+  border-radius: 30px;
+}
+
+.enable_div {
+  position: fixed;
+  display: none;
+  background-color: rgb(126, 126, 126);
+}
+
+.disable_text {
+  color: red;
+  font-size: 30px;
+  font-weight: bolder;
+  margin-top: 100px;
+}
+
+.disable_thumbnail {
+  width: 100px;

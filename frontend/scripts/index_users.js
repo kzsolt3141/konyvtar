@@ -8,7 +8,7 @@ const LabelNames = {
   notes: "Megjegyzesek:",
 };
 
-import { initDetailDiv } from "./common.js";
+import { initDetailDiv, disableMain, enableMain } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -30,6 +30,7 @@ userSearchBtn.addEventListener("click", async (event) => {
 });
 
 function searchUser(formData) {
+  disableMain();
   fetch("/user/find", {
     method: "POST",
     body: formData,
@@ -37,6 +38,7 @@ function searchUser(formData) {
     .then((rsp) => rsp.json())
     .then((data) => {
       UserData = JSON.parse(data);
+      enableMain();
       listUsers(UserData);
     });
 }
@@ -259,13 +261,13 @@ async function toggleStatus(id, name, status) {
     changeForm.append("update", "status");
     changeForm.append("id", id);
     changeForm.append("notes", e.value);
-
+    disableMain();
     fetch("/user/edit", {
       method: "POST",
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        console.log(data);
+        enableMain();
         detailsDiv.innerHTML = "";
       })
     );
@@ -329,7 +331,6 @@ function editUser(key) {
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        console.log(data);
         detailsDiv.innerHTML = "";
         userSearchBtn.click();
       })

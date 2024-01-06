@@ -5,7 +5,7 @@ import {
   getGenreValue,
 } from "./genre.js";
 
-import { updateStatus } from "./common.js";
+import { updateStatus, disableMain, enableMain } from "./common.js";
 
 const mainBtn = document.getElementById("main_btn");
 mainBtn.addEventListener("click", async (event) => {
@@ -37,11 +37,14 @@ formBtn.addEventListener("click", async (event) => {
   const genre = getGenreValue("genre");
 
   formData.append("genre", genre);
-
+  disableMain();
   fetch("/book/add", {
     method: "POST",
     body: formData,
   })
     .then((rsp) => rsp.text())
-    .then((data) => updateStatus(data));
+    .then((data) => {
+      updateStatus(data);
+      enableMain();
+    });
 });

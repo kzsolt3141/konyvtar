@@ -98,10 +98,8 @@ function registerUserNotes(id, date, notes) {
 
     db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
       if (err) {
-        console.log(`Notes coudld not be added to DB`);
         return;
       }
-      console.log(`Notes added to User DB`);
     });
   }
 }
@@ -186,7 +184,6 @@ function updateUser(req, res) {
 }
 
 function toggleUserStatus(body, res) {
-  console.log(body);
   sql = `
   UPDATE users 
   SET status = 
@@ -198,13 +195,12 @@ function toggleUserStatus(body, res) {
   WHERE id = ?`;
   db_.run(sql, [body.id], (err) => {
     if (err) {
-      console.log(err);
+      console.log(err.message);
       res.json(`User ${body.id} could not be modified`);
       return;
     }
     const currentDate = new Date();
     registerUserNotes(body.id, currentDate, body.notes);
-    console.log(`User ${body.id} modified successfully`);
     // update book pic table
     res.json(`User ${body.id} modified successfully`);
   });
