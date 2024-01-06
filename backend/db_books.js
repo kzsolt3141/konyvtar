@@ -94,7 +94,6 @@ function registerBookNotes(id, date, notes) {
         console.log(`Notes could not be added to DB`);
         return;
       }
-      console.log(`Notes added to Books DB`);
     });
   }
 }
