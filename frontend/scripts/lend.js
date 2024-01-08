@@ -62,7 +62,7 @@ export async function lendBook(bid, uid, place, isLend) {
     lendForm.append("uid", uid);
     lendForm.append("notes", input.value);
     disableMain();
-    fetch("/lend/add", {
+    fetch("/loan/add", {
       method: "POST",
       body: lendForm,
     })
