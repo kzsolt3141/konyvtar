@@ -4,14 +4,7 @@ function init(db) {
   if (db === null) return false;
   db_ = db;
 
-  //   db_.run(`
-  //     CREATE TABLE IF NOT EXISTS kolcsonzes (
-  //         isbn TEXT PRIMARY KEY,
-  //         id INTEGER,
-  //         tipus TEXT
-  //     )
-  // `);
-
+  //TODO: password and salt is for future improvements
   db_.run(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +13,9 @@ function init(db) {
         phone TEXT,
         mail TEXT,
         pic TEXT,
-        status TEXT
+        status TEXT,
+        password TEXT,
+        salt TEXT
     )
 `);
 
@@ -106,10 +101,13 @@ function registerUserNotes(id, date, notes) {
 
 async function findUser(body) {
   const status = body.status == "on" ? 1 : 0;
-  const sql = `SELECT * FROM users WHERE 
-    LOWER(${body.type}) LIKE LOWER(?) 
-    AND 
-    status = ?
+  const sql = `
+    SELECT id, name, address, phone, mail, pic, status
+    FROM users
+    WHERE 
+      LOWER(${body.type}) LIKE LOWER(?) 
+        AND 
+      status = ?
     LIMIT 100`;
 
   return new Promise((resolve, reject) => {

@@ -1,15 +1,5 @@
 import { updateStatus, disableMain, enableMain } from "./common.js";
 
-const mainBtn = document.getElementById("main_btn");
-mainBtn.addEventListener("click", async (event) => {
-  window.location.href = "/";
-});
-
-const addBookBtn = document.getElementById("add_book_btn");
-addBookBtn.addEventListener("click", async (event) => {
-  window.location.href = "/book";
-});
-
 const addButton = document.getElementById("add");
 addButton.addEventListener("click", async (event) => {
   event.preventDefault();

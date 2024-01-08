@@ -33,16 +33,6 @@ function clearPlace(place) {
   place.innerHTML = "";
 }
 
-const addBookBtn = document.getElementById("add_book_btn");
-addBookBtn.addEventListener("click", async (event) => {
-  window.location.href = "/book";
-});
-
-const addUserBtn = document.getElementById("add_user_btn");
-addUserBtn.addEventListener("click", async (event) => {
-  window.location.href = "/user";
-});
-
 createTypeSelect("book_order", document.getElementById("book_order_div"));
 
 const bookSearchBtn = document.getElementById("search_books_btn");

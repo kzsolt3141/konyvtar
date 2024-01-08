@@ -76,3 +76,24 @@ export function enableMain() {
   div.className = "enable_div";
   div.innerHTML = "";
 }
+
+const mainBtn = document.getElementById("main_btn");
+if (mainBtn) {
+  mainBtn.addEventListener("click", async (event) => {
+    window.location.href = "/";
+  });
+}
+
+const addBookBtn = document.getElementById("add_book_btn");
+if (addBookBtn) {
+  addBookBtn.addEventListener("click", async (event) => {
+    window.location.href = "/book.html";
+  });
+}
+
+const addUserBtn = document.getElementById("add_user_btn");
+if (addUserBtn) {
+  addUserBtn.addEventListener("click", async (event) => {
+    window.location.href = "/user.html";
+  });
+}
