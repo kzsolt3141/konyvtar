@@ -96,12 +96,11 @@ router.post("/change", upload.single("image"), (req, res) => {
 
 //----------------------------------------------------------------
 
-router.post("/genres", textMulter.none(), (req, res) => {
-  console.log(req.body);
-  if (Object.keys(req.body).length == 0) {
-    database.getGenres(res);
+router.post("/genres/:genre?", upload.none(), (req, res) => {
+  if (req.params.genre) {
+    database.addGenre(req.params.genre, res);
   } else {
-    database.addGenre(req.body, res);
+    database.getGenres(res);
   }
 });
 

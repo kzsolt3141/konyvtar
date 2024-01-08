@@ -80,9 +80,8 @@ function addGenre(place) {
     }
     disableMain();
 
-    fetch("/book/genres", {
+    fetch("/book/genres/" + input.value, {
       method: "POST",
-      body: input.value,
     })
       .then((rsp) => rsp.text())
       .then((data) => {
