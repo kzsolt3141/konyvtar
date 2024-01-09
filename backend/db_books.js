@@ -16,6 +16,7 @@ function init(db) {
         ver TEXT,
         pic TEXT,
         keys TEXT,
+        price REAL,
         status INTEGER DEFAULT 1 NOT NULL
     )
   `);
@@ -51,8 +52,8 @@ function registerBook(req) {
 
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO books 
-      (isbn, title, author, genre, year, publ, ver, keys, pic)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
+      (isbn, title, author, genre, year, publ, ver, keys, price, pic)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `;
 
     const values = [
       body.isbn,
@@ -63,6 +64,7 @@ function registerBook(req) {
       body.publ,
       body.ver,
       body.keys,
+      body.price,
       file,
     ];
 
@@ -224,6 +226,7 @@ function editBook(req, res) {
     publ = ?,
     ver = ?,
     keys = ?,
+    price = ?,
     pic = COALESCE(?, pic)
   WHERE id = ?`;
   db_.run(
@@ -237,6 +240,7 @@ function editBook(req, res) {
       body.publ,
       body.ver,
       body.keys,
+      body.price,
       file,
       body.id,
     ],

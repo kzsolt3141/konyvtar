@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-const textMulter = multer();
 
 //----------------------------------------------------------------
 router.post("/add", upload.single("image"), (req, res) => {

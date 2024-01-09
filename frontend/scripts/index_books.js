@@ -11,6 +11,7 @@ const LabelNames = {
   keys: "Kulcsszavak",
   notes: "Megjegyzesek:",
   available: "Elerheto:",
+  price: "Ar(lej):",
 };
 
 import {
@@ -114,7 +115,7 @@ async function listBooks(books) {
     secondLineDiv.className = "book_second_line";
     boodDetailsDiv.appendChild(secondLineDiv);
 
-    const secondLine = [book.publ, book.ver, book.year];
+    const secondLine = [book.publ, book.ver, book.year, book.price + " lej"];
 
     for (const k of secondLine) {
       const element = document.createElement("p");
