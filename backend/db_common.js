@@ -1,4 +1,5 @@
-const path = require("path");
+const fs = require("fs");
+const zip = require("express-zip");
 const sqlite3 = require("sqlite3");
 
 const db_books = require("./db_books.js");
@@ -15,104 +16,125 @@ function init() {
 
 csv = require("csv-stringify");
 
-async function saveAllTables(fs, res) {
+async function saveAllTables(res) {
   let date = new Date();
   date = date.toISOString().split("T")[0];
-  await saveBooks(fs, date);
-  await saveBookGenres(fs, date);
-  await saveBookNotes(fs, date);
-  await saveLoan(fs, date);
-  await saveUsers(fs, date);
-  await saveUserNotes(fs, date);
-  res.json("Adatbazis exportalva!");
+  var fileNames = [
+    { name: "library.db", path: "database/library.db" },
+    await saveBooks(date),
+    await saveBookGenres(date),
+    await saveBookNotes(date),
+    await saveLoan(date),
+    await saveUsers(date),
+    await saveUserNotes(date),
+  ];
+
+  const images = fs.readdirSync("uploads").map((pic) => ({
+    name: pic,
+    path: "uploads/" + pic,
+  }));
+
+  fileNames = fileNames.concat(images);
+
+  res.zip(fileNames, "backup.zip", (err) => {
+    if (err) {
+      console.log("backup failed for this files", fileNames);
+      console.log(err.message);
+    }
+  });
 }
 
-async function saveBooks(fs, date) {
-  fs.writeFileSync(`${date}-konyvek.csv`, "");
+async function saveBooks(date) {
+  const fileName = `${date}-konyvek.csv`;
+  fs.writeFileSync(fileName, "");
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM books", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-konyvek.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }
-async function saveBookGenres(fs, date) {
-  fs.writeFileSync(`${date}-konyv-tipusok.csv`, "");
-
+async function saveBookGenres(date) {
+  const fileName = `${date}-konyv-tipusok.csv`;
+  fs.writeFileSync(fileName, "");
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM book_genres", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-konyv-tipusok.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }
-async function saveBookNotes(fs, date) {
-  fs.writeFileSync(`${date}-konyv-jegyzetek.csv`, "");
-
+async function saveBookNotes(date) {
+  const fileName = `${date}-konyv-jegyzetek.csv`;
+  fs.writeFileSync(fileName, "");
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM book_notes", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-konyv-jegyzetek.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }
-async function saveLoan(fs, date) {
-  fs.writeFileSync(`${date}-kolcsonzesek.csv`, "");
-
+async function saveLoan(date) {
+  const fileName = `${date}-kolcsonzesek.csv`;
+  fs.writeFileSync(fileName, "");
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM loan", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-kolcsonzesek.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }
-async function saveUsers(fs, date) {
-  fs.writeFileSync(`${date}-felhasznalok.csv`, "");
+async function saveUsers(date) {
+  const fileName = `${date}-felhasznalok.csv`;
+
+  fs.writeFileSync(fileName, "");
 
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM users", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-felhasznalok.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }
-async function saveUserNotes(fs, date) {
-  fs.writeFileSync(`${date}-felh-jegyzetek.csv`, "");
+async function saveUserNotes(date) {
+  const fileName = `${date}-felh-jegyzetek.csv`;
+
+  fs.writeFileSync(fileName, "");
 
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM book_notes", (err, rows) => {
       rows.forEach((row) => {
         row = Object.values(row);
         csv.stringify([row], (err, output) => {
-          fs.appendFileSync(`${date}-felh-jegyzetek.csv`, output);
+          fs.appendFileSync(fileName, output);
         });
       });
-      resolve("");
+      resolve({ name: fileName, path: fileName });
     });
   });
 }

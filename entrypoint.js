@@ -1,7 +1,5 @@
 const express = require("express");
 const path = require("path");
-const multer = require("multer");
-const fs = require("fs");
 
 const database = require("./backend/db_common.js");
 
@@ -30,7 +28,6 @@ app.listen(8080, () => {
   console.log("Server listening on 8080");
 });
 
-app.post("/backup", (req, res) => {
-  database.saveAllTables(fs, res);
-  //TODO archive the file then send back to user
+app.get("/backup", (req, res) => {
+  database.saveAllTables(res);
 });

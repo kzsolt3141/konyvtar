@@ -32,11 +32,15 @@ export function updateStatus(data) {
 const backupBtn = document.getElementById("backup_btn");
 backupBtn.addEventListener("click", async (event) => {
   fetch("/backup", {
-    method: "POST",
+    method: "GET",
   })
-    .then((rsp) => rsp.json())
+    .then((data) => data.blob())
     .then((data) => {
-      updateStatus(data);
+      var a = document.createElement("a");
+      a.href = window.URL.createObjectURL(data);
+      a.download = "BACKUP.zip";
+      a.click();
+      updateStatus("Backup generated");
     });
 });
 
