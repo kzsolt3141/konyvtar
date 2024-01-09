@@ -4,7 +4,7 @@ const LabelNames = {
   title: "Cim:",
   author: "Szerzo:",
   genre: "Tipus:",
-  year: "Kiadasi Ev:",
+  year: "Megjelent:",
   publ: "Kiado:",
   ver: "Kiadas:",
   status: "Allapot:",
