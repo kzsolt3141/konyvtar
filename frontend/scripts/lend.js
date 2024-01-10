@@ -23,8 +23,7 @@ button.addEventListener("click", function () {
   if (bookRadio && userRadio) {
     lendBook(bookRadio.id, userRadio.id, place, true);
   } else {
-    // TODO show this to the global status DIV
-    message.textContent = "Valassz egy konyvet es/vagy egy felhasznalot";
+    updateStatus("Valassz egy konyvet es/vagy egy felhasznalot");
   }
 });
 

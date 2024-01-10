@@ -25,7 +25,6 @@ const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
 router.post("/add", upload.single("image"), (req, res) => {
-  // TODO update with meaningful res messages + start using HTTP status codes
   database
     .registerUser(req)
     .then((message) => {
@@ -93,7 +92,7 @@ async function findUserHandler(req, res) {
 }
 
 //----------------------------------------------------------------
-
+// TODO USE parameter for bulk/staus
 router.post("/edit", upload.single("image"), (req, res) => {
   database.updateUser(req, res);
 });

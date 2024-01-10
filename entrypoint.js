@@ -19,6 +19,17 @@ const bookRoute = require("./backend/routes/Book");
 const userRoute = require("./backend/routes/User");
 const loanRoute = require("./backend/routes/Loan");
 
+app.use((req, res, next) => {
+  const clientIp =
+    req.headers["x-forwarded-for"] ||
+    req.headers["x-real-ip"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+  console.log(clientIp);
+  next();
+});
+
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
