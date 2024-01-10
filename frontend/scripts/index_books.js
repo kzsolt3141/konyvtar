@@ -44,13 +44,12 @@ bookSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const bookForm = document.getElementById("search_books");
   const bookFormData = new FormData(bookForm);
-  bookFormData.append("search", "bulk");
   searchBook(bookFormData);
 });
 
 function searchBook(bookFormData) {
   disableMain();
-  fetch("/book/find", {
+  fetch("/book/find/bulk", {
     method: "POST",
     body: bookFormData,
   })
@@ -419,13 +418,8 @@ function reorderBooks(BookData, prop) {
 }
 
 export async function getBookTitleById(bid) {
-  const frm = new FormData();
-  frm.append("id", bid);
-  frm.append("search", "single");
-
-  const rsp = await fetch("/book/find", {
-    method: "POST",
-    body: frm,
+  const rsp = await fetch(`/book/find/id=${bid}`, {
+    method: "GET",
   });
   const title = await rsp.json();
   return title.title;

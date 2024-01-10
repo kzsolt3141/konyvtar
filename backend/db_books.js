@@ -160,10 +160,10 @@ async function findBookNotes(id) {
   });
 }
 
-function getBookNameById(body, res) {
+function getBookNameById(id, res) {
   const sql = ` SELECT title FROM books WHERE id = ?`;
 
-  db_.all(sql, [body.id], (err, rows) => {
+  db_.all(sql, [id], (err, rows) => {
     if (err) {
       console.log(err.message);
       reject("Hiba!");

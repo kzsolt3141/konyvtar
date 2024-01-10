@@ -135,10 +135,10 @@ async function findUserNotes(id) {
   });
 }
 
-function getUserNameById(body, res) {
+function getUserNameById(id, res) {
   const sql = ` SELECT name FROM users WHERE id = ?`;
 
-  db_.all(sql, [body.id], (err, rows) => {
+  db_.all(sql, [id], (err, rows) => {
     if (err) {
       res.json(err.message);
       return;
@@ -147,7 +147,7 @@ function getUserNameById(body, res) {
   });
 }
 
-function getLendedBooks(body, res) {
+function getLendedBooks(id, res) {
   const sql = `
     SELECT books.title
     FROM loan
@@ -155,7 +155,7 @@ function getLendedBooks(body, res) {
       ON loan.bid = books.id
     WHERE loan.uid = ? AND loan.back_date IS NULL;`;
 
-  db_.all(sql, [body.id], (err, rows) => {
+  db_.all(sql, [id], (err, rows) => {
     if (err) {
       res.json(err.message);
       return;

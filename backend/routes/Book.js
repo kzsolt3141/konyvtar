@@ -48,18 +48,23 @@ router.post("/add", upload.single("image"), (req, res) => {
 });
 
 //----------------------------------------------------------------
-router.post("/find", upload.none(), (req, res) => {
-  switch (req.body.search) {
-    case "single":
-      database.getBookNameById(req.body, res);
-      break;
-    case "bulk":
+router
+  .route("/find/:search?")
+  .post(upload.none(), (req, res) => {
+    if (req.params.search == "bulk") {
       findBookHandler(req, res);
-      break;
-    default:
-      res.json("failed");
-  }
-});
+    } else {
+      res.json("HIBA");
+    }
+  })
+  .get((req, res) => {
+    if (req.params.search.includes("id=")) {
+      id = req.params.search.split("id=")[1];
+      database.getBookNameById(id, res);
+    } else {
+      res.json("HIBA");
+    }
+  });
 
 async function findBookHandler(req, res) {
   try {

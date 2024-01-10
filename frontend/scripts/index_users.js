@@ -24,14 +24,13 @@ userSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const userForm = document.getElementById("search_users");
   const userFormData = new FormData(userForm);
-  userFormData.append("search", "bulk");
   event.preventDefault();
   searchUser(userFormData);
 });
 
 function searchUser(formData) {
   disableMain();
-  fetch("/user/find", {
+  fetch("/user/find/bulk", {
     method: "POST",
     body: formData,
   })
@@ -210,13 +209,8 @@ async function details(id) {
 }
 
 async function getLendedBookList(uid) {
-  const frm = new FormData();
-  frm.append("id", uid);
-  frm.append("search", "lend");
-
-  const rsp = await fetch("/user/find", {
-    method: "POST",
-    body: frm,
+  const rsp = await fetch(`/user/find/loan=${uid}`, {
+    method: "GET",
   });
   const bookList = await rsp.json();
 
@@ -381,13 +375,8 @@ function reorderBooks(UserData, prop) {
 }
 
 export async function getUserNameById(uid) {
-  const frm = new FormData();
-  frm.append("id", uid);
-  frm.append("search", "single");
-
-  const rsp = await fetch("/user/find", {
-    method: "POST",
-    body: frm,
+  const rsp = await fetch(`/user/find/id=${uid}`, {
+    method: "GET",
   });
   const name = await rsp.json();
 

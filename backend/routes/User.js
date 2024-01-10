@@ -45,21 +45,26 @@ router.post("/add", upload.single("image"), (req, res) => {
 });
 
 //----------------------------------------------------------------
-router.post("/find", upload.none(), (req, res) => {
-  switch (req.body.search) {
-    case "single":
-      database.getUserNameById(req.body, res);
-      break;
-    case "bulk":
+router
+  .route("/find/:search?")
+  .post(upload.none(), (req, res) => {
+    if (req.params.search == "bulk") {
       findUserHandler(req, res);
-      break;
-    case "lend":
-      database.getLendedBooks(req.body, res);
-      break;
-    default:
-      res.json("failed to look up user");
-  }
-});
+    } else {
+      res.json("HIBA");
+    }
+  })
+  .get((req, res) => {
+    if (req.params.search.includes("id=")) {
+      id = req.params.search.split("id=")[1];
+      database.getUserNameById(id, res);
+    } else if (req.params.search.includes("loan=")) {
+      id = req.params.search.split("loan=")[1];
+      database.getLendedBooks(id, res);
+    } else {
+      res.json("HIBA");
+    }
+  });
 
 async function findUserHandler(req, res) {
   try {
