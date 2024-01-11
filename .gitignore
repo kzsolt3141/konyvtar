@@ -3,6 +3,7 @@
 *.exe
 uploads/*
 entrypoint*
+package-lock.json
 
 # Logs
 logs
