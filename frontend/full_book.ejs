@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Berecki konyvtar</title>
+    <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/index-header.css" />
+    <link rel="stylesheet" href="/styles/index-grid.css" />
+    <link rel="stylesheet" href="/styles/index-details.css" />
+    <meta id="bid" name="bid" content="<%= id %>" />
+  </head>
+  <body>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+      </div>
+      <div class="fixed_header_right">
+        <button class="search_button" id="add_book_btn">
+          <img class="search_button_icon" src="/styles/static/book-plus.svg" />
+          <div class="tooltip">Uj Konyv</div>
+        </button>
+        <button class="search_button" id="add_user_btn">
+          <img class="search_button_icon" src="/styles/static/user-plus.svg" />
+          <div class="tooltip">Uj Felhasznalo</div>
+        </button>
+        <button class="search_button" id="backup_btn">
+          <img class="search_button_icon" src="/styles/static/backup.svg" />
+          <div class="tooltip">Backup!</div>
+        </button>
+      </div>
+    </div>
+    <h1>Document for book ID: <%= id%></h1>
+    <div class="version" id="version"></div>
+  </body>
+  <script type="module" src="/scripts/common.js"></script>
+  <script type="module" src="/scripts/full_book.js"></script>
+</html>

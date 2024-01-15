@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const ejs = require("ejs");
 
 const database = require("./backend/db_common.js");
 
@@ -8,8 +9,12 @@ database.init();
 
 //----------------------------------------------------------------
 const app = express();
-app.use(express.static("frontend"));
-app.use(express.static("uploads"));
+
+app.use(express.static(path.join(process.cwd(), "frontend")));
+app.use(express.static(path.join(process.cwd(), "uploads")));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(process.cwd(), "frontend"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());

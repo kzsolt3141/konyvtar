@@ -1,7 +1,7 @@
 {
   "name": "konyvtar",
   "version": "1.0.0",
-  "description": "",
+  "description": "Berecki konyvtar",
   "main": "backend.js",
   "scripts": {
     "start": "node --watch ./entrypoint.js"
@@ -11,10 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "csv-stringify": "^6.4.5",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-zip": "^3.0.0",
     "multer": "^1.4.5-lts.1",
     "pkg": "^5.8.1",
     "sqlite3": "^5.1.6"
-  }
+  },
+  "devDependencies": {}
 }

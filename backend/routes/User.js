@@ -10,7 +10,6 @@ const database = require("../db_common.js");
 const router = express.Router();
 
 //----------------------------------------------------------------
-const base_dir = __dirname;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(base_dir, "../../uploads"));

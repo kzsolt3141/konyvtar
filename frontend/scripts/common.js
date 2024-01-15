@@ -44,11 +44,12 @@ backupBtn.addEventListener("click", async (event) => {
     });
 });
 
-function showVersion(file = "VERSION") {
+function showVersion(file = "/VERSION") {
   const ver = document.getElementById("version");
   fetch(file)
     .then((response) => response.text())
     .then((version) => {
+      console.log(version);
       // Display the version at the bottom of the page
       const versionElement = document.createElement("p");
       versionElement.innerText = "Version: " + version;

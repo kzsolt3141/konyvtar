@@ -10,7 +10,6 @@ const database = require("../db_common.js");
 const router = express.Router();
 
 //----------------------------------------------------------------
-const base_dir = __dirname;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(base_dir, "../../uploads"));
@@ -105,6 +104,17 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
     database.addGenre(req.params.genre, res);
   } else {
     database.getGenres(res);
+  }
+});
+
+router.route("/full/:id?").get((req, res) => {
+  if (req.params.id) {
+    // TODO gat all data about book
+    // TODO get all book notes (date + notes)
+    // TODO get all loans (date + name + <-/-> + notes)
+    res.render("full_book.ejs", { id: req.params.id });
+  } else {
+    res.json("HIBA");
   }
 });
 
