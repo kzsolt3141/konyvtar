@@ -114,12 +114,17 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
   }
 });
 
-router.route("/full/:id?").get((req, res) => {
+router.route("/full/:id?").get(async (req, res) => {
   if (req.params.id) {
-    // TODO gat all data about book
-    // TODO get all book notes (date + notes)
-    // TODO get all loans (date + name + <-/-> + notes)
-    res.render("full_book.ejs", { id: req.params.id });
+    //TODO use this in a separate fetch
+    // const book = await database.getBookById(req.params.id);
+    // const bookNotes = await database.getBookNotesById(req.params.id);
+    // const loan = await database.getLoansByBookId(req.params.id);
+    // console.log(book, bookNotes, loan);
+
+    res.render("full_book.ejs", {
+      bid: req.params.id,
+    });
   } else {
     res.json("HIBA");
   }

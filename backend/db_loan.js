@@ -1,5 +1,6 @@
 var db_ = null;
 
+//----------------------------------------------------------------
 function init(db) {
   if (db === null) return false;
   db_ = db;
@@ -17,7 +18,7 @@ function init(db) {
 `);
 }
 
-//--------------------------
+//----------------------------------------------------------------
 async function bookIsAvailable(bid) {
   return new Promise((resolve, reject) => {
     sql = `
@@ -36,6 +37,7 @@ async function bookIsAvailable(bid) {
   });
 }
 
+//----------------------------------------------------------------
 async function lend(body, rsp) {
   try {
     const isAvailable = await bookIsAvailable(body.bid);
@@ -65,6 +67,7 @@ async function lend(body, rsp) {
   }
 }
 
+//----------------------------------------------------------------
 async function bring(body, rsp) {
   try {
     const isAvailable = await bookIsAvailable(body.bid);
@@ -92,9 +95,27 @@ async function bring(body, rsp) {
   }
 }
 
+async function getLoansByBookId(bid) {
+  return new Promise((resolve, reject) => {
+    sql = `
+    SELECT loan.id, users.name, loan.lend_date, loan.lend_notes, loan.back_date, loan.back_notes
+    FROM loan
+    JOIN users ON loan.uid = users.id
+    WHERE loan.bid = ?
+      `;
+    db_.all(sql, [bid], (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+//----------------------------------------------------------------
 module.exports = {
   init: init,
   lend: lend,
   bring: bring,
   bookIsAvailable: bookIsAvailable,
+  getLoansByBookId: getLoansByBookId,
 };
