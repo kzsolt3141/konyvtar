@@ -145,7 +145,7 @@ module.exports = {
 
   registerBook: db_books.registerBook,
   findBook: db_books.findBook,
-  findBookNotes: db_books.findBookNotes,
+  getBookNotesById: db_books.getBookNotesById,
   getBookById: db_books.getBookById,
   addGenre: db_books.addGenre,
   getGenres: db_books.getGenres,
@@ -154,7 +154,7 @@ module.exports = {
 
   registerUser: db_users.registerUser,
   findUser: db_users.findUser,
-  findUserNotes: db_users.findUserNotes,
+  getUserNotesById: db_users.getUserNotesById,
   getUserById: db_users.getUserById,
   getLendedBooks: db_users.getLendedBooks,
   updateUser: db_users.updateUser,

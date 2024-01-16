@@ -52,10 +52,15 @@ router
       res.json("HIBA");
     }
   })
-  .get((req, res) => {
+  .get(async (req, res) => {
     if (req.params.search.includes("id=")) {
       id = req.params.search.split("id=")[1];
-      database.getUserById(id, res);
+      try {
+        const user = await database.getUserById(id);
+        res.json(user);
+      } catch (err) {
+        res.json(err.message);
+      }
     } else if (req.params.search.includes("loan=")) {
       id = req.params.search.split("loan=")[1];
       database.getLendedBooks(id, res);
@@ -73,7 +78,7 @@ async function findUserHandler(req, res) {
 
     const userPromises = users.map(async function (user) {
       try {
-        const notes = await database.findUserNotes(user.id);
+        const notes = await database.getUserNotesById(user.id);
         return [user, ...notes];
       } catch (err) {
         throw err; // or handle the error as needed

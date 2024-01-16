@@ -56,10 +56,15 @@ router
       res.json("HIBA");
     }
   })
-  .get((req, res) => {
+  .get(async (req, res) => {
     if (req.params.search.includes("id=")) {
       id = req.params.search.split("id=")[1];
-      database.getBookById(id, res);
+      try {
+        const book = await database.getBookById(id);
+        res.json(book);
+      } catch (err) {
+        res.json(err.message);
+      }
     } else if (req.params.search == "next") {
       database.getNextBookId(res);
     } else {
@@ -74,7 +79,7 @@ async function findBookHandler(req, res) {
 
     const bookPromises = books.map(async function (book) {
       try {
-        const notes = await database.findBookNotes(book.id);
+        const notes = await database.getBookNotesById(book.id);
         const available = await database.bookIsAvailable(book.id);
         return [book, available, ...notes];
       } catch (err) {

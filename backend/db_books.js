@@ -1,5 +1,6 @@
 var db_ = null;
 
+//----------------------------------------------------------------
 function init(db) {
   if (db === null) return false;
   db_ = db;
@@ -36,6 +37,7 @@ function init(db) {
   `);
 }
 
+//----------------------------------------------------------------
 function registerBook(req) {
   const body = req.body;
   var file = null;
@@ -115,6 +117,7 @@ function getGenres(res) {
   });
 }
 
+//----------------------------------------------------------------
 async function findBook(body) {
   const status = body.status == "on" ? 1 : 0;
   const sql = `
@@ -136,7 +139,7 @@ async function findBook(body) {
   });
 }
 
-async function findBookNotes(id) {
+async function getBookNotesById(id) {
   const sql = ` SELECT date, notes FROM book_notes WHERE id = ?`;
 
   return new Promise((resolve, reject) => {
@@ -151,19 +154,34 @@ async function findBookNotes(id) {
   });
 }
 
-function getBookById(id, res) {
+function getBookById(id) {
   const sql = ` SELECT * FROM books WHERE id = ?`;
 
-  db_.all(sql, [id], (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      reject("Hiba!");
-      return;
-    }
-    res.json(rows[0]);
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [id], (err, rows) => {
+      if (err) {
+        console.log(err.message);
+        reject("Hiba!");
+        return;
+      }
+      resolve(rows[0]);
+    });
   });
 }
 
+function getNextBookId(res) {
+  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM books`;
+  db_.all(sql, (err, rows) => {
+    if (err) {
+      console.log(err.message);
+      res.json("Hiba!");
+      return;
+    }
+    res.json(rows[0].next_id);
+  });
+}
+
+//----------------------------------------------------------------
 function updateBook(req, res) {
   switch (req.body.update) {
     case "bulk":
@@ -248,23 +266,11 @@ function editBook(req, res) {
   );
 }
 
-function getNextBookId(res) {
-  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM books`;
-  db_.all(sql, (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      res.json("Hiba!");
-      return;
-    }
-    res.json(rows[0].next_id);
-  });
-}
-
 module.exports = {
   init: init,
   registerBook: registerBook,
   findBook: findBook,
-  findBookNotes: findBookNotes,
+  getBookNotesById: getBookNotesById,
   getBookById: getBookById,
   addGenre: addGenre,
   getGenres: getGenres,

@@ -1,5 +1,6 @@
 var db_ = null;
 
+//----------------------------------------------------------------
 function init(db) {
   if (db === null) return false;
   db_ = db;
@@ -28,8 +29,7 @@ CREATE TABLE IF NOT EXISTS user_notes (
 `);
 }
 
-//--------------------------
-
+//----------------------------------------------------------------
 function registerUser(req) {
   const body = req.body;
   var filename = null;
@@ -99,6 +99,7 @@ function registerUserNotes(id, date, notes) {
   }
 }
 
+//----------------------------------------------------------------
 async function findUser(body) {
   const status = body.status == "on" ? 1 : 0;
   const sql = `
@@ -121,7 +122,7 @@ async function findUser(body) {
   });
 }
 
-async function findUserNotes(id) {
+async function getUserNotesById(id) {
   const sql = ` SELECT date, notes FROM user_notes WHERE id = ?`;
 
   return new Promise((resolve, reject) => {
@@ -138,12 +139,26 @@ async function findUserNotes(id) {
 function getUserById(id, res) {
   const sql = ` SELECT * FROM users WHERE id = ?`;
 
-  db_.all(sql, [id], (err, rows) => {
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [id], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(rows[0]);
+    });
+  });
+}
+
+function getNextUserId(res) {
+  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM users`;
+  db_.all(sql, (err, rows) => {
     if (err) {
-      res.json(err.message);
+      console.log(err.message);
+      res.json("Hiba!");
       return;
     }
-    res.json(rows[0]);
+    res.json(rows[0].next_id);
   });
 }
 
@@ -168,6 +183,7 @@ function getLendedBooks(id, res) {
   });
 }
 
+//----------------------------------------------------------------
 function updateUser(req, res) {
   switch (req.body.update) {
     case "bulk":
@@ -234,23 +250,11 @@ function editUser(req, res) {
   );
 }
 
-function getNextUserId(res) {
-  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM users`;
-  db_.all(sql, (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      res.json("Hiba!");
-      return;
-    }
-    res.json(rows[0].next_id);
-  });
-}
-
 module.exports = {
   init: init,
   registerUser: registerUser,
   findUser: findUser,
-  findUserNotes: findUserNotes,
+  getUserNotesById: getUserNotesById,
   getUserById: getUserById,
   getLendedBooks: getLendedBooks,
   updateUser: updateUser,
