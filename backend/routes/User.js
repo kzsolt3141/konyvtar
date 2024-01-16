@@ -59,6 +59,8 @@ router
     } else if (req.params.search.includes("loan=")) {
       id = req.params.search.split("loan=")[1];
       database.getLendedBooks(id, res);
+    } else if (req.params.search == "next") {
+      database.getNextUserId(res);
     } else {
       res.json("HIBA");
     }

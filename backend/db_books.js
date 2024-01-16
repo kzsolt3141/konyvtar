@@ -257,6 +257,18 @@ function editBook(req, res) {
   );
 }
 
+function getNextBookId(res) {
+  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM books`;
+  db_.all(sql, (err, rows) => {
+    if (err) {
+      console.log(err.message);
+      res.json("Hiba!");
+      return;
+    }
+    res.json(rows[0].next_id);
+  });
+}
+
 module.exports = {
   init: init,
   registerBook: registerBook,
@@ -266,4 +278,5 @@ module.exports = {
   addGenre: addGenre,
   getGenres: getGenres,
   updateBook: updateBook,
+  getNextBookId: getNextBookId,
 };

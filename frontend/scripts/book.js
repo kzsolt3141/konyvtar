@@ -7,6 +7,8 @@ import {
 
 import { updateStatus, disableMain, enableMain } from "./common.js";
 
+await showNextBookId();
+
 //create genre selection drop-down
 const genreDiv = document.getElementById("genre_div");
 creteGenreSelect("genre", genreDiv);
@@ -28,13 +30,21 @@ formBtn.addEventListener("click", async (event) => {
 
   formData.append("genre", genre);
   disableMain();
-  fetch("/book/add", {
+  const status = await fetch("/book/add", {
     method: "POST",
     body: formData,
-  })
-    .then((rsp) => rsp.text())
-    .then((data) => {
-      updateStatus(data);
-      enableMain();
-    });
+  }).then((rsp) => rsp.text());
+
+  updateStatus(status);
+  await showNextBookId();
+  enableMain();
 });
+
+async function showNextBookId() {
+  const rsp = await fetch(`/book/find/next`, {
+    method: "GET",
+  }).then((rsp) => rsp.text());
+
+  const title = document.getElementById("title");
+  title.innerHTML = `<h2>Uj konyv: ${rsp}<h2>`;
+}

@@ -47,18 +47,18 @@ bookSearchBtn.addEventListener("click", async (event) => {
   searchBook(bookFormData);
 });
 
-function searchBook(bookFormData) {
+async function searchBook(bookFormData) {
   disableMain();
-  fetch("/book/find/bulk", {
+  const data = await fetch("/book/find/bulk", {
     method: "POST",
     body: bookFormData,
-  })
-    .then((rsp) => rsp.json())
-    .then((data) => {
-      BookData = JSON.parse(data);
-      listBooks(BookData);
-      enableMain();
-    });
+  }).then((res) => res.json());
+
+  if (data) {
+    BookData = JSON.parse(data);
+    listBooks(BookData);
+  }
+  enableMain();
 }
 
 /* all books will be listed in the books_div div element

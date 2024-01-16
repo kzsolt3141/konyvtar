@@ -1,5 +1,7 @@
 import { updateStatus, disableMain, enableMain } from "./common.js";
 
+await showNextUserId();
+
 const addButton = document.getElementById("add");
 addButton.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -8,13 +10,21 @@ addButton.addEventListener("click", async (event) => {
 
   const formData = new FormData(form);
   disableMain();
-  fetch("/user/add", {
+  const data = await fetch("/user/add", {
     method: "POST",
     body: formData,
-  })
-    .then((rsp) => rsp.text())
-    .then((data) => {
-      updateStatus(data);
-      enableMain();
-    });
+  }).then((rsp) => rsp.text());
+
+  updateStatus(data);
+  await showNextUserId();
+  enableMain();
 });
+
+async function showNextUserId() {
+  const rsp = await fetch(`/user/find/next`, {
+    method: "GET",
+  }).then((rsp) => rsp.text());
+
+  const title = document.getElementById("title");
+  title.innerHTML = `<h2>Uj Felhasznalo: ${rsp}<h2>`;
+}

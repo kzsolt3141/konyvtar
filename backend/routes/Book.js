@@ -60,6 +60,8 @@ router
     if (req.params.search.includes("id=")) {
       id = req.params.search.split("id=")[1];
       database.getBookNameById(id, res);
+    } else if (req.params.search == "next") {
+      database.getNextBookId(res);
     } else {
       res.json("HIBA");
     }

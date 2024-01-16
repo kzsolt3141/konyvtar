@@ -150,6 +150,7 @@ module.exports = {
   addGenre: db_books.addGenre,
   getGenres: db_books.getGenres,
   updateBook: db_books.updateBook,
+  getNextBookId: db_books.getNextBookId,
 
   registerUser: db_users.registerUser,
   findUser: db_users.findUser,
@@ -157,6 +158,7 @@ module.exports = {
   getUserNameById: db_users.getUserNameById,
   getLendedBooks: db_users.getLendedBooks,
   updateUser: db_users.updateUser,
+  getNextUserId: db_users.getNextUserId,
 
   lend: db_loan.lend,
   bring: db_loan.bring,

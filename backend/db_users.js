@@ -234,6 +234,18 @@ function editUser(req, res) {
   );
 }
 
+function getNextUserId(res) {
+  const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM users`;
+  db_.all(sql, (err, rows) => {
+    if (err) {
+      console.log(err.message);
+      res.json("Hiba!");
+      return;
+    }
+    res.json(rows[0].next_id);
+  });
+}
+
 module.exports = {
   init: init,
   registerUser: registerUser,
@@ -242,4 +254,5 @@ module.exports = {
   getUserNameById: getUserNameById,
   getLendedBooks: getLendedBooks,
   updateUser: updateUser,
+  getNextUserId: getNextUserId,
 };
