@@ -53,11 +53,20 @@ router
     }
   })
   .get(async (req, res) => {
-    if (req.params.search.includes("id=")) {
+    if (req.params.search.startsWith("id=")) {
       id = req.params.search.split("id=")[1];
       try {
         const user = await database.getUserById(id);
         res.json(user);
+      } catch (err) {
+        res.json(err.message);
+      }
+    }
+    if (req.params.search.startsWith("nid=")) {
+      id = req.params.search.split("nid=")[1];
+      try {
+        const userNotes = await database.getUserNotesById(id);
+        res.json(userNotes);
       } catch (err) {
         res.json(err.message);
       }
