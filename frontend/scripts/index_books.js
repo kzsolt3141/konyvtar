@@ -421,6 +421,6 @@ export async function getBookTitleById(bid) {
   const rsp = await fetch(`/book/find/id=${bid}`, {
     method: "GET",
   });
-  const title = await rsp.json();
-  return title.title;
+  const book = await rsp.json();
+  return book.title;
 }

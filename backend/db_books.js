@@ -36,15 +36,6 @@ function init(db) {
   `);
 }
 
-function getValidYear(textyear) {
-  year = parseInt(textyear, 10);
-  const currentDate = new Date();
-  if (isNaN(year) || year > currentDate.getFullYear()) {
-    return { error: new Error(`Invalid year: ${textyear}`) };
-  }
-  return { value: year };
-}
-
 function registerBook(req) {
   const body = req.body;
   var file = null;
@@ -160,8 +151,8 @@ async function findBookNotes(id) {
   });
 }
 
-function getBookNameById(id, res) {
-  const sql = ` SELECT title FROM books WHERE id = ?`;
+function getBookById(id, res) {
+  const sql = ` SELECT * FROM books WHERE id = ?`;
 
   db_.all(sql, [id], (err, rows) => {
     if (err) {
@@ -274,7 +265,7 @@ module.exports = {
   registerBook: registerBook,
   findBook: findBook,
   findBookNotes: findBookNotes,
-  getBookNameById: getBookNameById,
+  getBookById: getBookById,
   addGenre: addGenre,
   getGenres: getGenres,
   updateBook: updateBook,

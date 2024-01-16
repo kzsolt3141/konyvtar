@@ -55,7 +55,7 @@ router
   .get((req, res) => {
     if (req.params.search.includes("id=")) {
       id = req.params.search.split("id=")[1];
-      database.getUserNameById(id, res);
+      database.getUserById(id, res);
     } else if (req.params.search.includes("loan=")) {
       id = req.params.search.split("loan=")[1];
       database.getLendedBooks(id, res);

@@ -378,7 +378,7 @@ export async function getUserNameById(uid) {
   const rsp = await fetch(`/user/find/id=${uid}`, {
     method: "GET",
   });
-  const name = await rsp.json();
+  const user = await rsp.json();
 
-  return name.name;
+  return user.name;
 }

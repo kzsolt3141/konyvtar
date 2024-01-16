@@ -135,8 +135,8 @@ async function findUserNotes(id) {
   });
 }
 
-function getUserNameById(id, res) {
-  const sql = ` SELECT name FROM users WHERE id = ?`;
+function getUserById(id, res) {
+  const sql = ` SELECT * FROM users WHERE id = ?`;
 
   db_.all(sql, [id], (err, rows) => {
     if (err) {
@@ -251,7 +251,7 @@ module.exports = {
   registerUser: registerUser,
   findUser: findUser,
   findUserNotes: findUserNotes,
-  getUserNameById: getUserNameById,
+  getUserById: getUserById,
   getLendedBooks: getLendedBooks,
   updateUser: updateUser,
   getNextUserId: getNextUserId,
