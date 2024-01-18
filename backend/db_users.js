@@ -101,6 +101,7 @@ function registerUserNotes(id, date, notes) {
 
 //----------------------------------------------------------------
 async function findUser(body) {
+  key = body.key.trim();
   const status = body.status == "on" ? 1 : 0;
   const sql = `
     SELECT id, name, address, phone, mail, pic, status
@@ -112,7 +113,7 @@ async function findUser(body) {
     LIMIT 100`;
 
   return new Promise((resolve, reject) => {
-    db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
+    db_.all(sql, [`%${key}%`, status], (err, rows) => {
       if (err) {
         reject(err.message);
         return;

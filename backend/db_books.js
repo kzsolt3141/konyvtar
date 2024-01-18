@@ -119,6 +119,7 @@ function getGenres(res) {
 
 //----------------------------------------------------------------
 async function findBook(body) {
+  key = body.key.trim();
   const status = body.status == "on" ? 1 : 0;
   const sql = `
     SELECT * FROM books WHERE 
@@ -128,7 +129,7 @@ async function findBook(body) {
     LIMIT 100`;
 
   return new Promise((resolve, reject) => {
-    db_.all(sql, [`%${body.key}%`, status], (err, rows) => {
+    db_.all(sql, [`%${key}%`, status], (err, rows) => {
       if (err) {
         console.log(err.message);
         reject("Hiba!");

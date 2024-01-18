@@ -1,4 +1,4 @@
-.search_main {
+.seach_results_block {
   display: grid;
   align-items: center;
   grid-template-columns: 80px 580px;
@@ -22,7 +22,7 @@
   align-items: center;
 }
 
-.book_order_div {
+.order_div {
   max-width: 100px;
 }
 

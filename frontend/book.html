@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Berecki konyvtar</title>
+    <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="styles/common.css" />
-    <link rel="stylesheet" href="styles/index-header.css" />
     <link rel="stylesheet" href="styles/index-grid.css" />
     <link rel="stylesheet" href="styles/index-details.css" />
     <link rel="stylesheet" href="styles/book.css" />
@@ -14,19 +13,19 @@
         <img class="fixed_header_image" src="styles/static/CIMER.png" />
       </div>
       <div class="fixed_header_center">
-        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
       <div class="fixed_header_right">
-        <button class="search_button" id="main_btn">
-          <img class="search_button_icon" src="styles/static/home.svg" />
-          <div class="tooltip">Fooldal</div>
+        <button class="general_button" id="main_btn">
+          <img class="general_button_icon" src="styles/static/home.svg" />
+          <div class="tooltip">Főoldal</div>
         </button>
-        <button class="search_button" id="add_user_btn">
-          <img class="search_button_icon" src="styles/static/user-plus.svg" />
-          <div class="tooltip">Uj Felhasznalo</div>
+        <button class="general_button" id="add_user_btn">
+          <img class="general_button_icon" src="styles/static/user-plus.svg" />
+          <div class="tooltip">Új Felhasznaló</div>
         </button>
-        <button class="search_button" id="backup_btn">
-          <img class="search_button_icon" src="styles/static/backup.svg" />
+        <button class="general_button" id="backup_btn">
+          <img class="general_button_icon" src="styles/static/backup.svg" />
           <div class="tooltip">Backup!</div>
         </button>
       </div>
@@ -38,11 +37,11 @@
 
     <form id="add_book" class="book_form_div">
       <div id="title" class="book_form_line">
-        <h2>Uj Konyv</h2>
+        <h2>Új Könyv</h2>
       </div>
 
       <div id="genre_div" class="book_form_line">
-        <label for="isbn">Tipus</label>
+        <label for="isbn">Típus</label>
       </div>
       <div class="book_form_line">
         <label for="isbn">ISBN</label>
@@ -92,7 +91,7 @@
         <img
           src="styles/static/ok.svg"
           id="add_button"
-          class="search_button book_form_button"
+          class="general_button book_form_button"
         />
       </div>
     </form>

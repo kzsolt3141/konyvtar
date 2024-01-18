@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Berecki konyvtar</title>
+    <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="styles/common.css" />
-    <link rel="stylesheet" href="styles/index-header.css" />
     <link rel="stylesheet" href="styles/index-grid.css" />
     <link rel="stylesheet" href="styles/index-details.css" />
   </head>
@@ -13,19 +12,19 @@
         <img class="fixed_header_image" src="styles/static/CIMER.png" />
       </div>
       <div class="fixed_header_center">
-        <h1 class="fixed_header_title">Berecki konyvtar</h1>
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
       <div class="fixed_header_right">
-        <button class="search_button" id="add_book_btn">
-          <img class="search_button_icon" src="styles/static/book-plus.svg" />
-          <div class="tooltip">Uj Konyv</div>
+        <button class="general_button" id="add_book_btn">
+          <img class="general_button_icon" src="styles/static/book-plus.svg" />
+          <div class="tooltip">Új Könyv</div>
         </button>
-        <button class="search_button" id="add_user_btn">
-          <img class="search_button_icon" src="styles/static/user-plus.svg" />
-          <div class="tooltip">Uj Felhasznalo</div>
+        <button class="general_button" id="add_user_btn">
+          <img class="general_button_icon" src="styles/static/user-plus.svg" />
+          <div class="tooltip">Új Felhasználó</div>
         </button>
-        <button class="search_button" id="backup_btn">
-          <img class="search_button_icon" src="styles/static/backup.svg" />
+        <button class="general_button" id="backup_btn">
+          <img class="general_button_icon" src="styles/static/backup.svg" />
           <div class="tooltip">Backup!</div>
         </button>
       </div>
@@ -35,7 +34,7 @@
     <div class="global_status" id="global_status"></div>
     <div class="enable_div" id="disable_div"></div>
 
-    <div class="search_main">
+    <div class="seach_results_block">
       <img class="search_icon" src="styles/static/book.svg" />
       <form class="search" id="search_books">
         <select id="book_type" name="type">
@@ -52,7 +51,7 @@
 
         <input type="text" id="book_key" name="key" placeholder="Kereses" />
 
-        <div class="book_order_div" id="book_order_div"></div>
+        <div class="order_div" id="book_order_div"></div>
 
         <div class="avl_tool">
           <input type="checkbox" id="avl" name="avl" checked="true" />
@@ -62,15 +61,15 @@
           <input type="checkbox" id="status" name="status" checked="true" />
           <div class="tooltip">Aktiv</div>
         </div>
-        <button class="search_button" id="search_books_btn">
-          <img class="search_button_icon" src="styles/static/kereso.png" />
+        <button class="general_button" id="search_books_btn">
+          <img class="general_button_icon" src="styles/static/kereso.png" />
         </button>
       </form>
     </div>
 
     <div class="list_div" id="books_div"></div>
 
-    <div class="search_main">
+    <div class="seach_results_block">
       <img class="search_icon" src="styles/static/user.svg" />
       <form class="search" id="search_users">
         <select id="user_type" name="type">
@@ -80,24 +79,25 @@
         </select>
         <input type="text" id="user_key" name="key" placeholder="Kereses" />
 
-        <div class="user_order_div" id="user_order_div"></div>
+        <div class="order_div" id="user_order_div"></div>
+        <div></div>
 
         <div class="user_sts_tool">
           <input type="checkbox" id="status" name="status" checked="true" />
           <div class="tooltip">Aktiv</div>
         </div>
-        <button class="search_button" id="search_user">
-          <img class="search_button_icon" src="styles/static/kereso.png" />
+        <button class="general_button" id="search_user">
+          <img class="general_button_icon" src="styles/static/kereso.png" />
         </button>
       </form>
     </div>
 
     <div class="list_div" id="users_div"></div>
 
-    <div class="search_main" id="lend_div">
-      <img class="search_icon" src="styles/static/register.png" />
-      <button class="search_button" id="lend_button">
-        <img class="search_button_icon" src="styles/static/edit.png" />
+    <div class="seach_results_block" id="lend_div">
+      <img class="search_icon" src="styles/static/register.svg" />
+      <button class="general_button" id="lend_button">
+        <img class="general_button_icon" src="styles/static/edit.png" />
       </button>
     </div>
 
