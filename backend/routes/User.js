@@ -61,8 +61,7 @@ router
       } catch (err) {
         res.json(err.message);
       }
-    }
-    if (req.params.search.startsWith("nid=")) {
+    } else if (req.params.search.startsWith("nid=")) {
       id = req.params.search.split("nid=")[1];
       try {
         const userNotes = await database.getUserNotesById(id);

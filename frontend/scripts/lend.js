@@ -12,7 +12,7 @@ const place = document.getElementById("details_div");
 const statusDiv = document.getElementById("global_status");
 
 // button.disabled = true;
-button.addEventListener("click", function () {
+button.addEventListener("click", async function () {
   place.innerHTML = "";
   var bookRadio = document.querySelector('input[name="book_radio"]:checked');
   var userRadio = document.querySelector('input[name="user_radio"]:checked');
@@ -21,7 +21,7 @@ button.addEventListener("click", function () {
   statusDiv.appendChild(message);
 
   if (bookRadio && userRadio) {
-    lendBook(bookRadio.id, userRadio.id, place, true);
+    await lendBook(bookRadio.id, userRadio.id, place, true);
   } else {
     updateStatus("Valassz egy konyvet es/vagy egy felhasznalot");
   }
