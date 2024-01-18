@@ -1,2 +1,25 @@
-.todo {
+.full_book_details {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+}
+
+.full_book_text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  text-align: center;
+}
+
+.full_book_notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  text-align: center;
+}
+
+.full_book_lend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  text-align: center;
 }

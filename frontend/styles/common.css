@@ -12,7 +12,7 @@ body {
 input {
   height: 30px;
   border-radius: 10px;
-  background-color:rgb(239, 248, 239);
+  background-color: rgb(239, 248, 239);
   border-color: rgb(147, 192, 147);
 }
 
@@ -24,7 +24,7 @@ input[type="checkbox" i] {
 select {
   height: 30px;
   border-radius: 10px;
-  background-color:rgb(239, 248, 239);
+  background-color: rgb(239, 248, 239);
   border-color: rgb(147, 192, 147);
 }
 p {
@@ -49,15 +49,16 @@ button {
   align-items: center;
 
   background: linear-gradient(
-    90deg,
-    rgb(133, 194, 139, 0.2) 0%,
-    rgb(182, 248, 188, 0.2) 50%,
-    rgb(136, 196, 142, 0.2) 100%
-  ), url("/styles/static/header_bg.jpeg");
+      90deg,
+      rgb(133, 194, 139, 0.2) 0%,
+      rgb(182, 248, 188, 0.2) 50%,
+      rgb(136, 196, 142, 0.2) 100%
+    ),
+    url("/styles/static/header_bg.jpeg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  
+
   border-radius: 20px;
   box-shadow: 8px 8px 8px 0px rgba(0, 0, 0, 0.2);
   z-index: 100;
@@ -69,7 +70,7 @@ button {
 }
 
 .fixed_header_title {
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: "Georgia", "Times New Roman", serif;
   text-align: center;
   color: #205021; /* Green color */
   text-shadow: 4px 4px 2px rgba(164, 243, 181, 0.9);
@@ -79,7 +80,6 @@ button {
     rgb(182, 248, 188, 0.7) 50%,
     rgb(136, 196, 142, 0.1) 100%
   );
-
 }
 
 .fixed_header_right {
@@ -143,7 +143,6 @@ button {
   box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.2);
   padding: 5px;
 }
-
 
 .ok_btn {
   width: 30px;
@@ -217,3 +216,4 @@ button {
 
 .disable_thumbnail {
   width: 100px;
+}
