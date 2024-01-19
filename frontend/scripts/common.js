@@ -1,3 +1,6 @@
+//TODO remove IdOffset when it is not needed
+export const IdOffset = 1000;
+
 export const LabelNames = {
   id: "Azonosito:",
   isbn: "ISBN:",

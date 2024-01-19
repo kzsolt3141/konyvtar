@@ -1,4 +1,5 @@
-import { LabelNames } from "./common.js";
+//TODO remove IdOffset when it is not needed
+import { LabelNames, IdOffset } from "./common.js";
 
 const bookTable = document.getElementById("book_table");
 
@@ -17,7 +18,12 @@ if (data) {
       if (k == "pic") continue;
       if (k == "notes") continue;
       const e = document.createElement("p");
-      e.textContent = book[k];
+      //TODO remove IdOffset when it is not needed
+      if (k == "id") {
+        e.textContent = parseInt(book[k], 10) + IdOffset;
+      } else {
+        e.textContent = book[k];
+      }
       bookTable.appendChild(e);
     }
   });

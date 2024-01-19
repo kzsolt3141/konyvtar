@@ -5,7 +5,8 @@ import {
   getGenreValue,
 } from "./genre.js";
 
-import { updateStatus, disableMain, enableMain } from "./common.js";
+//TODO remove IdOffset when it is not needed
+import { updateStatus, disableMain, enableMain, IdOffset } from "./common.js";
 
 await showNextBookId();
 
@@ -46,5 +47,6 @@ async function showNextBookId() {
   }).then((rsp) => rsp.text());
 
   const title = document.getElementById("title");
-  title.innerHTML = `<h2>Uj konyv: ${rsp}<h2>`;
+  //TODO remove IdOffset when it is not needed
+  title.innerHTML = `<h2>Uj konyv: ${parseInt(rsp, 10) + IdOffset}<h2>`;
 }
