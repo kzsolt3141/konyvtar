@@ -147,9 +147,10 @@ function getAllBooks(body, res) {
 
   const sql = `
     SELECT * FROM books 
-    ORDER BY ${order} ASC
-    LIMIT 50
-    OFFSET ${offset}`;
+    ORDER BY ${order} ASC`;
+  //TODO add this when paging is ready
+  // LIMIT 50
+  // OFFSET ${offset}`;
 
   db_.all(sql, (err, rows) => {
     if (err) {
