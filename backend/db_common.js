@@ -145,6 +145,7 @@ module.exports = {
 
   registerBook: db_books.registerBook,
   findBook: db_books.findBook,
+  getAllBooks: db_books.getAllBooks,
   getBookNotesById: db_books.getBookNotesById,
   getBookById: db_books.getBookById,
   addGenre: db_books.addGenre,

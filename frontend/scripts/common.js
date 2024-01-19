@@ -118,3 +118,10 @@ if (addUserBtn) {
     window.location.href = "/user.html";
   });
 }
+
+const bookTableBtn = document.getElementById("book_table_btn");
+if (bookTableBtn) {
+  bookTableBtn.addEventListener("click", async (event) => {
+    window.location.href = "/book_table.html";
+  });
+}

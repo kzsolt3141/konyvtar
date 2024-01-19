@@ -14,6 +14,10 @@
         <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
       <div class="fixed_header_right">
+        <button class="general_button" id="main_btn">
+          <img class="general_button_icon" src="styles/static/home.svg" />
+          <div class="tooltip">Főoldal</div>
+        </button>
         <button class="general_button" id="add_book_btn">
           <img class="general_button_icon" src="styles/static/book-plus.svg" />
           <div class="tooltip">Új Könyv</div>
@@ -29,7 +33,25 @@
       </div>
     </div>
 
+    <select id="book_type" name="type">
+      <option value="title">Konyvcim</option>
+      <option value="author">Szerzo</option>
+      <option value="genre">Tipus</option>
+      <option value="id">Azonosito</option>
+      <option value="isbn">ISBN</option>
+      <option value="year">Megjelent</option>
+      <option value="publ">Kiado</option>
+      <option value="ver">Kiadas</option>
+      <option value="keys">Kulcsszo</option>
+    </select>
+
     <div id="book_table" class="book_table"></div>
+
+    <div id="navi" class="navi">
+      <img class="navi_icon" src="styles/static/back.svg" />
+      <input class="navi_input" type="text" id="navi" name="navi" value="1" />
+      <img class="navi_icon" src="styles/static/next.svg" />
+    </div>
 
     <!-- TODO -->
 

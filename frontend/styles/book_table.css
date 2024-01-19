@@ -1,4 +1,20 @@
 .book_table {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(11, 1fr);
+}
+
+.navi {
+  display: grid;
+  grid-template-columns: 30px 30px 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.navi_icon {
+  width: 30px;
+}
+
+.navi_input {
+  width: 20px;
+  text-align: center;
 }

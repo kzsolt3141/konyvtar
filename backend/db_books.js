@@ -141,6 +141,26 @@ async function findBook(body) {
   });
 }
 
+function getAllBooks(body, res) {
+  order = body.order;
+  offset = body.offset * 50;
+
+  const sql = `
+    SELECT * FROM books 
+    ORDER BY ${order} ASC
+    LIMIT 50
+    OFFSET ${offset}`;
+
+  db_.all(sql, (err, rows) => {
+    if (err) {
+      console.log(err.message);
+      res.json("Hiba!");
+      return;
+    }
+    res.json(rows);
+  });
+}
+
 async function getBookNotesById(id) {
   const sql = ` SELECT date, notes FROM book_notes WHERE id = ?`;
 
@@ -272,6 +292,7 @@ module.exports = {
   init: init,
   registerBook: registerBook,
   findBook: findBook,
+  getAllBooks: getAllBooks,
   getBookNotesById: getBookNotesById,
   getBookById: getBookById,
   addGenre: addGenre,

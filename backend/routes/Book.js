@@ -52,6 +52,8 @@ router
   .post(upload.none(), (req, res) => {
     if (req.params.search == "bulk") {
       findBookHandler(req, res);
+    } else if (req.params.search == "table") {
+      database.getAllBooks(req.body, res);
     } else {
       res.json("HIBA");
     }
