@@ -1,19 +1,3 @@
-const LabelNames = {
-  id: "Azonosito:",
-  isbn: "ISBN:",
-  title: "Cim:",
-  author: "Szerzo:",
-  genre: "Tipus:",
-  year: "Megjelent:",
-  publ: "Kiado:",
-  ver: "Kiadas:",
-  status: "Allapot:",
-  keys: "Kulcsszavak",
-  notes: "Megjegyzesek:",
-  available: "Elerheto:",
-  price: "Ar(lej):",
-};
-
 import {
   creteGenreSelect,
   getGenreValue,
@@ -27,6 +11,7 @@ import {
   updateStatus,
   disableMain,
   enableMain,
+  LabelNames,
 } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
@@ -182,6 +167,13 @@ export function showBookPic(id, bookDiv, deletion) {
   } else {
     img.src = "/" + book.pic;
   }
+
+  img.addEventListener("click", async (event) => {
+    disableMain();
+    window.location.href = `/book/full/${id}`;
+    enableMain();
+  });
+
   picDiv.appendChild(img);
 }
 

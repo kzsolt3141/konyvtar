@@ -11,6 +11,7 @@ body {
 
 input {
   height: 30px;
+  width: 250px;
   border-radius: 10px;
   background-color: rgb(239, 248, 239);
   border-color: rgb(147, 192, 147);
@@ -127,6 +128,7 @@ button {
 
 .general_button_icon {
   height: 50px;
+  opacity: 0.7;
 }
 
 .general_button:hover .tooltip {

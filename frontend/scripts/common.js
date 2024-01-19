@@ -1,3 +1,19 @@
+export const LabelNames = {
+  id: "Azonosito:",
+  isbn: "ISBN:",
+  title: "Cim:",
+  author: "Szerzo:",
+  genre: "Tipus:",
+  year: "Megjelent:",
+  publ: "Kiado:",
+  ver: "Kiadas:",
+  status: "Allapot:",
+  keys: "Kulcsszavak",
+  notes: "Megjegyzesek:",
+  available: "Elerheto:",
+  price: "Ar(lej):",
+};
+
 export function initDetailDiv(place, okFunction, title = "") {
   place.innerHTML = "";
   const h2 = document.createElement("h2");

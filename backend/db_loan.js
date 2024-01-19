@@ -98,7 +98,7 @@ async function bring(body, rsp) {
 async function getLoansByBookId(bid) {
   return new Promise((resolve, reject) => {
     sql = `
-    SELECT loan.id, users.name, loan.lend_date, loan.lend_notes, loan.back_date, loan.back_notes
+    SELECT loan.lend_date, users.name, loan.lend_notes, loan.back_date, loan.back_notes
     FROM loan
     JOIN users ON loan.uid = users.id
     WHERE loan.bid = ?

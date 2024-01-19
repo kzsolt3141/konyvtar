@@ -10,16 +10,26 @@
   text-align: center;
 }
 
+.full_book_xt {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  align-items: center;
+  text-align: center;
+}
 .full_book_notes {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   text-align: center;
+
+  border: 2px solid darkgreen;
 }
 
 .full_book_lend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   align-items: center;
   text-align: center;
+
+  border: 2px solid darkgreen;
 }

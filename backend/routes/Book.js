@@ -124,12 +124,6 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
 
 router.route("/full/:id?").get(async (req, res) => {
   if (req.params.id) {
-    //TODO use this in a separate fetch
-    // const book = await database.getBookById(req.params.id);
-    // const bookNotes = await database.getBookNotesById(req.params.id);
-    // const loan = await database.getLoansByBookId(req.params.id);
-    // console.log(book, bookNotes, loan);
-
     res.render("full_book.ejs", {
       bid: req.params.id,
     });
