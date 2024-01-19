@@ -1,0 +1,4 @@
+.book_table {
+  display: grid;
+  grid-template-columns: 1fr;
+}

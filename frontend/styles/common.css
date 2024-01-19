@@ -17,6 +17,16 @@ input {
   border-color: rgb(147, 192, 147);
 }
 
+input[type="radio" i] {
+  appearance: auto;
+  width: 25px;
+}
+
+input[type="file" i] {
+  appearance: auto;
+  width: 65px;
+}
+
 input[type="checkbox" i] {
   appearance: auto;
   width: 25px;

@@ -126,7 +126,8 @@ async function findBook(body) {
     LOWER(${body.type}) LIKE LOWER(?) 
     AND 
     status = ?
-    LIMIT 100`;
+    ORDER BY ${body.type} ASC
+    LIMIT 20`;
 
   return new Promise((resolve, reject) => {
     db_.all(sql, [`%${key}%`, status], (err, rows) => {

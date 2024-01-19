@@ -1,6 +1,6 @@
 .details_div {
   display: grid;
-  grid-template-columns: 300px 350px;
+  grid-template-columns: 300px 450px;
   column-gap: 20px;
   position: fixed;
   left: 100px;
