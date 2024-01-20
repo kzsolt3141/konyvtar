@@ -181,11 +181,12 @@ button {
 .global_status {
   background-color: rgb(238, 129, 129);
   position: fixed;
-  left: 300px;
+  left: 500px;
   top: 115px;
 
   font-weight: bold;
   font-size: 16px;
+  z-index: 200;
 }
 
 .version {
