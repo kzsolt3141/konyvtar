@@ -1,1 +1,1 @@
-cd D:\konyvtar & powershell ./updates.ps1
+cd D:\konyvtar & powershell ./update.ps1
