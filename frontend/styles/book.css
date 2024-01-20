@@ -1,5 +1,5 @@
 .book_form_div {
-  position: fixed;
+  position: absolute;
   display: grid;
   grid-template-columns: 400px;
   column-gap: 20px;
