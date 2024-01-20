@@ -1,0 +1,1 @@
+cd D:\konyvtar & powershell ./run.ps1
