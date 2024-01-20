@@ -12,7 +12,6 @@ import {
   disableMain,
   enableMain,
   LabelNames,
-  IdOffset, //TODO remove IdOffset when it is not needed
 } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
@@ -195,9 +194,8 @@ async function details(key) {
       e.textContent = LabelNames[k];
       detailText.appendChild(e);
       const e2 = document.createElement("p");
-      //TODO remove IdOffset when it is not needed
       if (k == "id") {
-        e2.textContent = parseInt(element[0][k], 10) + IdOffset;
+        e2.textContent = parseInt(element[0][k], 10);
       } else {
         e2.textContent = element[0][k];
       }

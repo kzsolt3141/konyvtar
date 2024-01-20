@@ -1,5 +1,4 @@
-//TODO remove IdOffset when it is not needed
-import { LabelNames, IdOffset } from "./common.js";
+import { LabelNames } from "./common.js";
 
 const bid = document.getElementById("bid").getAttribute("content");
 console.log("generate the full list based on:" + bid);
@@ -22,9 +21,8 @@ async function fillBookPage() {
     e.textContent = LabelNames[k];
     bookText.appendChild(e);
     const e2 = document.createElement("p");
-    //TODO remove IdOffset when it is not needed
     if (k == "id") {
-      e2.textContent = parseInt(book[k], 10) + IdOffset;
+      e2.textContent = parseInt(book[k], 10);
     } else {
       e2.textContent = book[k];
     }
