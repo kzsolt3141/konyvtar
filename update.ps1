@@ -1,7 +1,7 @@
 git checkout .
 git pull
 
-$filePath = './entrypoint.exe'
+$filePath = './entrypoint-win.exe'
 $dbDir = 'database'
 
 if (Test-Path $filePath -PathType Leaf) {
@@ -14,7 +14,7 @@ if (Test-Path $filePath -PathType Leaf) {
 
 npm install
 
-pkg entrypoint.js -t node18
+pkg entrypoint.js
 
 if (-not (Test-Path -Path $dbDir -PathType Container)) {
     # If the directory doesn't exist, create it
@@ -24,5 +24,5 @@ if (-not (Test-Path -Path $dbDir -PathType Container)) {
     Write-Host "Directory already exists: $dbDir"
 }
 
-Start-Process -FilePath ./entrypoint.exe -NoNewWindow
+Start-Process -FilePath ./entrypoint-win.exe -NoNewWindow
 Start-Process localhost.url

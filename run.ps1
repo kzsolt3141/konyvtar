@@ -1,2 +1,2 @@
-Start-Process -FilePath ./entrypoint.exe -NoNewWindow
+Start-Process -FilePath ./entrypoint-win.exe -NoNewWindow
 Start-Process localhost.url
