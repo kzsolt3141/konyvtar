@@ -256,12 +256,13 @@ function editBook(req, res) {
     file = req.file.filename;
   }
 
+  if (body.genre == "") body.genre = null;
   sql = `UPDATE books 
   SET 
     isbn = ?,
     title= ?,
     author = ?,
-    genre = ?,
+    genre =  COALESCE(?, genre),
     year = ?,
     publ = ?,
     ver = ?,

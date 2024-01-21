@@ -323,10 +323,6 @@ async function editBook(book) {
   detailsDiv.appendChild(detailText);
 
   function okFunction() {
-    if (!genreSelectIsValid("changeForm")) {
-      updateStatus("Kerlek valasz megfelelo TIPUS-t");
-      return;
-    }
     const changeForm = new FormData();
     changeForm.append("update", "bulk");
     changeForm.append("genre", getGenreValue("changeForm"));

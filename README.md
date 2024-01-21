@@ -15,5 +15,6 @@ Changelog:
 - [*] check for empty book isbn and title
 - [*] deactivate selection for inactive book
 - [*] use common reorder function
+- [*] don't require genre at book editing
 - [-] consistent book and user OK button placement
 - [-] fix loan error message

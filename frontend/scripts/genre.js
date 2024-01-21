@@ -58,7 +58,8 @@ export function genreSelectIsValid(id) {
 
 export function getGenreValue(id) {
   const bookGenre = document.getElementById(id + "_select");
-  return bookGenre.value;
+  if (bookGenre && bookGenre.value != "down") return bookGenre.value;
+  else return "";
 }
 
 // define a new genre and send it back to the DB
