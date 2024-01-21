@@ -4,7 +4,6 @@ import {
   genreSelectIsValid,
 } from "./genre.js";
 
-import { getUserNameById } from "./index_users.js";
 import { lendBook } from "./lend.js";
 import {
   reorderData,
@@ -13,6 +12,7 @@ import {
   disableMain,
   enableMain,
   LabelNames,
+  getUserById,
 } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
@@ -24,7 +24,7 @@ createTypeSelect("book_order", document.getElementById("book_order_div"));
 
 const bookSearchBtn = document.getElementById("search_books_btn");
 
-var BookData = null;
+const BookData = [];
 
 bookSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -40,8 +40,10 @@ async function searchBook(bookFormData) {
     body: bookFormData,
   }).then((res) => res.json());
 
+  BookData.length = 0;
+
   if (data) {
-    BookData = JSON.parse(data);
+    BookData.push(JSON.parse(data));
     listBooks(BookData);
   }
   enableMain();
@@ -50,7 +52,8 @@ async function searchBook(bookFormData) {
 /* all books will be listed in the books_div div element
  * each book will have its own table
  */
-async function listBooks(books) {
+async function listBooks(bookArray) {
+  const books = bookArray[0];
   const booksDiv = document.getElementById("books_div");
   booksDiv.innerHTML = "";
 
@@ -71,7 +74,7 @@ async function listBooks(books) {
       bookDiv.style.backgroundColor = "#f0c0c0";
     }
 
-    showBookPic(book.id, bookDiv, false);
+    showBookPic(book.id, book.pic, bookDiv);
 
     const boodDetailsDiv = document.createElement("div");
     boodDetailsDiv.className = "book_details_div";
@@ -115,7 +118,7 @@ async function listBooks(books) {
     img.src = "styles/static/edit.png";
     img.className = "detail_options";
     img.addEventListener("click", function () {
-      editBook(book.id);
+      editBook(book);
     });
     thirdLineDiv.appendChild(img);
 
@@ -123,7 +126,7 @@ async function listBooks(books) {
     img.src = "styles/static/details.svg";
     img.className = "detail_options";
     img.addEventListener("click", function () {
-      details(book.id);
+      details(bookObj);
     });
     thirdLineDiv.appendChild(img);
 
@@ -132,7 +135,7 @@ async function listBooks(books) {
     img.className = "detail_options";
     img.id = "lend_" + book.id;
     img.addEventListener("click", function () {
-      toggleStatus(book.id, book.title, book.status);
+      toggleStatus(book);
     });
     thirdLineDiv.appendChild(img);
 
@@ -148,25 +151,17 @@ async function listBooks(books) {
   });
 }
 
-export function showBookPic(id, bookDiv, deletion) {
+export function showBookPic(id, pic, bookDiv) {
   const picDiv = document.createElement("div");
   bookDiv.appendChild(picDiv);
-
-  var book = null;
-  for (const element of BookData) {
-    if (element[0].id == id) {
-      book = element[0];
-      break;
-    }
-  }
 
   const img = document.createElement("img");
   img.className = "book_thumbnail";
 
-  if (book.pic == null) {
+  if (pic == null) {
     img.src = "/styles/static/default_book.png";
   } else {
-    img.src = "/" + book.pic;
+    img.src = "/" + pic;
   }
 
   img.addEventListener("click", async (event) => {
@@ -178,82 +173,80 @@ export function showBookPic(id, bookDiv, deletion) {
   picDiv.appendChild(img);
 }
 
-async function details(key) {
+async function details(bookObj) {
+  const book = bookObj[0];
+  const loan = bookObj[1];
+
   initDetailDiv(detailsDiv, clearPlace, "Reszletek");
+  showBookPic(book.id, book.pic, detailsDiv);
 
-  for (const element of BookData) {
-    if (element[0].id != key) continue;
-    showBookPic(key, detailsDiv, false);
+  var detailText = document.createElement("div");
+  detailText.className = "detail_text";
 
-    var detailText = document.createElement("div");
-    detailText.className = "detail_text";
-
-    for (const k in element[0]) {
-      if (k == "pic") continue;
-      if (k == "notes") continue;
-      const e = document.createElement("p");
-      e.textContent = LabelNames[k];
-      detailText.appendChild(e);
-      const e2 = document.createElement("p");
-      if (k == "id") {
-        e2.textContent = parseInt(element[0][k], 10);
-      } else {
-        e2.textContent = element[0][k];
-      }
-      detailText.appendChild(e2);
-    }
-
-    detailsDiv.appendChild(detailText);
-
-    detailText = document.createElement("div");
-    detailText.className = "detail_text2";
-
+  for (const k in book) {
+    if (k == "pic") continue;
+    if (k == "notes") continue;
     const e = document.createElement("p");
-    e.textContent = "Megjegyzesek:";
+    e.textContent = LabelNames[k];
     detailText.appendChild(e);
-
-    element.slice(2).map((item) => {
-      const e = document.createElement("p");
-      e.textContent = item.date + ": " + item.notes;
-      detailText.appendChild(e);
-    });
-
-    detailsDiv.appendChild(detailText);
-
-    detailText = document.createElement("div");
-    detailText.className = "detail_text2";
-    detailsDiv.appendChild(detailText);
-
-    const p = document.createElement("p");
-    detailText.appendChild(p);
-    if (element[1][1] != null) {
-      p.textContent = "Kiadva: " + (await getUserNameById(element[1][1]));
-      detailText.className = "detail_text_red";
-    } else if (element[0]["status"] != 1) {
-      p.textContent = "Inaktiv konyv";
-      detailText.className = "detail_text_red";
+    const e2 = document.createElement("p");
+    if (k == "id") {
+      e2.textContent = parseInt(book[k], 10);
     } else {
-      p.textContent = "Jelengel Raktaron van";
-      detailText.className = "detail_text_green";
+      e2.textContent = book[k];
     }
+    detailText.appendChild(e2);
+  }
 
-    break;
+  detailsDiv.appendChild(detailText);
+
+  detailText = document.createElement("div");
+  detailText.className = "detail_text2";
+
+  const e = document.createElement("p");
+  e.textContent = "Megjegyzesek:";
+  detailText.appendChild(e);
+
+  bookObj.slice(2).map((item) => {
+    const e = document.createElement("p");
+    e.textContent = item.date + ": " + item.notes;
+    detailText.appendChild(e);
+  });
+
+  detailsDiv.appendChild(detailText);
+
+  detailText = document.createElement("div");
+  detailText.className = "detail_text2";
+  detailsDiv.appendChild(detailText);
+
+  const p = document.createElement("p");
+  detailText.appendChild(p);
+  if (loan[1] != null) {
+    const user = await getUserById(loan[1]);
+    p.textContent = "Kiadva: " + user.name;
+    detailText.className = "detail_text_red";
+  } else if (book.status != 1) {
+    p.textContent = "Inaktiv konyv";
+    detailText.className = "detail_text_red";
+  } else {
+    p.textContent = "Jelengel Raktaron van";
+    detailText.className = "detail_text_green";
   }
 }
 
-async function toggleStatus(id, name, status) {
+async function toggleStatus(book) {
   initDetailDiv(detailsDiv, okFunction, "Elveszett/Megkerult");
-  showBookPic(id, detailsDiv, false);
+  showBookPic(book.id, book.pic, detailsDiv, false);
 
-  const currentStatus = status == 1 ? "Aktiv" : "Elveszett";
-  const nextStatus = status == 1 ? "Elveszett" : "Aktiv";
+  const currentStatus = book.status == 1 ? "Aktiv" : "Elveszett";
+  const nextStatus = book.status == 1 ? "Elveszett" : "Aktiv";
 
   const detailText = document.createElement("div");
   detailsDiv.appendChild(detailText);
   detailText.className = "detail_text2";
 
   var p = document.createElement("p");
-  p.textContent = name + " Cimu konyv allapotanak megvaltoztatasa:";
+  p.textContent = book.title + " Cimu konyv allapotanak megvaltoztatasa:";
   detailText.appendChild(p);
 
   p = document.createElement("p");
@@ -277,7 +270,7 @@ async function toggleStatus(id, name, status) {
   function okFunction() {
     const changeForm = new FormData();
     changeForm.append("update", "status");
-    changeForm.append("id", id);
+    changeForm.append("id", book.id);
     changeForm.append("notes", e.value);
 
     disableMain();
@@ -296,17 +289,9 @@ async function toggleStatus(id, name, status) {
   }
 }
 
-async function editBook(key) {
-  var element = null;
-  for (const e of BookData) {
-    if (e[0].id == key) {
-      element = e;
-      break;
-    }
-  }
-
+async function editBook(book) {
   initDetailDiv(detailsDiv, okFunction, "Konyv Szerkesztese");
-  showBookPic(key, detailsDiv, true);
+  showBookPic(book.id, book.pic, detailsDiv, true);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
@@ -317,14 +302,14 @@ async function editBook(key) {
   l.textContent = LabelNames["genre"];
   creteGenreSelect("changeForm", detailText);
 
-  element[0].notes = "";
+  book.notes = "";
 
-  for (const k in element[0]) {
+  for (const k in book) {
     if (k == "id" || k == "status" || k == "genre" || k == "pic") continue;
     const l = document.createElement("label");
     l.textContent = LabelNames[k];
     const e = document.createElement("input");
-    e.value = element[0][k];
+    e.value = book[k];
     e.id = k;
     detailText.appendChild(l);
     detailText.appendChild(e);
@@ -345,7 +330,7 @@ async function editBook(key) {
     const changeForm = new FormData();
     changeForm.append("update", "bulk");
     changeForm.append("genre", getGenreValue("changeForm"));
-    changeForm.append("id", key);
+    changeForm.append("id", book.id);
     changeForm.append("image", pic.files[0]);
 
     for (var i = 0; i < detailText.children.length; i++) {
@@ -397,12 +382,4 @@ function createTypeSelect(id, place) {
   });
 
   place.appendChild(typeSelect);
-}
-
-export async function getBookTitleById(bid) {
-  const rsp = await fetch(`/book/find/id=${bid}`, {
-    method: "GET",
-  });
-  const book = await rsp.json();
-  return book.title;
 }

@@ -41,6 +41,7 @@ function searchUser(formData) {
   })
     .then((rsp) => rsp.json())
     .then((data) => {
+      //TODO push into UserData and update functions
       UserData = JSON.parse(data);
       enableMain();
       listUsers(UserData);
@@ -102,6 +103,7 @@ function listUsers(users) {
     img.src = "styles/static/edit.png";
     img.className = "detail_options";
     img.addEventListener("click", function () {
+      // TODO use user directly
       editUser(user.id);
     });
     thirdLineDiv.appendChild(img);
@@ -359,13 +361,4 @@ function createTypeSelect(id, place) {
   });
 
   place.appendChild(typeSelect);
-}
-
-export async function getUserNameById(uid) {
-  const rsp = await fetch(`/user/find/id=${uid}`, {
-    method: "GET",
-  });
-  const user = await rsp.json();
-
-  return user.name;
 }

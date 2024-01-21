@@ -3,9 +3,10 @@ import {
   updateStatus,
   disableMain,
   enableMain,
+  getBookById,
+  getUserById,
 } from "./common.js";
-import { getBookTitleById, showBookPic } from "./index_books.js";
-import { getUserNameById } from "./index_users.js";
+import { showBookPic } from "./index_books.js";
 
 const button = document.getElementById("lend_button");
 const place = document.getElementById("details_div");
@@ -29,18 +30,21 @@ button.addEventListener("click", async function () {
 
 // define a new genre and send it back to the DB
 export async function lendBook(bid, uid, place, isLend) {
-  const bookName = await getBookTitleById(bid);
-  const userName = await getUserNameById(uid);
+  const book = await getBookById(bid);
+  const user = await getUserById(uid);
+
+  const bookTitle = book.title;
+  const userName = user.name;
 
   initDetailDiv(place, okFunction, "Visszahozott konyv");
-  showBookPic(bid, place, false);
+  showBookPic(book.id, book.pic, place, false);
 
   const textDiv = document.createElement("div");
   place.appendChild(textDiv);
   textDiv.className = "detail_text2";
 
   var p = document.createElement("p");
-  p.textContent = bookName + " cimu konyvet";
+  p.textContent = bookTitle + " cimu konyvet";
   textDiv.appendChild(p);
 
   p = document.createElement("p");

@@ -143,3 +143,38 @@ if (bookTableBtn) {
     window.location.href = "/book_table.html";
   });
 }
+
+export async function getBookById(bid) {
+  const rsp = await fetch(`/book/find/id=${bid}`, {
+    method: "GET",
+  });
+  console.log(bid);
+  const book = await rsp.json();
+  return book;
+}
+
+export async function getBookNotesById(bid) {
+  const rsp = await fetch(`/book/find/nid=${bid}`, {
+    method: "GET",
+  });
+  const bookNotes = await rsp.json();
+
+  return bookNotes;
+}
+
+export async function getUserById(bid) {
+  const rsp = await fetch(`/user/find/id=${bid}`, {
+    method: "GET",
+  });
+  const book = await rsp.json();
+  return book;
+}
+
+export async function getLoanById(uid) {
+  const rsp = await fetch(`/loan/bid=${uid}`, {
+    method: "GET",
+  });
+  const loan = await rsp.json();
+
+  return loan;
+}

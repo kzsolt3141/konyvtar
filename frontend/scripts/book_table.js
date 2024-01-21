@@ -1,5 +1,4 @@
-import { LabelNames } from "./common.js";
-import { getBookNotesById } from "./full_book.js";
+import { LabelNames, getBookNotesById } from "./common.js";
 
 const bookTable = document.getElementById("book_table");
 
