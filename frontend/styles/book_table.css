@@ -3,6 +3,10 @@
   grid-template-columns: repeat(11, 1fr);
 }
 
+.book_table p {
+  border: 1px solid rgba(27, 87, 27, 0.15) !important;
+}
+
 .navi {
   display: grid;
   grid-template-columns: 30px 30px 30px;

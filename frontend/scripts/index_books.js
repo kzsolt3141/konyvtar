@@ -7,6 +7,7 @@ import {
 import { getUserNameById } from "./index_users.js";
 import { lendBook } from "./lend.js";
 import {
+  reorderData,
   initDetailDiv,
   updateStatus,
   disableMain,
@@ -392,28 +393,10 @@ function createTypeSelect(id, place) {
 
   typeSelect.addEventListener("change", () => {
     if (typeSelect.value !== "Rendezes")
-      reorderBooks(BookData, typeSelect.value);
+      reorderData(BookData, typeSelect.value, listBooks);
   });
 
   place.appendChild(typeSelect);
-}
-
-function reorderBooks(BookData, prop) {
-  BookData.sort((a, b) => {
-    const propA = a[0][prop]; // Convert to uppercase for case-insensitive comparison
-    const propB = b[0][prop];
-
-    if (propA < propB) {
-      return -1;
-    }
-
-    if (propA > propB) {
-      return 1;
-    }
-
-    return 0;
-  });
-  listBooks(BookData);
 }
 
 export async function getBookTitleById(bid) {

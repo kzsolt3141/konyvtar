@@ -14,6 +14,24 @@ export const LabelNames = {
   price: "Ar(lej):",
 };
 
+export function reorderData(data, prop, cb = null) {
+  data.sort((a, b) => {
+    const propA = a[0][prop].toUpperCase();
+    const propB = b[0][prop].toUpperCase();
+
+    if (propA < propB) {
+      return -1;
+    }
+
+    if (propA > propB) {
+      return 1;
+    }
+
+    return 0;
+  });
+  if (cb) cb(data);
+}
+
 export function initDetailDiv(place, okFunction, title = "") {
   place.innerHTML = "";
   const h2 = document.createElement("h2");

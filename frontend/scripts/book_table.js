@@ -1,4 +1,5 @@
 import { LabelNames } from "./common.js";
+import { getBookNotesById } from "./full_book.js";
 
 const bookTable = document.getElementById("book_table");
 
@@ -11,18 +12,24 @@ const data = await fetch("/book/find/table", {
   body: bookFormData,
 }).then((res) => res.json());
 
-if (data) {
-  data.forEach((book) => {
-    for (const k in book) {
-      if (k == "pic") continue;
-      if (k == "notes") continue;
-      const e = document.createElement("p");
-      if (k == "id") {
-        e.textContent = parseInt(book[k], 10);
-      } else {
+listAllBooks(data);
+
+function listAllBooks(data) {
+  if (data) {
+    data.forEach(async (book) => {
+      const notes = await getBookNotesById(book["id"]);
+      const register_notes = notes.filter((entry) => /^\d+$/.test(entry.notes));
+      var register_note = "";
+      if (register_notes.length > 0) register_note = register_notes[0].notes;
+      book["register"] = register_note;
+
+      for (const k in book) {
+        if (k == "pic") continue;
+        if (k == "id") continue;
+        const e = document.createElement("p");
         e.textContent = book[k];
+        bookTable.appendChild(e);
       }
-      bookTable.appendChild(e);
-    }
-  });
+    });
+  }
 }

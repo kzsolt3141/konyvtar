@@ -8,7 +8,12 @@ const LabelNames = {
   notes: "Megjegyzesek:",
 };
 
-import { initDetailDiv, disableMain, enableMain } from "./common.js";
+import {
+  reorderData,
+  initDetailDiv,
+  disableMain,
+  enableMain,
+} from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -350,28 +355,10 @@ function createTypeSelect(id, place) {
 
   typeSelect.addEventListener("change", () => {
     if (typeSelect.value !== "Rendezes")
-      reorderBooks(UserData, typeSelect.value);
+      reorderData(UserData, typeSelect.value, listUsers);
   });
 
   place.appendChild(typeSelect);
-}
-
-function reorderBooks(UserData, prop) {
-  UserData.sort((a, b) => {
-    const propA = a[0][prop]; // Convert to uppercase for case-insensitive comparison
-    const propB = b[0][prop];
-
-    if (propA < propB) {
-      return -1;
-    }
-
-    if (propA > propB) {
-      return 1;
-    }
-
-    return 0;
-  });
-  listUsers(UserData);
 }
 
 export async function getUserNameById(uid) {

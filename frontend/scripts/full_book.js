@@ -1,11 +1,14 @@
 import { LabelNames } from "./common.js";
 
-const bid = document.getElementById("bid").getAttribute("content");
-console.log("generate the full list based on:" + bid);
-
 await fillBookPage();
 
 async function fillBookPage() {
+  const element = document.getElementById("bid");
+  if (!element) return;
+
+  const bid = element.getAttribute("content");
+  console.log("generate the full list based on:" + bid);
+
   const book = await getBookById(bid);
   const bookNotes = await getBookNotesById(bid);
   const loans = await getLoanById(bid);
@@ -56,7 +59,7 @@ async function getBookById(bid) {
   return book;
 }
 
-async function getBookNotesById(bid) {
+export async function getBookNotesById(bid) {
   const rsp = await fetch(`/book/find/nid=${bid}`, {
     method: "GET",
   });
