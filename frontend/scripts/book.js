@@ -47,4 +47,7 @@ async function showNextBookId() {
 
   const title = document.getElementById("title");
   title.innerHTML = `<h2>Uj konyv: ${parseInt(rsp, 10)}<h2>`;
+
+  const isbn = document.getElementById("isbn");
+  isbn.value = parseInt(rsp, 10);
 }

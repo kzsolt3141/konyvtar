@@ -84,7 +84,7 @@ async function listBooks(books) {
     radio.type = "radio";
     radio.name = "book_radio";
     radio.id = book.id;
-    radio.disabled = !available[0];
+    radio.disabled = !available[0] || book.status != 1;
     firstLineDiv.appendChild(radio);
 
     const firstLine = [book.title, book.author];
@@ -227,6 +227,9 @@ async function details(key) {
     detailText.appendChild(p);
     if (element[1][1] != null) {
       p.textContent = "Kiadva: " + (await getUserNameById(element[1][1]));
+      detailText.className = "detail_text_red";
+    } else if (element[0]["status"] != 1) {
+      p.textContent = "Inaktiv konyv";
       detailText.className = "detail_text_red";
     } else {
       p.textContent = "Jelengel Raktaron van";

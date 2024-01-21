@@ -44,6 +44,14 @@ function registerBook(req) {
   if (req.file != null) file = req.file.filename;
 
   return new Promise((resolve, reject) => {
+    if (body.isbn == "") {
+      reject("ISBN nem lehet ures");
+      return;
+    }
+    if (body.title == "") {
+      reject("Cim nem lehet ures");
+      return;
+    }
     const sql = `INSERT INTO books 
       (isbn, title, author, genre, year, publ, ver, keys, price, pic)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `;

@@ -23,7 +23,7 @@ button.addEventListener("click", async function () {
   if (bookRadio && userRadio) {
     await lendBook(bookRadio.id, userRadio.id, place, true);
   } else {
-    updateStatus("Valassz egy konyvet es/vagy egy felhasznalot");
+    updateStatus("Kolcsonzeshez valassz egy konyvet es felhasznalot");
   }
 });
 
