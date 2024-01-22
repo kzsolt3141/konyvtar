@@ -110,7 +110,7 @@ function showVersion(file = "/VERSION") {
 
 showVersion();
 
-export function disableMain() {
+function disableMain() {
   const div = document.getElementById("disable_div");
   div.className = "disable_div";
 
@@ -126,13 +126,13 @@ export function disableMain() {
   div.appendChild(img);
 }
 
-export function enableMain() {
+function enableMain() {
   const div = document.getElementById("disable_div");
   div.className = "enable_div";
   div.innerHTML = "";
 }
 
-export function showPic(id, pic, place, cb) {
+function showPic(id, pic, place, cb) {
   const picDiv = document.createElement("div");
   place.appendChild(picDiv);
 
@@ -152,16 +152,15 @@ export function showPic(id, pic, place, cb) {
   picDiv.appendChild(img);
 }
 
-export async function getBookById(bid) {
+async function getBookById(bid) {
   const rsp = await fetch(`/book/find/id=${bid}`, {
     method: "GET",
   });
-  console.log(bid);
   const book = await rsp.json();
   return book;
 }
 
-export async function getBookNotesById(bid) {
+async function getBookNotesById(bid) {
   const rsp = await fetch(`/book/find/nid=${bid}`, {
     method: "GET",
   });
@@ -170,7 +169,7 @@ export async function getBookNotesById(bid) {
   return bookNotes;
 }
 
-export async function getUserById(bid) {
+async function getUserById(bid) {
   const rsp = await fetch(`/user/find/id=${bid}`, {
     method: "GET",
   });
@@ -178,13 +177,39 @@ export async function getUserById(bid) {
   return book;
 }
 
-export async function getLoanById(uid) {
+async function getLoanById(uid) {
   const rsp = await fetch(`/loan/bid=${uid}`, {
     method: "GET",
   });
   const loan = await rsp.json();
 
   return loan;
+}
+
+function createOrderingSelector(id, place, data, label, sortcb, nextcb) {
+  const typeSelect = document.createElement("select");
+  typeSelect.id = id;
+
+  const option = document.createElement("option");
+  option.value = "";
+  option.text = "Rendezes";
+  typeSelect.add(option);
+
+  for (const key in label) {
+    if (key == "available" || key == "notes" || key == "status") continue;
+    const option = document.createElement("option");
+    option.value = key;
+    option.text = label[key];
+    typeSelect.add(option);
+  }
+
+  typeSelect.addEventListener("change", () => {
+    if (typeSelect.value !== "Rendezes") {
+      sortcb(data, typeSelect.value, nextcb);
+    }
+  });
+
+  place.appendChild(typeSelect);
 }
 
 const mainBtn = document.getElementById("main_btn");
@@ -229,4 +254,5 @@ export const common = {
   getBookNotesById,
   getUserById,
   getLoanById,
+  createOrderingSelector,
 };

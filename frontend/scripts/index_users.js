@@ -5,9 +5,16 @@ function clearPlace(place) {
   place.innerHTML = "";
 }
 
-createTypeSelect("user_order", document.getElementById("user_order_div"));
-
 let UserData = [];
+
+common.createOrderingSelector(
+  "user_order",
+  document.getElementById("user_order_div"),
+  UserData,
+  common.UserLabelNames,
+  common.reorderData,
+  listUsers
+);
 
 const userSearchBtn = document.getElementById("search_user");
 userSearchBtn.addEventListener("click", async (event) => {

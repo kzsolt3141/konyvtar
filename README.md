@@ -9,6 +9,9 @@ Changelog:
 - [+] add message in details for inactive book
 - [+] add register number from notes to book table
 - [+] add getUserById function
+- [+] add Ordering to bookTable
+- [*] add to common code showPic, ordering, Labels
+- [*] use a more compact method of exporting functions
 - [*] reorder function locations, add todos
 - [*] increase font size for book input
 - [*] automatically add book ID as ISBN

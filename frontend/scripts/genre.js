@@ -1,4 +1,4 @@
-import { disableMain, enableMain } from "./common.js";
+import { common } from "./common.js";
 
 // genre select creates a new diw with all the requred elements:
 // - label, ganre drop-down, input fields, buttons
@@ -79,14 +79,14 @@ function addGenre(place) {
       console.log("Input field empty");
       return;
     }
-    disableMain();
+    common.disableMain();
 
     fetch("/book/genres/" + input.value, {
       method: "POST",
     })
       .then((rsp) => rsp.text())
       .then((data) => {
-        enableMain();
+        common.enableMain();
         location.reload();
       });
   });

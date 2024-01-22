@@ -13,7 +13,38 @@ const data = await fetch("/book/find/table", {
 
 listAllBooks(data);
 
+common.createOrderingSelector(
+  "book_order",
+  document.getElementById("book_order_div"),
+  data,
+  common.BookLabelNames,
+  reorderData,
+  listAllBooks
+);
+
+function reorderData(data, prop, cb = null) {
+  if (!data) return;
+
+  //TODO use uppercase for not INT data
+  data.sort((a, b) => {
+    const propA = a[prop];
+    const propB = b[prop];
+
+    if (propA < propB) {
+      return -1;
+    }
+
+    if (propA > propB) {
+      return 1;
+    }
+
+    return 0;
+  });
+  if (cb) cb(data);
+}
+
 function listAllBooks(data) {
+  bookTable.innerHTML = "";
   if (data) {
     data.forEach(async (book) => {
       const notes = await common.getBookNotesById(book["id"]);

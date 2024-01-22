@@ -1,8 +1,4 @@
-import {
-  creteGenreSelect,
-  getGenreValue,
-  genreSelectIsValid,
-} from "./genre.js";
+import { creteGenreSelect, getGenreValue } from "./genre.js";
 
 import { lendBook } from "./lend.js";
 
@@ -13,11 +9,18 @@ function clearPlace(place) {
   place.innerHTML = "";
 }
 
-createTypeSelect("book_order", document.getElementById("book_order_div"));
-
 const bookSearchBtn = document.getElementById("search_books_btn");
 
 const BookData = [];
+
+common.createOrderingSelector(
+  "book_order",
+  document.getElementById("book_order_div"),
+  BookData,
+  common.BookLabelNames,
+  common.reorderData,
+  listBooks
+);
 
 bookSearchBtn.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -329,30 +332,4 @@ async function editBook(book) {
       })
     );
   }
-}
-
-function createTypeSelect(id, place) {
-  const typeSelect = document.createElement("select");
-  typeSelect.id = id;
-
-  const option = document.createElement("option");
-  option.value = "";
-  option.text = "Rendezes";
-  typeSelect.add(option);
-
-  for (const key in common.BookLabelNames) {
-    if (key == "available" || key == "notes" || key == "status") continue;
-    const option = document.createElement("option");
-    option.value = key;
-    option.text = common.BookLabelNames[key];
-    typeSelect.add(option);
-  }
-
-  typeSelect.addEventListener("change", () => {
-    if (typeSelect.value !== "Rendezes") {
-      common.reorderData(BookData, typeSelect.value, listBooks);
-    }
-  });
-
-  place.appendChild(typeSelect);
 }
