@@ -1,9 +1,4 @@
-import {
-  LabelNames,
-  getBookById,
-  getBookNotesById,
-  getLoanById,
-} from "./common.js";
+import { common } from "./common.js";
 
 await fillBookPage();
 
@@ -14,10 +9,11 @@ async function fillBookPage() {
   const bid = element.getAttribute("content");
   console.log("generate the full list based on:" + bid);
 
-  const book = await getBookById(bid);
-  const bookNotes = await getBookNotesById(bid);
-  const loans = await getLoanById(bid);
+  const book = await common.getBookById(bid);
+  const bookNotes = await common.getBookNotesById(bid);
+  const loans = await common.getLoanById(bid);
 
+  book.pic = book.pic == null ? "styles/static/default_book.png" : book.pic;
   document.getElementById("book_thumbnail").src = "/" + book.pic;
 
   const bookText = document.getElementById("full_book_text");
@@ -26,7 +22,7 @@ async function fillBookPage() {
     if (k == "pic") continue;
     if (k == "notes") continue;
     const e = document.createElement("p");
-    e.textContent = LabelNames[k];
+    e.textContent = common.BookLabelNames[k];
     bookText.appendChild(e);
     const e2 = document.createElement("p");
     if (k == "id") {

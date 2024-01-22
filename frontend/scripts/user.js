@@ -1,4 +1,4 @@
-import { updateStatus, disableMain, enableMain } from "./common.js";
+import { common } from "./common.js";
 
 await showNextUserId();
 
@@ -9,15 +9,15 @@ addButton.addEventListener("click", async (event) => {
   const form = document.getElementById("add_user");
 
   const formData = new FormData(form);
-  disableMain();
+  common.disableMain();
   const data = await fetch("/user/add", {
     method: "POST",
     body: formData,
   }).then((rsp) => rsp.text());
 
-  updateStatus(data);
+  common.updateStatus(data);
   await showNextUserId();
-  enableMain();
+  common.enableMain();
 });
 
 async function showNextUserId() {

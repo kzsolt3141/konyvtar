@@ -5,15 +5,8 @@ import {
 } from "./genre.js";
 
 import { lendBook } from "./lend.js";
-import {
-  reorderData,
-  initDetailDiv,
-  updateStatus,
-  disableMain,
-  enableMain,
-  LabelNames,
-  getUserById,
-} from "./common.js";
+
+import { common } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -33,8 +26,14 @@ bookSearchBtn.addEventListener("click", async (event) => {
   searchBook(bookFormData);
 });
 
+function bookClickCb(id) {
+  common.disableMain();
+  window.location.href = `/book/full/${id}`;
+  common.enableMain();
+}
+
 async function searchBook(bookFormData) {
-  disableMain();
+  common.disableMain();
   const data = await fetch("/book/find/bulk", {
     method: "POST",
     body: bookFormData,
@@ -44,16 +43,15 @@ async function searchBook(bookFormData) {
 
   if (data) {
     BookData.push(JSON.parse(data));
-    listBooks(BookData);
+    if (BookData.length > 0) {
+      listBooks(BookData[0]);
+    }
   }
-  enableMain();
+  common.enableMain();
 }
 
-/* all books will be listed in the books_div div element
- * each book will have its own table
- */
-async function listBooks(bookArray) {
-  const books = bookArray[0];
+async function listBooks(books) {
+  if (!books) return;
   const booksDiv = document.getElementById("books_div");
   booksDiv.innerHTML = "";
 
@@ -74,7 +72,7 @@ async function listBooks(bookArray) {
       bookDiv.style.backgroundColor = "#f0c0c0";
     }
 
-    showBookPic(book.id, book.pic, bookDiv);
+    common.showPic(book.id, book.pic, bookDiv, bookClickCb);
 
     const boodDetailsDiv = document.createElement("div");
     boodDetailsDiv.className = "book_details_div";
@@ -151,34 +149,12 @@ async function listBooks(bookArray) {
   });
 }
 
-export function showBookPic(id, pic, bookDiv) {
-  const picDiv = document.createElement("div");
-  bookDiv.appendChild(picDiv);
-
-  const img = document.createElement("img");
-  img.className = "book_thumbnail";
-
-  if (pic == null) {
-    img.src = "/styles/static/default_book.png";
-  } else {
-    img.src = "/" + pic;
-  }
-
-  img.addEventListener("click", async (event) => {
-    disableMain();
-    window.location.href = `/book/full/${id}`;
-    enableMain();
-  });
-
-  picDiv.appendChild(img);
-}
-
 async function details(bookObj) {
   const book = bookObj[0];
   const loan = bookObj[1];
 
-  initDetailDiv(detailsDiv, clearPlace, "Reszletek");
-  showBookPic(book.id, book.pic, detailsDiv);
+  common.initDetailDiv(detailsDiv, clearPlace, "Reszletek");
+  common.showPic(book.id, book.pic, detailsDiv, bookClickCb);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
@@ -187,7 +163,7 @@ async function details(bookObj) {
     if (k == "pic") continue;
     if (k == "notes") continue;
     const e = document.createElement("p");
-    e.textContent = LabelNames[k];
+    e.textContent = common.BookLabelNames[k];
     detailText.appendChild(e);
     const e2 = document.createElement("p");
     if (k == "id") {
@@ -222,7 +198,7 @@ async function details(bookObj) {
   const p = document.createElement("p");
   detailText.appendChild(p);
   if (loan[1] != null) {
-    const user = await getUserById(loan[1]);
+    const user = await common.getUserById(loan[1]);
     p.textContent = "Kiadva: " + user.name;
     detailText.className = "detail_text_red";
   } else if (book.status != 1) {
@@ -235,8 +211,8 @@ async function details(bookObj) {
 }
 
 async function toggleStatus(book) {
-  initDetailDiv(detailsDiv, okFunction, "Elveszett/Megkerult");
-  showBookPic(book.id, book.pic, detailsDiv, false);
+  common.initDetailDiv(detailsDiv, okFunction, "Elveszett/Megkerult");
+  common.showPic(book.id, book.pic, detailsDiv, bookClickCb);
 
   const currentStatus = book.status == 1 ? "Aktiv" : "Elveszett";
   const nextStatus = book.status == 1 ? "Elveszett" : "Aktiv";
@@ -273,25 +249,25 @@ async function toggleStatus(book) {
     changeForm.append("id", book.id);
     changeForm.append("notes", e.value);
 
-    disableMain();
+    common.disableMain();
 
     fetch("/book/change", {
       method: "POST",
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        updateStatus(data);
+        common.updateStatus(data);
         bookSearchBtn.click();
         detailsDiv.innerHTML = "";
-        enableMain();
+        common.enableMain();
       })
     );
   }
 }
 
 async function editBook(book) {
-  initDetailDiv(detailsDiv, okFunction, "Konyv Szerkesztese");
-  showBookPic(book.id, book.pic, detailsDiv, true);
+  common.initDetailDiv(detailsDiv, okFunction, "Konyv Szerkesztese");
+  common.showPic(book.id, book.pic, detailsDiv, bookClickCb);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
@@ -299,7 +275,7 @@ async function editBook(book) {
 
   const l = document.createElement("label");
   detailText.appendChild(l);
-  l.textContent = LabelNames["genre"];
+  l.textContent = common.BookLabelNames["genre"];
   creteGenreSelect("changeForm", detailText);
 
   book.notes = "";
@@ -307,7 +283,7 @@ async function editBook(book) {
   for (const k in book) {
     if (k == "id" || k == "status" || k == "genre" || k == "pic") continue;
     const l = document.createElement("label");
-    l.textContent = LabelNames[k];
+    l.textContent = common.BookLabelNames[k];
     const e = document.createElement("input");
     e.value = book[k];
     e.id = k;
@@ -339,16 +315,16 @@ async function editBook(book) {
         changeForm.append(currentElement.id, currentElement.value);
       }
     }
-    disableMain();
+    common.disableMain();
 
     fetch("/book/change", {
       method: "POST",
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        updateStatus(data);
+        common.updateStatus(data);
         detailsDiv.innerHTML = "";
-        enableMain();
+        common.enableMain();
         bookSearchBtn.click();
       })
     );
@@ -364,17 +340,18 @@ function createTypeSelect(id, place) {
   option.text = "Rendezes";
   typeSelect.add(option);
 
-  for (const key in LabelNames) {
+  for (const key in common.BookLabelNames) {
     if (key == "available" || key == "notes" || key == "status") continue;
     const option = document.createElement("option");
     option.value = key;
-    option.text = LabelNames[key];
+    option.text = common.BookLabelNames[key];
     typeSelect.add(option);
   }
 
   typeSelect.addEventListener("change", () => {
-    if (typeSelect.value !== "Rendezes")
-      reorderData(BookData, typeSelect.value, listBooks);
+    if (typeSelect.value !== "Rendezes") {
+      common.reorderData(BookData, typeSelect.value, listBooks);
+    }
   });
 
   place.appendChild(typeSelect);

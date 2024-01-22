@@ -1,12 +1,4 @@
-import {
-  initDetailDiv,
-  updateStatus,
-  disableMain,
-  enableMain,
-  getBookById,
-  getUserById,
-} from "./common.js";
-import { showBookPic } from "./index_books.js";
+import { common } from "./common.js";
 
 const button = document.getElementById("lend_button");
 const place = document.getElementById("details_div");
@@ -24,20 +16,20 @@ button.addEventListener("click", async function () {
   if (bookRadio && userRadio) {
     await lendBook(bookRadio.id, userRadio.id, place, true);
   } else {
-    updateStatus("Kolcsonzeshez valassz egy konyvet es felhasznalot");
+    common.updateStatus("Kolcsonzeshez valassz egy konyvet es felhasznalot");
   }
 });
 
 // define a new genre and send it back to the DB
 export async function lendBook(bid, uid, place, isLend) {
-  const book = await getBookById(bid);
-  const user = await getUserById(uid);
+  const book = await common.getBookById(bid);
+  const user = await common.getUserById(uid);
 
   const bookTitle = book.title;
   const userName = user.name;
 
-  initDetailDiv(place, okFunction, "Visszahozott konyv");
-  showBookPic(book.id, book.pic, place, false);
+  common.initDetailDiv(place, okFunction, "Visszahozott konyv");
+  common.showPic(book.id, book.pic, place, false);
 
   const textDiv = document.createElement("div");
   place.appendChild(textDiv);
@@ -64,7 +56,7 @@ export async function lendBook(bid, uid, place, isLend) {
     lendForm.append("bid", bid);
     lendForm.append("uid", uid);
     lendForm.append("notes", input.value);
-    disableMain();
+    common.disableMain();
     fetch("/loan/add", {
       method: "POST",
       body: lendForm,
@@ -72,7 +64,7 @@ export async function lendBook(bid, uid, place, isLend) {
       .then((rsp) => rsp.text())
       .then((data) => {
         place.innerHTML = "";
-        enableMain();
+        common.enableMain();
         location.reload();
       });
   }

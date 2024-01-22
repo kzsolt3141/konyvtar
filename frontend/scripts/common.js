@@ -1,4 +1,4 @@
-export const LabelNames = {
+const BookLabelNames = {
   id: "Azonosito:",
   isbn: "ISBN:",
   title: "Cim:",
@@ -14,10 +14,24 @@ export const LabelNames = {
   price: "Ar(lej):",
 };
 
-export function reorderData(data, prop, cb = null) {
+const UserLabelNames = {
+  id: "Azonosito:",
+  name: "Nev:",
+  address: "Cim:",
+  phone: "Telefonszam:",
+  mail: "E-Mail:",
+  status: "Allapot:",
+  notes: "Megjegyzesek:",
+};
+
+function reorderData(dataArr, prop, cb = null) {
+  if (!dataArr[0]) return;
+
+  const data = dataArr[0];
+  //TODO use uppercase for not INT data
   data.sort((a, b) => {
-    const propA = a[0][prop].toUpperCase();
-    const propB = b[0][prop].toUpperCase();
+    const propA = a[0][prop];
+    const propB = b[0][prop];
 
     if (propA < propB) {
       return -1;
@@ -32,7 +46,7 @@ export function reorderData(data, prop, cb = null) {
   if (cb) cb(data);
 }
 
-export function initDetailDiv(place, okFunction, title = "") {
+function initDetailDiv(place, okFunction, title = "") {
   place.innerHTML = "";
   const h2 = document.createElement("h2");
   h2.className = "detail_title";
@@ -56,7 +70,7 @@ export function initDetailDiv(place, okFunction, title = "") {
   });
 }
 
-export function updateStatus(data) {
+function updateStatus(data) {
   document.getElementById("global_status").textContent = data;
   setTimeout(() => {
     document.getElementById("global_status").innerHTML = "";
@@ -64,19 +78,21 @@ export function updateStatus(data) {
 }
 
 const backupBtn = document.getElementById("backup_btn");
-backupBtn.addEventListener("click", async (event) => {
-  fetch("/backup", {
-    method: "GET",
-  })
-    .then((data) => data.blob())
-    .then((data) => {
-      var a = document.createElement("a");
-      a.href = window.URL.createObjectURL(data);
-      a.download = "BACKUP.zip";
-      a.click();
-      updateStatus("Backup generated");
-    });
-});
+if (backupBtn) {
+  backupBtn.addEventListener("click", async (event) => {
+    fetch("/backup", {
+      method: "GET",
+    })
+      .then((data) => data.blob())
+      .then((data) => {
+        var a = document.createElement("a");
+        a.href = window.URL.createObjectURL(data);
+        a.download = "BACKUP.zip";
+        a.click();
+        updateStatus("Backup generated");
+      });
+  });
+}
 
 function showVersion(file = "/VERSION") {
   const ver = document.getElementById("version");
@@ -116,32 +132,24 @@ export function enableMain() {
   div.innerHTML = "";
 }
 
-const mainBtn = document.getElementById("main_btn");
-if (mainBtn) {
-  mainBtn.addEventListener("click", async (event) => {
-    window.location.href = "/";
-  });
-}
+export function showPic(id, pic, place, cb) {
+  const picDiv = document.createElement("div");
+  place.appendChild(picDiv);
 
-const addBookBtn = document.getElementById("add_book_btn");
-if (addBookBtn) {
-  addBookBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book.html";
-  });
-}
+  const img = document.createElement("img");
+  img.className = "book_thumbnail";
 
-const addUserBtn = document.getElementById("add_user_btn");
-if (addUserBtn) {
-  addUserBtn.addEventListener("click", async (event) => {
-    window.location.href = "/user.html";
-  });
-}
+  if (pic == null) {
+    img.src = "/styles/static/default_book.png";
+  } else {
+    img.src = "/" + pic;
+  }
 
-const bookTableBtn = document.getElementById("book_table_btn");
-if (bookTableBtn) {
-  bookTableBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book_table.html";
+  img.addEventListener("click", (event) => {
+    if (cb) cb(id);
   });
+
+  picDiv.appendChild(img);
 }
 
 export async function getBookById(bid) {
@@ -178,3 +186,47 @@ export async function getLoanById(uid) {
 
   return loan;
 }
+
+const mainBtn = document.getElementById("main_btn");
+if (mainBtn) {
+  mainBtn.addEventListener("click", async (event) => {
+    window.location.href = "/";
+  });
+}
+
+const addBookBtn = document.getElementById("add_book_btn");
+if (addBookBtn) {
+  addBookBtn.addEventListener("click", async (event) => {
+    window.location.href = "/book.html";
+  });
+}
+
+const addUserBtn = document.getElementById("add_user_btn");
+if (addUserBtn) {
+  addUserBtn.addEventListener("click", async (event) => {
+    window.location.href = "/user.html";
+  });
+}
+
+const bookTableBtn = document.getElementById("book_table_btn");
+if (bookTableBtn) {
+  bookTableBtn.addEventListener("click", async (event) => {
+    window.location.href = "/book_table.html";
+  });
+}
+
+export const common = {
+  BookLabelNames,
+  UserLabelNames,
+  reorderData,
+  initDetailDiv,
+  updateStatus,
+  showVersion,
+  disableMain,
+  enableMain,
+  showPic,
+  getBookById,
+  getBookNotesById,
+  getUserById,
+  getLoanById,
+};

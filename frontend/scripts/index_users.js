@@ -1,19 +1,4 @@
-const LabelNames = {
-  id: "Azonosito:",
-  name: "Nev:",
-  address: "Cim:",
-  phone: "Telefonszam:",
-  mail: "E-Mail:",
-  status: "Allapot:",
-  notes: "Megjegyzesek:",
-};
-
-import {
-  reorderData,
-  initDetailDiv,
-  disableMain,
-  enableMain,
-} from "./common.js";
+import { common } from "./common.js";
 
 const detailsDiv = document.getElementById("details_div");
 function clearPlace(place) {
@@ -33,24 +18,32 @@ userSearchBtn.addEventListener("click", async (event) => {
   searchUser(userFormData);
 });
 
+function userClickCb(id) {
+  common.disableMain();
+  window.location.href = `/user/full/${id}`;
+  common.enableMain();
+}
+
 function searchUser(formData) {
-  disableMain();
+  common.disableMain();
+  UserData.length = 0;
   fetch("/user/find/bulk", {
     method: "POST",
     body: formData,
   })
     .then((rsp) => rsp.json())
     .then((data) => {
-      //TODO push into UserData and update functions
-      UserData = JSON.parse(data);
-      enableMain();
+      UserData.push(JSON.parse(data));
+      common.enableMain();
       listUsers(UserData);
     });
 }
 
-function listUsers(users) {
+function listUsers(userData) {
   const usersDiv = document.getElementById("users_div");
   usersDiv.innerHTML = "";
+
+  const users = UserData[0];
 
   users.forEach((userObj) => {
     const user = userObj[0];
@@ -60,7 +53,7 @@ function listUsers(users) {
     userDiv.id = user.id;
     userDiv.className = "book_div";
 
-    showUserPic(user.id, userDiv, false);
+    common.showPic(user.id, user.pic, userDiv, userClickCb);
 
     const userDetailsDiv = document.createElement("div");
     userDetailsDiv.className = "book_details_div";
@@ -103,8 +96,7 @@ function listUsers(users) {
     img.src = "styles/static/edit.png";
     img.className = "detail_options";
     img.addEventListener("click", function () {
-      // TODO use user directly
-      editUser(user.id);
+      editUser(user);
     });
     thirdLineDiv.appendChild(img);
 
@@ -112,7 +104,7 @@ function listUsers(users) {
     img.src = "styles/static/details.svg";
     img.className = "detail_options";
     img.addEventListener("click", function () {
-      details(user.id);
+      details(userObj);
     });
     thirdLineDiv.appendChild(img);
 
@@ -120,59 +112,29 @@ function listUsers(users) {
     img.src = "styles/static/broken.svg";
     img.className = "detail_options";
     img.addEventListener("click", function () {
-      toggleStatus(user.id, user.name, user.status);
+      toggleStatus(user);
     });
     thirdLineDiv.appendChild(img);
   });
 }
 
-function showUserPic(id, place) {
-  const picDiv = document.createElement("div");
-  place.appendChild(picDiv);
+async function details(userObj) {
+  const user = userObj[0];
+  common.initDetailDiv(detailsDiv, clearPlace, "Reszletek");
 
-  var user = null;
-  for (const element of UserData) {
-    if (element[0].id == id) {
-      user = element[0];
-      break;
-    }
-  }
-
-  const img = document.createElement("img");
-  img.className = "user_thumbnail";
-
-  if (user.pic == null) {
-    img.src = "/styles/static/default_book.png";
-  } else {
-    img.src = "/" + user.pic;
-  }
-  picDiv.appendChild(img);
-}
-
-async function details(id) {
-  var element = null;
-  for (const e of UserData) {
-    if (e[0].id == id) {
-      element = e;
-      break;
-    }
-  }
-
-  initDetailDiv(detailsDiv, clearPlace, "Reszletek");
-
-  showUserPic(id, detailsDiv, false);
+  common.showPic(user.id, user.pic, detailsDiv, userClickCb);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
 
-  for (const k in element[0]) {
+  for (const k in user) {
     if (k == "pic") continue;
     if (k == "notes") continue;
     const e = document.createElement("p");
-    e.textContent = LabelNames[k];
+    e.textContent = common.UserLabelNames[k];
     detailText.appendChild(e);
     const e2 = document.createElement("p");
-    e2.textContent = element[0][k];
+    e2.textContent = user[k];
     detailText.appendChild(e2);
   }
 
@@ -181,7 +143,7 @@ async function details(id) {
   detailText = document.createElement("div");
   detailText.className = "detail_text2";
 
-  element.slice(1).map((item) => {
+  userObj.slice(1).map((item) => {
     const e = document.createElement("p");
     e.textContent = item.date + ": " + item.notes;
     detailText.appendChild(e);
@@ -198,7 +160,7 @@ async function details(id) {
   detailText.appendChild(e);
 
   const d = document.createElement("div");
-  const list = await getLendedBookList(id);
+  const list = await getLendedBookList(user.id);
   if (list.length == 0) {
     const e = document.createElement("p");
     e.textContent = "Jelenleg nincs kikolcsonzott konyv";
@@ -224,19 +186,23 @@ async function getLendedBookList(uid) {
   return bookList;
 }
 
-async function toggleStatus(id, name, status) {
-  initDetailDiv(detailsDiv, okFunction, "Felhasznalo Deaktivalas/Aktivalas");
-  showUserPic(id, detailsDiv, false);
+async function toggleStatus(user) {
+  common.initDetailDiv(
+    detailsDiv,
+    okFunction,
+    "Felhasznalo Deaktivalas/Aktivalas"
+  );
+  common.showPic(user.id, user.pic, detailsDiv, userClickCb);
 
-  const currentStatus = status == 1 ? "Aktiv" : "Inaktiv";
-  const nextStatus = status == 1 ? "Inaktiv" : "Aktiv";
+  const currentStatus = user.status == 1 ? "Aktiv" : "Inaktiv";
+  const nextStatus = user.status == 1 ? "Inaktiv" : "Aktiv";
 
   const detailText = document.createElement("div");
   detailText.className = "detail_text2";
   detailsDiv.appendChild(detailText);
 
   var p = document.createElement("p");
-  p.textContent = name + " nevul felhasznalo allapot valtoztatasa";
+  p.textContent = user.name + " nevul felhasznalo allapot valtoztatasa";
   detailText.appendChild(p);
 
   p = document.createElement("p");
@@ -260,44 +226,38 @@ async function toggleStatus(id, name, status) {
   function okFunction() {
     const changeForm = new FormData();
     changeForm.append("update", "status");
-    changeForm.append("id", id);
+    changeForm.append("id", user.id);
     changeForm.append("notes", e.value);
-    disableMain();
+    common.disableMain();
     fetch("/user/edit", {
       method: "POST",
       body: changeForm,
     }).then((rsp) =>
       rsp.json().then((data) => {
-        enableMain();
+        common.enableMain();
         detailsDiv.innerHTML = "";
+        userSearchBtn.click();
       })
     );
   }
 }
 
-function editUser(key) {
-  var element = null;
-  for (const e of UserData) {
-    if (e[0].id == key) {
-      element = e;
-      break;
-    }
-  }
-  initDetailDiv(detailsDiv, okFunction, "Profil Szerkesztes");
-  showUserPic(key, detailsDiv, true);
+function editUser(user) {
+  common.initDetailDiv(detailsDiv, okFunction, "Profil Szerkesztes");
+  common.showPic(user.id, user.pic, detailsDiv, userClickCb);
 
   var detailText = document.createElement("div");
   detailText.className = "detail_text";
   detailsDiv.appendChild(detailText);
 
-  element[0].notes = "";
+  user.notes = "";
 
-  for (const k in element[0]) {
+  for (const k in user) {
     if (k == "id" || k == "status" || k == "pic") continue;
     const l = document.createElement("label");
-    l.textContent = LabelNames[k];
+    l.textContent = common.UserLabelNames[k];
     const e = document.createElement("input");
-    e.value = element[0][k];
+    e.value = user[k];
     e.id = k;
     detailText.appendChild(l);
     detailText.appendChild(e);
@@ -313,7 +273,7 @@ function editUser(key) {
   function okFunction() {
     const changeForm = new FormData();
     changeForm.append("update", "bulk");
-    changeForm.append("id", key);
+    changeForm.append("id", user.id);
     changeForm.append("image", pic.files[0]);
 
     for (var i = 0; i < detailText.children.length; i++) {
@@ -348,16 +308,16 @@ function createTypeSelect(id, place) {
   option.text = "Rendezes";
   typeSelect.add(option);
 
-  for (const key in LabelNames) {
+  for (const key in common.UserLabelNames) {
     const option = document.createElement("option");
     option.value = key;
-    option.text = LabelNames[key];
+    option.text = common.UserLabelNames[key];
     typeSelect.add(option);
   }
 
   typeSelect.addEventListener("change", () => {
     if (typeSelect.value !== "Rendezes")
-      reorderData(UserData, typeSelect.value, listUsers);
+      common.reorderData(UserData, typeSelect.value, listUsers);
   });
 
   place.appendChild(typeSelect);

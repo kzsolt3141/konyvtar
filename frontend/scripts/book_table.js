@@ -1,4 +1,4 @@
-import { LabelNames, getBookNotesById } from "./common.js";
+import { common } from "./common.js";
 
 const bookTable = document.getElementById("book_table");
 
@@ -16,7 +16,7 @@ listAllBooks(data);
 function listAllBooks(data) {
   if (data) {
     data.forEach(async (book) => {
-      const notes = await getBookNotesById(book["id"]);
+      const notes = await common.getBookNotesById(book["id"]);
       const register_notes = notes.filter((entry) => /^\d+$/.test(entry.notes));
       var register_note = "";
       if (register_notes.length > 0) register_note = register_notes[0].notes;

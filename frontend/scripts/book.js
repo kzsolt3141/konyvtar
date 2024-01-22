@@ -5,7 +5,7 @@ import {
   getGenreValue,
 } from "./genre.js";
 
-import { updateStatus, disableMain, enableMain } from "./common.js";
+import { common } from "./common.js";
 
 await showNextBookId();
 
@@ -19,7 +19,7 @@ formBtn.addEventListener("click", async (event) => {
   event.preventDefault();
 
   if (!genreSelectIsValid("genre")) {
-    updateStatus("Kivalasztott 'Tipus' nem megfelelo");
+    common.updateStatus("Kivalasztott 'Tipus' nem megfelelo");
     return;
   }
 
@@ -29,15 +29,15 @@ formBtn.addEventListener("click", async (event) => {
   const genre = getGenreValue("genre");
 
   formData.append("genre", genre);
-  disableMain();
+  common.disableMain();
   const status = await fetch("/book/add", {
     method: "POST",
     body: formData,
   }).then((rsp) => rsp.text());
 
-  updateStatus(status);
+  common.updateStatus(status);
   await showNextBookId();
-  enableMain();
+  common.enableMain();
 });
 
 async function showNextBookId() {
