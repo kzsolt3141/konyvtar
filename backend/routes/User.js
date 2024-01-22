@@ -12,7 +12,7 @@ const router = express.Router();
 //----------------------------------------------------------------
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(base_dir, "../../uploads"));
+    cb(null, path.join(__dirname, "../../uploads"));
   },
   filename: function (req, file, cb) {
     const newName = Date.now() + "_" + file.originalname;
@@ -32,7 +32,7 @@ router.post("/add", upload.single("image"), (req, res) => {
     .catch((err) => {
       if (req.file) {
         fs.unlink(
-          path.join(base_dir, "../../uploads", req.file.filename),
+          path.join(__dirname, "../../uploads", req.file.filename),
           (err) => {
             if (err) console.log(err.message);
           }
