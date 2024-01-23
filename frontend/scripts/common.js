@@ -24,6 +24,15 @@ const UserLabelNames = {
   notes: "Megjegyzesek:",
 };
 
+function getCurrentDate() {
+  const date = new Date();
+  var year = date.getFullYear();
+  var month = (date.getMonth() + 1).toString().padStart(2, "0");
+  var day = date.getDate().toString().padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 function reorderData(dataArr, prop, cb = null) {
   if (!dataArr[0]) return;
 
@@ -87,7 +96,7 @@ if (backupBtn) {
       .then((data) => {
         var a = document.createElement("a");
         a.href = window.URL.createObjectURL(data);
-        a.download = "BACKUP.zip";
+        a.download = getCurrentDate() + "-BACKUP.zip";
         a.click();
         updateStatus("Backup generated");
       });
@@ -243,6 +252,7 @@ if (bookTableBtn) {
 export const common = {
   BookLabelNames,
   UserLabelNames,
+  getCurrentDate,
   reorderData,
   initDetailDiv,
   updateStatus,
