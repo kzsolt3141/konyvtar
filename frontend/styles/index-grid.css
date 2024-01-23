@@ -55,17 +55,6 @@
   }
 }
 
-.book_thumbnail {
-  align-self: center;
-  width: 100%;
-  border-radius: 30px;
-  margin-right: 10px;
-}
-
-.book_thumbnail_red:hover {
-  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.8);
-}
-
 .book_div {
   display: grid;
   height: 300px;

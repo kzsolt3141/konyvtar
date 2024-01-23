@@ -1,6 +1,6 @@
 .full_book_details {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 400px 300px;
 }
 
 .full_book_text {

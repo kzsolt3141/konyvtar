@@ -146,7 +146,7 @@ function showPic(id, pic, place, cb) {
   place.appendChild(picDiv);
 
   const img = document.createElement("img");
-  img.className = "book_thumbnail";
+  img.className = "thumbnail";
 
   if (pic == null) {
     img.src = "/styles/static/default_book.png";

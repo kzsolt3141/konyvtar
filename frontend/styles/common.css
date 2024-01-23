@@ -150,6 +150,13 @@ button {
   opacity: 1;
 }
 
+.thumbnail {
+  align-self: center;
+  width: 100%;
+  border-radius: 30px;
+  margin-right: 10px;
+}
+
 .tooltip {
   position: absolute;
   background-color: lightgray;

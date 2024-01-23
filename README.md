@@ -4,7 +4,7 @@ Berecki konyvtar
 
 Changelog:
 
-# 2024.??.?? 1.0.1
+# 2024.01.23 1.1.0
 
 - [+] add message in details for inactive book
 - [+] add register number from notes to book table
@@ -19,5 +19,7 @@ Changelog:
 - [*] deactivate selection for inactive book
 - [*] use common reorder function
 - [*] don't require genre at book editing
+- [*] backup archive contains current date
 - [-] consistent book and user OK button placement
 - [-] fix loan error message
+- [-] fix image size at full book page
