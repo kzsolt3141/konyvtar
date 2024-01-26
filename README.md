@@ -4,6 +4,11 @@ Berecki konyvtar
 
 Changelog:
 
+# 2024.??.?? 2.0.0
+
+[+] Add passsword, birthdate and ocupancy to Users database
+[+] Add simple Login and Registration pages
+
 # 2024.01.23 1.1.0
 
 - [+] add message in details for inactive book

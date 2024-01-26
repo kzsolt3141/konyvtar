@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki könyvtár</title>
+    <link rel="stylesheet" href="/styles/common.css" />
+  </head>
+  <body>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
+      </div>
+    </div>
+
+    <h2>Regisztráció</h2>
+
+    <form
+      action="/user/register"
+      method="POST"
+      class="book_form_div"
+      enctype="multipart/form-data"
+    >
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Teljes Nev"
+        required
+      />
+
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="your@email.please"
+        required
+      />
+
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Jelszó"
+        required
+      />
+
+      <input
+        type="password"
+        id="password_again"
+        name="password_again"
+        placeholder="Jelszó ujra"
+        required
+      />
+
+      <input
+        type="text"
+        id="address"
+        name="address"
+        placeholder="Cim"
+        required
+      />
+
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="0123456789"
+        required
+      />
+
+      <input
+        type="text"
+        id="ocupancy"
+        name="ocupancy"
+        placeholder="Fogalkozas"
+        required
+      />
+
+      <input type="date" id="birth_date" name="birth_date" required />
+
+      <input type="file" id="image" name="image" accept="image/*" />
+
+      <button
+        onclick="window.location.href='/user/login'"
+        type="button"
+        class="general_button"
+      >
+        <img src="/styles/static/user.svg" id="register" />
+      </button>
+
+      <button type="submit" class="general_button">
+        <img src="/styles/static/ok.svg" id="login" />
+      </button>
+    </form>
+
+    <div class="global_status" id="global_status"></div>
+
+    <div class="version" id="version"></div>
+  </body>
+</html>

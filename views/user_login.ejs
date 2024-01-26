@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki könyvtár</title>
+    <link rel="stylesheet" href="/styles/common.css" />
+  </head>
+  <body>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
+      </div>
+    </div>
+
+    <h2>Bejelentkezes</h2>
+
+    <form action="/user/login" method="POST" class="book_form_div">
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="your@email.please"
+        required
+      />
+
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Jelszó"
+        required
+      />
+
+      <button
+        onclick="window.location.href='/user/register'"
+        type="button"
+        class="general_button"
+      >
+        <img src="/styles/static/user-plus.svg" id="register" />
+      </button>
+
+      <button type="submit" class="general_button">
+        <img src="/styles/static/ok.svg" id="login" />
+      </button>
+    </form>
+
+    <div class="global_status" id="global_status"></div>
+
+    <div class="version" id="version"></div>
+  </body>
+</html>

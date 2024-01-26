@@ -10,13 +10,15 @@ function init(db) {
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
+        email TEXT,
+        password TEXT,
         address TEXT,
         phone TEXT,
-        mail TEXT,
+        birth_date DATE,
+        ocupancy TEXT,
         pic TEXT,
-        status TEXT,
-        password TEXT,
-        salt TEXT
+        status BOOLEAN
+        
     )
 `);
 
@@ -30,47 +32,40 @@ CREATE TABLE IF NOT EXISTS user_notes (
 }
 
 //----------------------------------------------------------------
-function registerUser(req) {
-  const body = req.body;
+function registerUser(body, file) {
   var filename = null;
-  if (req.file) filename = req.file.filename;
+  if (file) filename = file.filename;
 
-  // TODO check how should Promise work (probably without return ?)
   return new Promise((resolve, reject) => {
     // seach for incopatible user data (phone and mail both used by other user)
-    var sql = `SELECT * FROM users WHERE phone = ? AND mail = ?`;
-    db_.all(sql, [body.phone, body.mail], (err, rows) => {
+    var sql = `SELECT * FROM users WHERE email = ?`;
+    db_.all(sql, [body.email], (err, rows) => {
       if (err) {
         reject(err.message);
         return;
       }
       if (rows && rows.length > 0) {
-        reject(`Phone:${body.phone} AND mail:${body.mail} used`);
-        return;
-      }
-
-      // additional check for user validation
-      if (body.name === "") {
-        reject("Empty name");
-        return;
-      }
-      if (body.address === "") {
-        reject("Empty address");
-        return;
-      }
-      if (body.phone === "") {
-        reject("Empty phone");
+        reject(`Email:${body.email} is used`);
         return;
       }
 
       // it's ok to start adding the user
       sql = `
         INSERT INTO users 
-        (name, address, phone, mail, pic, status) 
-        VALUES (?, ?, ?, ?, ?, 1) `;
+        (name, email, password, address, phone, birth_date, ocupancy, pic, status) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE) `;
       db_.run(
         sql,
-        [body.name, body.address, body.phone, body.mail, filename],
+        [
+          body.name,
+          body.email,
+          body.password,
+          body.address,
+          body.phone,
+          body.birth_date,
+          body.ocupancy,
+          filename,
+        ],
         function (err) {
           if (err) {
             reject(err.message);
@@ -86,17 +81,16 @@ function registerUser(req) {
 }
 
 function registerUserNotes(id, date, notes) {
-  if (notes !== "") {
-    const sql = `
+  if (!notes || notes == "") notes = "Init";
+  const sql = `
     INSERT INTO user_notes (id, date, notes) 
     VALUES (?, ?, ?)`;
 
-    db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
-      if (err) {
-        return;
-      }
-    });
-  }
+  db_.run(sql, [id, date.toISOString().split("T")[0], notes], (err) => {
+    if (err) {
+      return;
+    }
+  });
 }
 
 //----------------------------------------------------------------
@@ -142,6 +136,20 @@ function getUserById(id, res) {
 
   return new Promise((resolve, reject) => {
     db_.all(sql, [id], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(rows[0]);
+    });
+  });
+}
+
+function getUserByEmail(email) {
+  const sql = `SELECT * FROM users WHERE email = ?`;
+
+  return new Promise((resolve, reject) => {
+    db_.all(sql, [email], (err, rows) => {
       if (err) {
         reject(err);
         return;
@@ -257,6 +265,7 @@ module.exports = {
   findUser: findUser,
   getUserNotesById: getUserNotesById,
   getUserById: getUserById,
+  getUserByEmail: getUserByEmail,
   getLendedBooks: getLendedBooks,
   updateUser: updateUser,
   getNextUserId: getNextUserId,
