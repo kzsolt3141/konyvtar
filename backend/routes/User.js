@@ -4,6 +4,8 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
+const bcrypt = require("bcrypt");
+
 const database = require("../db_common.js");
 
 //----------------------------------------------------------------
@@ -23,24 +25,44 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
-router.post("/add", upload.single("image"), (req, res) => {
-  database
-    .registerUser(req)
-    .then((message) => {
-      res.json(message);
-    })
-    .catch((err) => {
-      if (req.file) {
-        fs.unlink(
-          path.join(__dirname, "../../uploads", req.file.filename),
-          (err) => {
-            if (err) console.log(err.message);
-          }
-        );
-      }
-      res.json(err);
-    });
-});
+router
+  .route("/login")
+  .get((req, res) => {
+    res.render("user_login", {});
+  })
+  .post(async (req, res) => {
+    console.log("login post:", req.body);
+    const user = await database.getUserByEmail(req.body.email);
+    console.log(user);
+    const auth = await bcrypt.compare(req.body.password, user.password);
+    console.log("auth:", auth);
+    res.json(200);
+  });
+
+router
+  .route("/register")
+  .get((req, res) => {
+    res.render("user_register");
+  })
+  .post(upload.single("image"), async (req, res) => {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+    database
+      .registerUser(req.body, req.file)
+      .then((message) => {
+        res.json(message);
+      })
+      .catch((err) => {
+        if (req.file) {
+          fs.unlink(
+            path.join(__dirname, "../../uploads", req.file.filename),
+            (err) => {
+              if (err) console.log(err.message);
+            }
+          );
+        }
+        res.json(err);
+      });
+  });
 
 //----------------------------------------------------------------
 router

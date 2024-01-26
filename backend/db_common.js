@@ -157,6 +157,7 @@ module.exports = {
   findUser: db_users.findUser,
   getUserNotesById: db_users.getUserNotesById,
   getUserById: db_users.getUserById,
+  getUserByEmail: db_users.getUserByEmail,
   getLendedBooks: db_users.getLendedBooks,
   updateUser: db_users.updateUser,
   getNextUserId: db_users.getNextUserId,
