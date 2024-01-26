@@ -14,7 +14,6 @@ app.use(express.static(path.join(process.cwd(), "frontend")));
 app.use(express.static(path.join(process.cwd(), "uploads")));
 
 app.set("view engine", "ejs");
-app.set("views", path.join(process.cwd(), "frontend"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
@@ -50,6 +49,10 @@ app.use((req, res, next) => {
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
+
+app.get("/", (req, res) => {
+  res.render("user_login");
+});
 
 //----------------------------------------------------------------
 app.listen(8080, () => {
