@@ -3,10 +3,9 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
-
 const bcrypt = require("bcrypt");
 
-const database = require("../db_common.js");
+const db_users = require("../db_users.js");
 
 //----------------------------------------------------------------
 const router = express.Router();
@@ -30,14 +29,23 @@ router
   .get((req, res) => {
     res.render("user_login", {});
   })
-  .post(async (req, res) => {
-    console.log("login post:", req.body);
-    const user = await database.getUserByEmail(req.body.email);
-    console.log(user);
-    const auth = await bcrypt.compare(req.body.password, user.password);
-    console.log("auth:", auth);
-    res.json(200);
-  });
+  .post
+  // passport.authenticate("local", {
+  //   successRedirect: "/",
+  //   failureRedirect: "/login",
+  //   failureFlash: true,
+  // })
+  ();
+
+//TODO adapt! import configured passport
+// app.post(
+//   "/login",
+//   passport.authenticate("local", {
+//     successRedirect: "/user/register",
+//     failureRedirect: "/login",
+//     failureFlash: true,
+//   })
+// );
 
 router
   .route("/register")
@@ -46,7 +54,7 @@ router
   })
   .post(upload.single("image"), async (req, res) => {
     req.body.password = await bcrypt.hash(req.body.password, 10);
-    database
+    db_users
       .registerUser(req.body, req.file)
       .then((message) => {
         res.json(message);
@@ -78,7 +86,7 @@ router
     if (req.params.search.startsWith("id=")) {
       id = req.params.search.split("id=")[1];
       try {
-        const user = await database.getUserById(id);
+        const user = await db_users.getUserById(id);
         res.json(user);
       } catch (err) {
         res.json(err.message);
@@ -86,16 +94,16 @@ router
     } else if (req.params.search.startsWith("nid=")) {
       id = req.params.search.split("nid=")[1];
       try {
-        const userNotes = await database.getUserNotesById(id);
+        const userNotes = await db_users.getUserNotesById(id);
         res.json(userNotes);
       } catch (err) {
         res.json(err.message);
       }
     } else if (req.params.search.includes("loan=")) {
       id = req.params.search.split("loan=")[1];
-      database.getLendedBooks(id, res);
+      db_users.getLendedBooks(id, res);
     } else if (req.params.search == "next") {
-      database.getNextUserId(res);
+      db_users.getNextUserId(res);
     } else {
       res.json("HIBA");
     }
@@ -103,12 +111,12 @@ router
 
 async function findUserHandler(req, res) {
   try {
-    const users = await database.findUser(req.body);
+    const users = await db_users.findUser(req.body);
     result = [];
 
     const userPromises = users.map(async function (user) {
       try {
-        const notes = await database.getUserNotesById(user.id);
+        const notes = await db_users.getUserNotesById(user.id);
         return [user, ...notes];
       } catch (err) {
         throw err; // or handle the error as needed
@@ -130,7 +138,7 @@ async function findUserHandler(req, res) {
 //----------------------------------------------------------------
 // TODO USE parameter for bulk/staus
 router.post("/edit", upload.single("image"), (req, res) => {
-  database.updateUser(req, res);
+  db_users.updateUser(req, res);
 });
 
 module.exports = router;
