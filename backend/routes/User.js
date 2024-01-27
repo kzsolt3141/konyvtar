@@ -36,7 +36,11 @@ router
       failureRedirect: "/user/login",
       failureFlash: true,
     })
-  );
+  )
+  .delete((req, res) => {
+    req.logOut();
+    res.redirect("/login");
+  });
 
 router
   .route("/register")
