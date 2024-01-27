@@ -17,6 +17,7 @@ function init(db) {
         birth_date DATE,
         ocupancy TEXT,
         pic TEXT,
+        admin BOOLEAN,
         status BOOLEAN
         
     )
@@ -52,8 +53,8 @@ function registerUser(body, file) {
       // it's ok to start adding the user
       sql = `
         INSERT INTO users 
-        (name, email, password, address, phone, birth_date, ocupancy, pic, status) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE) `;
+        (name, email, password, address, phone, birth_date, ocupancy, pic, admin, status) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSE, TRUE) `;
       db_.run(
         sql,
         [

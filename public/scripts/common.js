@@ -231,21 +231,21 @@ if (mainBtn) {
 const addBookBtn = document.getElementById("add_book_btn");
 if (addBookBtn) {
   addBookBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book.html";
+    window.location.href = "/book";
   });
 }
 
 const addUserBtn = document.getElementById("add_user_btn");
 if (addUserBtn) {
   addUserBtn.addEventListener("click", async (event) => {
-    window.location.href = "/user.html";
+    window.location.href = "/user";
   });
 }
 
 const bookTableBtn = document.getElementById("book_table_btn");
 if (bookTableBtn) {
   bookTableBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book_table.html";
+    window.location.href = "/book_table.htm]l";
   });
 }
 

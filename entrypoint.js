@@ -48,8 +48,7 @@ app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
 app.get("/", p.checkAuthenticated, (req, res) => {
-  console.log("hello!");
-  res.sendFile(path.join(__dirname, "frontend/index_disabled.html"));
+  res.render("index");
 });
 
 //----------------------------------------------------------------

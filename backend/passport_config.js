@@ -33,7 +33,16 @@ function initialize() {
   });
 }
 
+function checkAuthAdmin(req, res, next) {
+  if (req.isAuthenticated() && req.user.admin == 1) {
+    return next();
+  }
+
+  res.redirect("/");
+}
+
 function checkAuthenticated(req, res, next) {
+  console.log(req.user);
   if (req.isAuthenticated()) {
     return next();
   }
@@ -52,5 +61,6 @@ module.exports = {
   passport,
   initialize,
   checkAuthenticated,
+  checkAuthAdmin,
   checkNotAuthenticated,
 };
