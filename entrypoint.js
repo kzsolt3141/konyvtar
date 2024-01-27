@@ -1,6 +1,9 @@
 const express = require("express");
 const path = require("path");
 const ejs = require("ejs");
+const passport = require("passport");
+const session = require("express-session");
+const flash = require("express-flash");
 
 const database = require("./backend/db_common.js");
 
@@ -17,6 +20,21 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
+
+//----------------------------------------------------------------
+const passport_config = require("./backend/passport_config.js");
+passport_config.initialize(passport);
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 //----------------------------------------------------------------
 const bookRoute = require("./backend/routes/Book");
