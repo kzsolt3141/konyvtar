@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const ejs = require("ejs");
-const passport = require("passport");
+
 const session = require("express-session");
 const flash = require("express-flash");
 
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
 
 //----------------------------------------------------------------
-const passport_config = require("./backend/passport_config.js");
-passport_config.initialize(passport);
+const p = require("./backend/passport_config.js");
+p.initialize();
 
 app.use(
   session({
@@ -33,8 +33,8 @@ app.use(
   })
 );
 app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(p.passport.initialize());
+app.use(p.passport.session());
 
 //----------------------------------------------------------------
 const bookRoute = require("./backend/routes/Book");
@@ -68,8 +68,9 @@ app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
-app.get("/", (req, res) => {
-  res.render("user_login");
+app.get("/", p.checkAuthenticated, (req, res) => {
+  console.log("hello!");
+  res.sendFile(path.join(__dirname, "frontend/index_disabled.html"));
 });
 
 //----------------------------------------------------------------

@@ -1,11 +1,12 @@
+const passport = require("passport");
+
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 
 const db_users = require("./db_users");
 
-function initialize(passport) {
+function initialize() {
   const authenticateUser = async (email, password, done) => {
-    console.log("Authenticating", email, password, done);
     const user = await db_users.getUserByEmail(email);
     if (user == null) {
       return done(null, false, { message: "No user with that email" });
@@ -32,6 +33,24 @@ function initialize(passport) {
   });
 }
 
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect("/user/login");
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+  next();
+}
+
 module.exports = {
+  passport,
   initialize,
+  checkAuthenticated,
+  checkNotAuthenticated,
 };
