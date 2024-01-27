@@ -6,7 +6,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 
 const db_users = require("../db_users.js");
-
+const p = require("../passport_config.js");
 //----------------------------------------------------------------
 const router = express.Router();
 
@@ -26,26 +26,17 @@ const upload = multer({ storage: storage });
 //----------------------------------------------------------------
 router
   .route("/login")
-  .get((req, res) => {
+  .get(p.checkNotAuthenticated, (req, res) => {
     res.render("user_login", {});
   })
-  .post
-  // passport.authenticate("local", {
-  //   successRedirect: "/",
-  //   failureRedirect: "/login",
-  //   failureFlash: true,
-  // })
-  ();
-
-//TODO adapt! import configured passport
-// app.post(
-//   "/login",
-//   passport.authenticate("local", {
-//     successRedirect: "/user/register",
-//     failureRedirect: "/login",
-//     failureFlash: true,
-//   })
-// );
+  .post(
+    p.checkNotAuthenticated,
+    p.passport.authenticate("local", {
+      successRedirect: "/",
+      failureRedirect: "/user/login",
+      failureFlash: true,
+    })
+  );
 
 router
   .route("/register")
