@@ -4,7 +4,8 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
-const database = require("../common.js");
+const database = require("../db_books.js");
+const p = require("../passport_config.js");
 
 //----------------------------------------------------------------
 const router = express.Router();
@@ -23,28 +24,34 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
-router.post("/add", upload.single("image"), (req, res) => {
-  database
-    .registerBook(req)
-    .then((message) => {
-      res.json(message);
-    })
-    .catch((err) => {
-      if (req.file) {
-        fs.unlink(
-          path.join(__dirname, "../../uploads", req.file.filename),
-          (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("deleted:", req.file.filename);
+router
+  .route("/")
+  .get(p.checkAuthAdmin, (req, res) => {
+    res.render("book_add");
+  })
+  .post(upload.single("image"), (req, res) => {
+    database
+      .registerBook(req)
+      .then((message) => {
+        res.json(message);
+      })
+      .catch((err) => {
+        if (req.file) {
+          fs.unlink(
+            path.join(__dirname, "../../uploads", req.file.filename),
+            (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("deleted:", req.file.filename);
+              }
             }
-          }
-        );
-      }
-      res.json(err);
-    });
-});
+          );
+        }
+        res.json(err);
+      });
+  });
+//----------------------------------------------------------------
 
 //----------------------------------------------------------------
 router
