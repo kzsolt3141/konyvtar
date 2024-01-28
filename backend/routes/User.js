@@ -38,8 +38,8 @@ router
     })
   )
   .delete((req, res) => {
-    req.logOut();
-    res.redirect("/login");
+    req.logOut(() => {});
+    res.json("logout");
   });
 
 router
