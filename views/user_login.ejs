@@ -3,6 +3,7 @@
   <head>
     <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/user_login.css" />
   </head>
   <body>
     <div class="fixed_header">
@@ -14,9 +15,7 @@
       </div>
     </div>
 
-    <h2>Bejelentkezes</h2>
-
-    <form action="/user/login" method="POST" class="book_form_div">
+    <form action="/user/login" method="POST" class="user_login_form">
       <input
         type="email"
         id="email"
@@ -32,18 +31,27 @@
         placeholder="Jelszó"
         required
       />
+      <div class="user_login_buttons">
+        <button
+          onclick="window.location.href='/user/register'"
+          type="button"
+          class="general_button"
+        >
+          <img
+            src="/styles/static/user-plus.svg"
+            id="register"
+            class="general_button_icon"
+          />
+        </button>
 
-      <button
-        onclick="window.location.href='/user/register'"
-        type="button"
-        class="general_button"
-      >
-        <img src="/styles/static/user-plus.svg" id="register" />
-      </button>
-
-      <button type="submit" class="general_button">
-        <img src="/styles/static/ok.svg" id="login" />
-      </button>
+        <button type="submit" class="general_button">
+          <img
+            src="/styles/static/ok.svg"
+            id="login"
+            class="general_button_icon"
+          />
+        </button>
+      </div>
     </form>
 
     <div class="global_status" id="global_status"></div>
