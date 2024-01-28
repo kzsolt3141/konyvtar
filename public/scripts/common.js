@@ -245,7 +245,20 @@ if (addUserBtn) {
 const bookTableBtn = document.getElementById("book_table_btn");
 if (bookTableBtn) {
   bookTableBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book_table.htm]l";
+    window.location.href = "/book_table";
+  });
+}
+
+const logoutBtn = document.getElementById("logout");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async (event) => {
+    const rsp = await fetch("/user/login", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (rsp) window.location.reload();
   });
 }
 
