@@ -235,13 +235,6 @@ if (addBookBtn) {
   });
 }
 
-const addUserBtn = document.getElementById("add_user_btn");
-if (addUserBtn) {
-  addUserBtn.addEventListener("click", async (event) => {
-    window.location.href = "/user";
-  });
-}
-
 const bookTableBtn = document.getElementById("book_table_btn");
 if (bookTableBtn) {
   bookTableBtn.addEventListener("click", async (event) => {
