@@ -5,20 +5,22 @@ const place = document.getElementById("details_div");
 const statusDiv = document.getElementById("global_status");
 
 // button.disabled = true;
-button.addEventListener("click", async function () {
-  place.innerHTML = "";
-  var bookRadio = document.querySelector('input[name="book_radio"]:checked');
-  var userRadio = document.querySelector('input[name="user_radio"]:checked');
+if (button) {
+  button.addEventListener("click", async function () {
+    place.innerHTML = "";
+    var bookRadio = document.querySelector('input[name="book_radio"]:checked');
+    var userRadio = document.querySelector('input[name="user_radio"]:checked');
 
-  const message = document.createElement("p");
-  statusDiv.appendChild(message);
+    const message = document.createElement("p");
+    statusDiv.appendChild(message);
 
-  if (bookRadio && userRadio) {
-    await lendBook(bookRadio.id, userRadio.id, place, true);
-  } else {
-    common.updateStatus("Kolcsonzeshez valassz egy konyvet es felhasznalot");
-  }
-});
+    if (bookRadio && userRadio) {
+      await lendBook(bookRadio.id, userRadio.id, place, true);
+    } else {
+      common.updateStatus("Kolcsonzeshez valassz egy konyvet es felhasznalot");
+    }
+  });
+}
 
 // define a new genre and send it back to the DB
 export async function lendBook(bid, uid, place, isLend) {
