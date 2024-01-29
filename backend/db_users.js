@@ -5,7 +5,6 @@ function init(db) {
   if (db === null) return false;
   db_ = db;
 
-  //TODO: password and salt is for future improvements
   db_.run(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

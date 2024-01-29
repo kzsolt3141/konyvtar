@@ -14,7 +14,9 @@
       <div class="fixed_header_center">
         <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
+
       <div class="fixed_header_right">
+        <% if (admin) { %>
         <button class="general_button" id="add_book_btn">
           <img class="general_button_icon" src="styles/static/book-plus.svg" />
           <div class="tooltip">Új Könyv</div>
@@ -27,6 +29,7 @@
           <img class="general_button_icon" src="styles/static/backup.svg" />
           <div class="tooltip">Backup!</div>
         </button>
+        <% } %>
         <button class="general_button" id="logout">
           <img class="general_button_icon" src="styles/static/logout.svg" />
           <div class="tooltip">Kijelentkezes</div>
@@ -53,7 +56,7 @@
           <option value="keys">Kulcsszo</option>
         </select>
 
-        <input type="text" id="book_key" name="key" placeholder="Kereses" />
+        <input type="search" id="book_key" name="key" placeholder="Kereses" />
 
         <div class="order_div" id="book_order_div"></div>
 
@@ -72,7 +75,7 @@
     </div>
 
     <div class="list_div" id="books_div"></div>
-
+    <% if (admin) { %>
     <div class="seach_results_block">
       <img class="search_icon" src="styles/static/user.svg" />
       <form class="search" id="search_users">
@@ -81,7 +84,7 @@
           <option value="phone">Telefonszam</option>
           <option value="mail">e-Mail</option>
         </select>
-        <input type="text" id="user_key" name="key" placeholder="Kereses" />
+        <input type="search" id="user_key" name="key" placeholder="Kereses" />
 
         <div class="order_div" id="user_order_div"></div>
         <div></div>
@@ -104,7 +107,7 @@
         <img class="general_button_icon" src="styles/static/edit.png" />
       </button>
     </div>
-
+    <% } %>
     <div class="version" id="version"></div>
   </body>
 

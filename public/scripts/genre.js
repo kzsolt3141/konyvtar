@@ -2,27 +2,12 @@ import { common } from "./common.js";
 
 // genre select creates a new diw with all the requred elements:
 // - label, ganre drop-down, input fields, buttons
-export function creteGenreSelect(id, place) {
-  const genreDiv = document.createElement("div");
-  genreDiv.id = id;
-  place.appendChild(genreDiv);
-
-  // actual genre dropdown
-  const genreSelect = document.createElement("select");
-  genreSelect.id = id + "_select";
-
-  genreDiv.appendChild(genreSelect);
-
+export function fillGenreSelect(selector) {
+  if (!selector) return;
   // additional elements if "+" is selected
-  genreSelect.addEventListener("change", () => {
-    if (genreSelect.value === "+") addGenre(genreDiv);
+  selector.addEventListener("change", () => {
+    if (selector.value === "+") addGenre(selector);
   });
-
-  // create additional optin
-  const option = document.createElement("option");
-  option.value = "down";
-  option.text = "\u2193";
-  genreSelect.add(option);
 
   // fetch all known genres and fill the dropdown
   fetch("/book/genres", {
@@ -34,35 +19,30 @@ export function creteGenreSelect(id, place) {
         const option = document.createElement("option");
         option.value = opt["genre"];
         option.text = opt["genre"];
-        genreSelect.add(option);
+        selector.add(option);
       });
       const option = document.createElement("option");
       option.value = "+";
       option.text = "+";
-      genreSelect.add(option);
+      selector.add(option);
     });
 }
 
 // a selected genre is valid if it is not "+" or "down"
-export function genreSelectIsValid(id) {
-  const bookGenre = document.getElementById(id + "_select");
-  if (bookGenre === null) {
-    return false;
-  }
-  if (bookGenre.value === "+" || bookGenre.value === "down") {
-    return false;
-  }
+export function genreSelectIsValid(selector) {
+  if (!selector) return false;
+  if (selector.value === "+" || selector.value === "down") return false;
 
   return true;
 }
 
-export function getGenreValue(id) {
-  const bookGenre = document.getElementById(id + "_select");
-  if (bookGenre && bookGenre.value != "down") return bookGenre.value;
+export function getGenreValue(selector) {
+  if (selector && selector.value != "down") return selector.value;
   else return "";
 }
 
 // define a new genre and send it back to the DB
+//TODO: solve this, place no longer exists
 function addGenre(place) {
   const input = document.createElement("input");
   place.appendChild(input);

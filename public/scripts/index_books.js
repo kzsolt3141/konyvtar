@@ -1,4 +1,4 @@
-import { creteGenreSelect, getGenreValue } from "./genre.js";
+import { fillGenreSelect, getGenreValue } from "./genre.js";
 
 import { lendBook } from "./lend.js";
 

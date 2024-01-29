@@ -131,7 +131,6 @@ async function findUserHandler(req, res) {
 }
 
 //----------------------------------------------------------------
-// TODO USE parameter for bulk/staus
 router.post("/edit", upload.single("image"), (req, res) => {
   db_users.updateUser(req, res);
 });
