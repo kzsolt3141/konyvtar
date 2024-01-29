@@ -2,50 +2,56 @@
 <html>
   <head>
     <title>Berecki könyvtár</title>
-    <link rel="stylesheet" href="styles/common.css" />
-    <link rel="stylesheet" href="styles/index-grid.css" />
-    <link rel="stylesheet" href="styles/index-details.css" />
-    <link rel="stylesheet" href="styles/book.css" />
+    <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/index-grid.css" />
+    <link rel="stylesheet" href="/styles/index-details.css" />
+    <link rel="stylesheet" href="/styles/book.css" />
   </head>
   <body>
     <div class="fixed_header">
       <div class="fixed_header_left">
-        <img class="fixed_header_image" src="styles/static/CIMER.png" />
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
       </div>
       <div class="fixed_header_center">
         <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
       <div class="fixed_header_right">
         <button class="general_button" id="main_btn">
-          <img class="general_button_icon" src="styles/static/home.svg" />
+          <img class="general_button_icon" src="/styles/static/home.svg" />
           <div class="tooltip">Főoldal</div>
         </button>
         <button class="general_button" id="book_table_btn">
-          <img class="general_button_icon" src="styles/static/list.svg" />
+          <img class="general_button_icon" src="/styles/static/list.svg" />
           <div class="tooltip">Könyv Lista</div>
         </button>
         <button class="general_button" id="backup_btn">
-          <img class="general_button_icon" src="styles/static/backup.svg" />
+          <img class="general_button_icon" src="/styles/static/backup.svg" />
           <div class="tooltip">Backup!</div>
+        </button>
+        <button class="general_button" id="logout">
+          <img class="general_button_icon" src="/styles/static/logout.svg" />
+          <div class="tooltip">Kijelentkezes</div>
         </button>
       </div>
     </div>
 
     <div class="enable_div" id="disable_div"></div>
 
-    <img class="search_icon" src="styles/static/book.svg" />
+    <img class="search_icon" src="/styles/static/book.svg" />
 
-    <form id="add_book" class="book_form_div">
+    <form action="/book" method="POST" id="add_book" class="book_form_div">
       <div id="title" class="book_form_line">
-        <h2>Új Könyv</h2>
+        <h2>Könyv <%= (!!locals.bid) ? bid : '' %></h2>
       </div>
 
       <div id="genre_div" class="book_form_line">
         <label for="isbn">Típus</label>
+        <select id="genre" name="genre"></select>
       </div>
       <div class="book_form_line">
         <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" name="isbn" />
+        <input type="text" id="isbn" name="isbn" placeholder="ISBN"
+        value=<%=(!!locals.bid) ? bid : '' %> >
       </div>
 
       <div class="book_form_line">
@@ -88,11 +94,9 @@
       </div>
       <div class="book_form_line">
         <div></div>
-        <img
-          src="styles/static/ok.svg"
-          id="add_button"
-          class="general_button book_form_button"
-        />
+        <button type="submit" class="general_button">
+          <img src="/styles/static/ok.svg" class="general_button_icon" />
+        </button>
       </div>
     </form>
 
@@ -100,6 +104,6 @@
     <div class="version" id="version"></div>
   </body>
 
-  <script type="module" src="scripts/genre.js"></script>
-  <script type="module" src="scripts/book_add.js"></script>
+  <script type="module" src="/scripts/genre.js"></script>
+  <script type="module" src="/scripts/book_add.js"></script>
 </html>

@@ -1,14 +1,17 @@
 .book_form_div {
-  position: absolute;
+  position: relative;
   display: grid;
-  grid-template-columns: 400px;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
   column-gap: 20px;
   row-gap: 10px;
-  left: 100px;
   background-color: #b2b9af;
   border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .book_form_line {
@@ -18,7 +21,7 @@
 }
 
 .book_form_title {
-  position: absolute;
+  position: relative;
   text-align: center;
   align-items: center;
   width: 380;

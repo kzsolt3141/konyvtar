@@ -25,36 +25,6 @@ const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
 router
-  .route("/")
-  .get(p.checkAuthAdmin, (req, res) => {
-    res.render("book_add");
-  })
-  .post(upload.single("image"), (req, res) => {
-    database
-      .registerBook(req)
-      .then((message) => {
-        res.json(message);
-      })
-      .catch((err) => {
-        if (req.file) {
-          fs.unlink(
-            path.join(__dirname, "../../uploads", req.file.filename),
-            (err) => {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("deleted:", req.file.filename);
-              }
-            }
-          );
-        }
-        res.json(err);
-      });
-  });
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-router
   .route("/find/:search?")
   .post(upload.none(), (req, res) => {
     if (req.params.search == "bulk") {
@@ -118,6 +88,7 @@ async function findBookHandler(req, res) {
 
 //----------------------------------------------------------------
 router.post("/change", upload.single("image"), (req, res) => {
+  //TODO see .route("/:id?") merge with it!
   database.updateBook(req, res);
 });
 
@@ -140,5 +111,44 @@ router.route("/full/:id?").get(async (req, res) => {
     res.json("HIBA");
   }
 });
+
+//----------------------------------------------------------------
+router
+  .route("/:id?")
+  .get(p.checkAuthAdmin, async (req, res) => {
+    //TODO EDIT/ADD BASED ON BOOK ID PARAM
+    if (req.params.id) {
+      console.log("this:", req.params.id);
+    }
+    const nextBookId = await database.getNextBookId();
+    res.render("book_add", { bid: nextBookId });
+  })
+  .post(upload.single("image"), async (req, res) => {
+    var message = "";
+    try {
+      mesasge = await database.registerBook(req);
+    } catch (err) {
+      message = err.message;
+      if (req.file) {
+        fs.unlink(
+          path.join(__dirname, "../../uploads", req.file.filename),
+          (err) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("deleted:", req.file.filename);
+            }
+          }
+        );
+      }
+    }
+    console.log(message);
+    const nextBookId = await database.getNextBookId();
+    res.render("book_add", {
+      bid: nextBookId,
+      message: message,
+      newBook: false,
+    });
+  });
 
 module.exports = router;

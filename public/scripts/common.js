@@ -196,6 +196,7 @@ async function getLoanById(uid) {
 }
 
 function createOrderingSelector(id, place, data, label, sortcb, nextcb) {
+  if (!place) return;
   const typeSelect = document.createElement("select");
   typeSelect.id = id;
 

@@ -48,7 +48,7 @@ app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
 app.get("/", p.checkAuthenticated, (req, res) => {
-  res.render("index");
+  res.render("index", { admin: req.user.admin });
 });
 
 //----------------------------------------------------------------

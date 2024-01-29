@@ -117,7 +117,7 @@ function getGenres(res) {
   var sql = `SELECT * FROM book_genres ORDER BY genre ASC`;
   db_.all(sql, [], (err, rows) => {
     if (err) {
-      console.log(err.message);
+      console.log("Genre", err);
       res.json(`Hiba!`);
       return;
     }
@@ -200,15 +200,17 @@ function getBookById(id) {
   });
 }
 
-function getNextBookId(res) {
+function getNextBookId() {
   const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM books`;
-  db_.all(sql, (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      res.json("Hiba!");
-      return;
-    }
-    res.json(rows[0].next_id);
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        console.log("error", err);
+        reject(err);
+        return;
+      }
+      resolve(rows[0].next_id);
+    });
   });
 }
 
