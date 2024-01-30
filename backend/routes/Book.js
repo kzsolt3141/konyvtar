@@ -116,39 +116,52 @@ router.route("/full/:id?").get(async (req, res) => {
 router
   .route("/:id?")
   .get(p.checkAuthAdmin, async (req, res) => {
-    //TODO EDIT/ADD BASED ON BOOK ID PARAM
-    if (req.params.id) {
-      console.log("this:", req.params.id);
-    }
     const nextBookId = await database.getNextBookId();
-    res.render("book_add", { bid: nextBookId });
+
+    if (isNaN(req.params.id)) {
+      res.render("book", { bid: nextBookId });
+    } else if (req.params.id < nextBookId) {
+      const book = await database.getBookById(req.params.id);
+      res.render("book", {
+        bid: book.id,
+        isbn: book.isbn,
+        title: book.title,
+        author: book.author,
+        year: book.year,
+        publ: book.publ,
+        ver: book.ver,
+        keys: book.keys,
+        price: book.price,
+        pic: book.pic,
+      });
+    } else {
+      res.redirect("/");
+    }
   })
-  .post(upload.single("image"), async (req, res) => {
+  .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     var message = "";
-    try {
-      mesasge = await database.registerBook(req);
-    } catch (err) {
-      message = err.message;
-      if (req.file) {
-        fs.unlink(
-          path.join(__dirname, "../../uploads", req.file.filename),
-          (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("deleted:", req.file.filename);
+    if (isNaN(req.params.id)) {
+      try {
+        message = await database.registerBook(req);
+      } catch (err) {
+        message = err.message;
+        if (req.file) {
+          fs.unlink(
+            path.join(__dirname, "../../uploads", req.file.filename),
+            (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("deleted:", req.file.filename);
+              }
             }
-          }
-        );
+          );
+        }
       }
+    } else {
+      console.log(req.body);
     }
     console.log(message);
-    const nextBookId = await database.getNextBookId();
-    res.render("book_add", {
-      bid: nextBookId,
-      message: message,
-      newBook: false,
-    });
   });
 
 module.exports = router;
