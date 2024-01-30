@@ -1,3 +1,13 @@
+.book_form_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+  width: 800px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
 .book_form_div {
   position: relative;
   display: grid;
@@ -31,4 +41,11 @@
   background-color: #b2b9af;
   border-radius: 10px;
   align-self: center;
+}
+
+.book_thumbnail {
+  position: relative;
+  width: 400px;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
