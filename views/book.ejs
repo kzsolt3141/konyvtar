@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki könyvtár</title>
+    <link rel="stylesheet" href="/styles/common.css" />
+
+    <link rel="stylesheet" href="/styles/book.css" />
+  </head>
+  <body>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
+      </div>
+      <div class="fixed_header_right">
+        <button class="general_button" id="main_btn">
+          <img class="general_button_icon" src="/styles/static/home.svg" />
+          <div class="tooltip">Főoldal</div>
+        </button>
+        <button class="general_button" id="book_table_btn">
+          <img class="general_button_icon" src="/styles/static/list.svg" />
+          <div class="tooltip">Könyv Lista</div>
+        </button>
+        <button class="general_button" id="backup_btn">
+          <img class="general_button_icon" src="/styles/static/backup.svg" />
+          <div class="tooltip">Backup!</div>
+        </button>
+        <button class="general_button" id="logout">
+          <img class="general_button_icon" src="/styles/static/logout.svg" />
+          <div class="tooltip">Kijelentkezes</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="enable_div" id="disable_div"></div>
+
+    <div class="book_form_container">
+      <form
+        action=<%= (!!locals.isbn) ? "/book/"+ bid : "/book" %>
+        method="POST"
+        id="add_book"
+        class="book_form_div"
+        enctype="multipart/form-data"
+      >
+        <div id="title" class="book_form_line">
+          <h2>Könyv <%= (!!locals.bid) ? bid : '' %></h2>
+        </div>
+
+        <input type="hidden" id="id" name="id" 
+        value="<%= (!!locals.bid) ? bid :"" %>" />
+
+        <div id="genre_div" class="book_form_line">
+          <label for="isbn">Típus</label>
+          <select id="genre" name="genre"></select>
+        </div>
+        <div class="book_form_line">
+          <label for="isbn">ISBN</label>
+          <input type="text" id="isbn" name="isbn" placeholder="ISBN"
+          value=<%=(!!locals.isbn) ? isbn : (!!locals.bid) ? bid : "" %> >
+        </div>
+
+        <div class="book_form_line">
+          <label for="title">Cim:</label>
+          <input type="text" id="title" name="title" placeholder="Konyvcim"
+          value=<%=(!!locals.title) ? title : "" %> >
+        </div>
+
+        <div class="book_form_line">
+          <label for="author">Szerzo</label>
+          <input type="text" id="author" name="author" placeholder="Szerzo"
+          value=<%=(!!locals.author) ? author : "" %> >
+        </div>
+
+        <div class="book_form_line">
+          <label for="year">Megjelent</label>
+          <input type="text" id="year" name="year" placeholder="2024"
+          value=<%=(!!locals.year) ? year : "" %> >
+        </div>
+        <div class="book_form_line">
+          <label for="publ">Kiado:</label>
+          <input type="text" id="publ" name="publ" placeholder="Kiado"
+          value=<%=(!!locals.publ) ? publ : "" %> >
+        </div>
+        <div class="book_form_line">
+          <label for="ver">Kiadas</label>
+          <input type="text" id="ver" name="ver" placeholder="Kiadas"
+          value=<%=(!!locals.ver) ? ver : "" %> >
+        </div>
+        <div class="book_form_line">
+          <label for="keys">Kulcsszavak</label>
+          <input type="text" id="keys" name="keys" placeholder="kulcs, szo"
+          value=<%=(!!locals.keys) ? keys : "" %> >
+        </div>
+        <div class="book_form_line">
+          <label for="price">Ar(lej)</label>
+          <input type="text" id="price" name="price" placeholder="12.34"
+          value=<%=(!!locals.price) ? price : "" %> >
+        </div>
+        <div class="book_form_line">
+          <label for="notes">Megjegyes</label>
+          <input type="text" id="notes" name="notes" placeholder="Init" />
+        </div>
+        <div class="book_form_line">
+          <label for="image">Kep hozzasadasa:</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+        <div class="book_form_line">
+          <div></div>
+          <button type="submit" class="general_button">
+            <img src="/styles/static/ok.svg" class="general_button_icon" />
+          </button>
+        </div>
+      </form>
+      <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>"
+        id="book_thumbnail" class="book_thumbnail">
+    </div>
+
+    <div id="global_status" class="global_status"></div>
+    <div class="version" id="version"></div>
+  </body>
+
+  <script type="module" src="/scripts/genre.js"></script>
+  <script type="module" src="/scripts/book.js"></script>
+</html>
