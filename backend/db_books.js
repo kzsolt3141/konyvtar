@@ -251,53 +251,60 @@ function toggleBookStatus(body, res) {
   });
 }
 
-function editBook(req, res) {
-  const body = req.body;
-  var file = null;
-  if (req.file != null) {
-    file = req.file.filename;
-  }
-
-  if (body.genre == "") body.genre = null;
-  sql = `UPDATE books 
-  SET 
-    isbn = ?,
-    title= ?,
-    author = ?,
-    genre =  COALESCE(?, genre),
-    year = ?,
-    publ = ?,
-    ver = ?,
-    keys = ?,
-    price = ?,
-    pic = COALESCE(?, pic)
-  WHERE id = ?`;
-  db_.run(
-    sql,
-    [
-      body.isbn,
-      body.title,
-      body.author,
-      body.genre,
-      body.year,
-      body.publ,
-      body.ver,
-      body.keys,
-      body.price,
-      file,
-      body.id,
-    ],
-    (err) => {
-      if (err) {
-        console.log(err);
-        res.json(`Book ${body.title} could not be modified`);
-        return;
-      }
-      const currentDate = new Date();
-      registerBookNotes(body.id, currentDate, body.notes);
-      res.json(`Book ${body.title} modified successfully`);
+function editBook(body, file) {
+  return new Promise((resolve, reject) => {
+    if (body == null) {
+      reject("empty body");
+      return;
     }
-  );
+
+    var fileName = null;
+    if (file != null) {
+      fileName = file.filename;
+    }
+
+    if (body.genre == "") body.genre = null;
+
+    sql = `UPDATE books 
+      SET 
+        isbn = ?,
+        title= ?,
+        author = ?,
+        genre =  COALESCE(?, genre),
+        year = ?,
+        publ = ?,
+        ver = ?,
+        keys = ?,
+        price = ?,
+        pic = COALESCE(?, pic)
+      WHERE id = ?`;
+
+    db_.run(
+      sql,
+      [
+        body.isbn,
+        body.title,
+        body.author,
+        body.genre,
+        body.year,
+        body.publ,
+        body.ver,
+        body.keys,
+        body.price,
+        fileName,
+        body.id,
+      ],
+      (err) => {
+        if (err) {
+          reject(`Book ${body.title} could not be modified`);
+          return;
+        }
+        const currentDate = new Date();
+        registerBookNotes(body.id, currentDate, body.notes);
+        resolve(`Book ${body.title} modified successfully`);
+      }
+    );
+  });
 }
 
 module.exports = {
@@ -309,6 +316,7 @@ module.exports = {
   getBookById: getBookById,
   addGenre: addGenre,
   getGenres: getGenres,
+  editBook: editBook,
   updateBook: updateBook,
   getNextBookId: getNextBookId,
 };
