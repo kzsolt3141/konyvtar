@@ -140,6 +140,7 @@ router
   })
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     var message = "";
+    var bid = "/book/";
     if (isNaN(req.params.id)) {
       try {
         message = await database.registerBook(req);
@@ -159,9 +160,15 @@ router
         }
       }
     } else {
-      console.log(req.body);
+      try {
+        message = await database.editBook(req.body, req.file);
+      } catch (err) {
+        message = err.message;
+      }
+      bid += req.params.id;
     }
-    console.log(message);
+    //TODO redirect is not enough, should do someting with message instead
+    res.redirect(bid);
   });
 
 module.exports = router;
