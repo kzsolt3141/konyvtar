@@ -14,7 +14,7 @@ function init(db) {
         address TEXT,
         phone TEXT,
         birth_date DATE,
-        ocupancy TEXT,
+        occupancy TEXT,
         pic TEXT,
         admin BOOLEAN,
         status BOOLEAN
@@ -52,7 +52,7 @@ function registerUser(body, file) {
       // it's ok to start adding the user
       sql = `
         INSERT INTO users 
-        (name, email, password, address, phone, birth_date, ocupancy, pic, admin, status) 
+        (name, email, password, address, phone, birth_date, occupancy, pic, admin, status) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSE, TRUE) `;
       db_.run(
         sql,
@@ -63,7 +63,7 @@ function registerUser(body, file) {
           body.address,
           body.phone,
           body.birth_date,
-          body.ocupancy,
+          body.occupancy,
           filename,
         ],
         function (err) {
@@ -161,13 +161,15 @@ function getUserByEmail(email) {
 
 function getNextUserId(res) {
   const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM users`;
-  db_.all(sql, (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      res.json("Hiba!");
-      return;
-    }
-    res.json(rows[0].next_id);
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        console.log(err.message);
+        reject("Hiba!");
+        return;
+      }
+      resolve(rows[0].next_id);
+    });
   });
 }
 

@@ -6,7 +6,7 @@ Changelog:
 
 # 2024.??.?? 2.0.0
 
-- [+] Add passsword, birthdate, admin and ocupancy to Users database
+- [+] Add passsword, birthdate, admin and occupancy to Users database
 - [+] Add simple Login and Registration pages
 - [+] Use passport to login
 - [*] reorganize files frontend -> public, html -> ejs
