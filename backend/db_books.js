@@ -215,19 +215,6 @@ function getNextBookId() {
 }
 
 //----------------------------------------------------------------
-function updateBook(req, res) {
-  switch (req.body.update) {
-    case "bulk":
-      editBook(req, res);
-      break;
-    case "status":
-      toggleBookStatus(req.body, res);
-      break;
-    default:
-      res.json(`unknown instruction: ${body.update}`);
-  }
-}
-
 function toggleBookStatus(body, res) {
   sql = `
   UPDATE books 
@@ -317,6 +304,6 @@ module.exports = {
   addGenre: addGenre,
   getGenres: getGenres,
   editBook: editBook,
-  updateBook: updateBook,
+  toggleBookStatus: toggleBookStatus,
   getNextBookId: getNextBookId,
 };

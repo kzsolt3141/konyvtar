@@ -112,16 +112,15 @@ router.post("/edit", upload.single("image"), (req, res) => {
 
 //----------------------------------------------------------------
 router
-  .route("/:id?")
-  .get(async (req, res) => {
+  .route("/:id")
+  .get(p.checkAuthenticated, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
+
     if (
-      isNaN(req.params.id) ||
-      req.user == null ||
-      req.params.id != req.user.id
+      !isNaN(req.params.id) &&
+      req.params.id < nextUserId &&
+      (req.params.id == req.user.id || req.user.admin == 1)
     ) {
-      res.render("user");
-    } else if (req.params.id < nextUserId) {
       const user = await db_users.getUserById(req.params.id);
       res.render("user", {
         uid: user.id,
@@ -133,38 +132,50 @@ router
         occupancy: user.occupancy,
         pic: user.pic,
       });
+    } else {
+      res.redirect("/");
     }
   })
-  .post(upload.single("image"), async (req, res) => {
+  .post(p.checkAuthenticated, upload.single("image"), async (req, res) => {
     if (req.body.password != "") {
       req.body.password = await bcrypt.hash(req.body.password, 10);
-    }
+    } else req.body.password = null;
+
+    console.log(req.body);
 
     if (isNaN(req.params.id)) {
-      db_users
-        .registerUser(req.body, req.file)
-        .then((message) => {
-          res.json(message);
-        })
-        .catch((err) => {
-          if (req.file) {
-            fs.unlink(
-              path.join(__dirname, "../../uploads", req.file.filename),
-              (err) => {
-                if (err) console.log(err.message);
-              }
-            );
-          }
-          res.json(err);
-        });
-    } else if (req.user != null || req.params.id == req.user.id) {
-      // TODO authenticate
-      // update the functuion use editUser
-      // db_users.updateUser();
-      console.log("update user:", req.params.id);
+      res.redirect("/");
+    } else if (req.params.id == req.user.id || req.user.admin == 1) {
+      const message = await db_users.editUser(req.body, req.file);
+      console.log(message);
+      res.redirect("/user/" + req.params.id);
     } else {
       res.redirect("/");
     }
   });
 
+router
+  .route("/")
+  .get(async (req, res) => {
+    res.render("user");
+  })
+  .post(upload.single("image"), async (req, res) => {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+    db_users
+      .registerUser(req.body, req.file)
+      .then((message) => {
+        res.render("user", { message: message });
+      })
+      .catch((err) => {
+        if (req.file) {
+          fs.unlink(
+            path.join(__dirname, "../../uploads", req.file.filename),
+            (err) => {
+              if (err) console.log(err.message);
+            }
+          );
+        }
+        res.render("user", { message: err });
+      });
+  });
 module.exports = router;
