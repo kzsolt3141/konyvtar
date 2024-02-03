@@ -102,16 +102,6 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
   }
 });
 
-router.route("/full/:id?").get(async (req, res) => {
-  if (req.params.id) {
-    res.render("full_book.ejs", {
-      bid: req.params.id,
-    });
-  } else {
-    res.json("HIBA");
-  }
-});
-
 //----------------------------------------------------------------
 router
   .route("/:id?")
