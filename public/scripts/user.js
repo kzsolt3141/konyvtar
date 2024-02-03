@@ -1,30 +1,28 @@
-import { common } from "./common.js";
+const password = document.getElementById("password");
+const confirm_password = document.getElementById("confirm_password");
 
-await showNextUserId();
-
-const addButton = document.getElementById("add");
-addButton.addEventListener("click", async (event) => {
-  event.preventDefault();
-
-  const form = document.getElementById("add_user");
-
-  const formData = new FormData(form);
-  common.disableMain();
-  const data = await fetch("/user/add", {
-    method: "POST",
-    body: formData,
-  }).then((rsp) => rsp.text());
-
-  common.updateStatus(data);
-  await showNextUserId();
-  common.enableMain();
-});
-
-async function showNextUserId() {
-  const rsp = await fetch(`/user/find/next`, {
-    method: "GET",
-  }).then((rsp) => rsp.text());
-
-  const title = document.getElementById("title");
-  title.innerHTML = `<h2>Uj Felhasznalo: ${rsp}<h2>`;
+function validatePassword() {
+  if (password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity("");
+  }
 }
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+
+document.getElementById("image").addEventListener("change", function (event) {
+  const fileInput = event.target;
+  const imagePreview = document.getElementById("book_thumbnail");
+
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      imagePreview.src = e.target.result;
+    };
+
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+});
