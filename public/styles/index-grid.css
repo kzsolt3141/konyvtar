@@ -23,9 +23,6 @@
   align-items: center;
 }
 
-.order_div {
-}
-
 /* book search section: end  */
 
 /* book list: start  */
@@ -57,7 +54,7 @@
 
 .book_div {
   display: grid;
-  height: 300px;
+  height: 100px;
   grid-template-columns: 180px 1fr;
   column-gap: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -70,7 +67,6 @@
 
 .book_details_div {
   display: grid;
-  gap: 30px;
   margin-right: 20px;
   margin-left: 20px;
 }

@@ -35,15 +35,15 @@ function bookClickCb(id) {
 
 async function searchBook(bookFormData) {
   common.disableMain();
-  const data = await fetch("/book/find/bulk", {
+  const books = await fetch("/book/search", {
     method: "POST",
     body: bookFormData,
   }).then((res) => res.json());
 
   BookData.length = 0;
 
-  if (data) {
-    BookData.push(JSON.parse(data));
+  if (books) {
+    BookData.push(JSON.parse(books));
     if (BookData.length > 0) {
       listBooks(BookData[0]);
     }
@@ -58,20 +58,14 @@ async function listBooks(books) {
 
   const avlCheck = document.getElementById("avl");
 
-  books.forEach(async function (bookObj) {
-    const book = bookObj[0];
-    const available = bookObj[1];
-
+  books.forEach(async function (book) {
+    const available = await common.bookIsAvailableById(book.id);
     if (available[0] != avlCheck.checked) return;
 
     const bookDiv = document.createElement("div");
     booksDiv.appendChild(bookDiv);
     bookDiv.id = book.id;
     bookDiv.className = "book_div";
-
-    if (!available[0]) {
-      bookDiv.style.backgroundColor = "#f0c0c0";
-    }
 
     common.showPic(book.id, book.pic, bookDiv, bookClickCb);
 
