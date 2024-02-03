@@ -30,6 +30,12 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.genre_adder_div {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .book_form_title {
   position: relative;
   text-align: center;

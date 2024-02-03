@@ -53,9 +53,22 @@
         value="<%= (!!locals.bid) ? bid :"" %>" />
 
         <div id="genre_div" class="book_form_line">
-          <label for="isbn">Típus</label>
-          <select id="genre" name="genre"></select>
+            <label for="genre">Tipus</label>
+            <select id="genre" name="genre"></select>
         </div>
+
+        <div id="genre_add_div" class="genre_adder_div" hidden>
+          <input type="text" id="add_genre_text" placeholder="Uj tipus hozzaadasa"/>
+          <div>
+            <button type="button" id="submit_add_genre" class="general_button">
+              <img src="/styles/static/ok.svg" class="general_button_icon" />
+            </button>
+            <button type="button" id="cancel_add_genre" class="general_button">
+              <img src="/styles/static/x.svg" class="general_button_icon" />
+            </button>
+          </div>
+        </div>
+
         <div class="book_form_line">
           <label for="isbn">ISBN</label>
           <input type="text" id="isbn" name="isbn" placeholder="ISBN"
@@ -127,6 +140,5 @@
     <div class="version" id="version"></div>
   </body>
 
-  <script type="module" src="/scripts/genre.js"></script>
   <script type="module" src="/scripts/book.js"></script>
 </html>

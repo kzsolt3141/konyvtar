@@ -1,5 +1,3 @@
-import { fillGenreSelect, getGenreValue } from "./genre.js";
-
 import { lendBook } from "./lend.js";
 
 import { common } from "./common.js";
