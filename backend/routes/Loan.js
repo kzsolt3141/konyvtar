@@ -30,7 +30,12 @@ router.post("/add", upload.none(), (req, res) => {
   }
 });
 
-router.get("/:id?", async (req, res) => {
+router.get("/available/:id", async (req, res) => {
+  result = await database.bookIsAvailable(req.params.id);
+  res.json(result);
+});
+
+router.get("/:id", async (req, res) => {
   if (req.params.id.includes("bid=")) {
     id = req.params.id.split("bid=")[1];
     result = await database.getLoansByBookId(id);
