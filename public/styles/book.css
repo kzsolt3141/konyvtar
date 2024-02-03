@@ -49,3 +49,29 @@
   border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+/* book extanded details */
+
+.book_xt {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  align-items: center;
+  text-align: center;
+}
+.book_notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  text-align: center;
+
+  border: 2px solid darkgreen;
+}
+
+.book_loan {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  text-align: center;
+
+  border: 2px solid darkgreen;
+}

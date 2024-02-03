@@ -3,8 +3,9 @@
   <head>
     <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="/styles/common.css" />
-
     <link rel="stylesheet" href="/styles/book.css" />
+
+    <meta id="bid" name="bid" content="<%= (!!locals.bid) ? bid : '' %>" />
   </head>
   <body>
     <div class="fixed_header">
@@ -115,6 +116,11 @@
       </form>
       <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>"
         id="book_thumbnail" class="book_thumbnail">
+    </div>
+
+    <div id="book_xt" class="book_xt">
+      <div id="book_notes" class="book_notes"></div>
+      <div id="book_loan" class="book_loan"></div>
     </div>
 
     <div id="global_status" class="global_status"><%=(!!locals.message) ? message : "" %></div>
