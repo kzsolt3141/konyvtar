@@ -87,12 +87,6 @@ async function findBookHandler(req, res) {
 }
 
 //----------------------------------------------------------------
-router.post("/change", upload.single("image"), (req, res) => {
-  //TODO see .route("/:id?") merge with it!
-  database.updateBook(req, res);
-});
-
-//----------------------------------------------------------------
 
 router.post("/genres/:genre?", upload.none(), (req, res) => {
   if (req.params.genre) {
@@ -103,8 +97,9 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
 });
 
 //----------------------------------------------------------------
+
 router
-  .route("/:id?")
+  .route("/:id")
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
 
@@ -131,25 +126,7 @@ router
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     var message = "";
     var bid = "/book/";
-    if (isNaN(req.params.id)) {
-      try {
-        message = await database.registerBook(req);
-      } catch (err) {
-        message = err.message;
-        if (req.file) {
-          fs.unlink(
-            path.join(__dirname, "../../uploads", req.file.filename),
-            (err) => {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("deleted:", req.file.filename);
-              }
-            }
-          );
-        }
-      }
-    } else {
+    if (!isNaN(req.params.id)) {
       try {
         message = await database.editBook(req.body, req.file);
       } catch (err) {
@@ -157,8 +134,37 @@ router
       }
       bid += req.params.id;
     }
-    //TODO redirect is not enough, should do someting with message instead
     res.redirect(bid);
+  });
+
+router
+  .route("/")
+  .get(p.checkAuthAdmin, async (req, res) => {
+    const nextBookId = await database.getNextBookId();
+    res.render("book", { bid: nextBookId });
+  })
+  .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
+    const nextBookId = await database.getNextBookId();
+    var message = "";
+    try {
+      message = await database.registerBook(req);
+    } catch (err) {
+      message = err.message;
+      if (req.file) {
+        fs.unlink(
+          path.join(__dirname, "../../uploads", req.file.filename),
+          (err) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("deleted:", req.file.filename);
+            }
+          }
+        );
+      }
+    }
+
+    res.render("book", { message: message, bid: nextBookId + 1 });
   });
 
 module.exports = router;

@@ -29,7 +29,7 @@ bookSearchBtn.addEventListener("click", async (event) => {
 
 function bookClickCb(id) {
   common.disableMain();
-  window.location.href = `/book/full/${id}`;
+  window.location.href = `/book/${id}`;
   common.enableMain();
 }
 
