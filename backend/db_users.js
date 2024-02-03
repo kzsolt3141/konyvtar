@@ -194,20 +194,6 @@ function getLendedBooks(id, res) {
   });
 }
 
-//----------------------------------------------------------------
-function updateUser(req, res) {
-  switch (req.body.update) {
-    case "bulk":
-      editUser(req, res);
-      break;
-    case "status":
-      toggleUserStatus(req.body, res);
-      break;
-    default:
-      res.json(`unknown instruction: ${body.update}`);
-  }
-}
-
 function toggleUserStatus(body, res) {
   sql = `
   UPDATE users 
@@ -231,34 +217,53 @@ function toggleUserStatus(body, res) {
   });
 }
 
-function editUser(req, res) {
-  const body = req.body;
-  var file = null;
-  if (req.file != null) {
-    file = req.file.filename;
-  }
-
-  sql = `UPDATE users 
-  SET 
-  name = ?,
-  address = ?,
-  phone = ?,
-  mail = ?,
-  pic = COALESCE(?, pic)
-  WHERE id = ?`;
-  db_.run(
-    sql,
-    [body.name, body.address, body.phone, body.mail, file, body.id],
-    (err) => {
-      if (err) {
-        res.json(err.message);
-        return;
-      }
-      const currentDate = new Date();
-      registerUserNotes(body.id, currentDate, body.notes);
-      res.json(`User ${body.name} modified successfully`);
+function editUser(body, file) {
+  return new Promise((resolve, reject) => {
+    if (body == null) {
+      reject("empty body");
+      return;
     }
-  );
+
+    var fileName = null;
+    if (file != null) {
+      fileName = file.filename;
+    }
+
+    sql = `UPDATE users 
+      SET 
+        name = ?,
+        email = ?,
+        password = COALESCE(?, password),
+        address = ?,
+        phone = ?,
+        birth_date = ?,
+        occupancy = ?,
+        pic = COALESCE(?, pic)
+      WHERE id = ?`;
+    db_.run(
+      sql,
+      [
+        body.name,
+        body.email,
+        body.password,
+        body.address,
+        body.phone,
+        body.birth_date,
+        body.occupancy,
+        file,
+        body.id,
+      ],
+      (err) => {
+        if (err) {
+          reject(err.message);
+          return;
+        }
+        const currentDate = new Date();
+        registerUserNotes(body.id, currentDate, body.notes);
+        resolve(`User ${body.name} modified successfully`);
+      }
+    );
+  });
 }
 
 module.exports = {
@@ -269,6 +274,6 @@ module.exports = {
   getUserById: getUserById,
   getUserByEmail: getUserByEmail,
   getLendedBooks: getLendedBooks,
-  updateUser: updateUser,
   getNextUserId: getNextUserId,
+  editUser: editUser,
 };
