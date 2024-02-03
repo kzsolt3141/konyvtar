@@ -141,8 +141,6 @@ router
       req.body.password = await bcrypt.hash(req.body.password, 10);
     } else req.body.password = null;
 
-    console.log(req.body);
-
     if (isNaN(req.params.id)) {
       res.redirect("/");
     } else if (req.params.id == req.user.id || req.user.admin == 1) {
