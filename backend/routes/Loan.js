@@ -4,7 +4,7 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
-const database = require("../common.js");
+const database = require("../db_loan.js");
 //----------------------------------------------------------------
 const router = express.Router();
 

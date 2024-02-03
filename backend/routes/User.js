@@ -42,31 +42,6 @@ router
     res.json("logout");
   });
 
-router
-  .route("/register")
-  .get((req, res) => {
-    res.render("user_register");
-  })
-  .post(upload.single("image"), async (req, res) => {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-    db_users
-      .registerUser(req.body, req.file)
-      .then((message) => {
-        res.json(message);
-      })
-      .catch((err) => {
-        if (req.file) {
-          fs.unlink(
-            path.join(__dirname, "../../uploads", req.file.filename),
-            (err) => {
-              if (err) console.log(err.message);
-            }
-          );
-        }
-        res.json(err);
-      });
-  });
-
 //----------------------------------------------------------------
 router
   .route("/find/:search?")
@@ -134,5 +109,51 @@ async function findUserHandler(req, res) {
 router.post("/edit", upload.single("image"), (req, res) => {
   db_users.updateUser(req, res);
 });
+
+//----------------------------------------------------------------
+router
+  .route("/:id?")
+  .get(async (req, res) => {
+    const nextUserId = await db_users.getNextUserId();
+
+    if (
+      isNaN(req.params.id) ||
+      req.user == null ||
+      req.params.id == req.user.id
+    ) {
+      res.render("user");
+    } else if (req.params.id < nextUserId) {
+      const user = await db_users.getUserById(req.params.id);
+      res.render("user", {
+        uid: user.id,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        phone: user.phone,
+        birth_date: user.birth_date,
+        occupancy: user.occupancy,
+        pic: user.pic,
+      });
+    }
+  })
+  .post(upload.single("image"), async (req, res) => {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+    db_users
+      .registerUser(req.body, req.file)
+      .then((message) => {
+        res.json(message);
+      })
+      .catch((err) => {
+        if (req.file) {
+          fs.unlink(
+            path.join(__dirname, "../../uploads", req.file.filename),
+            (err) => {
+              if (err) console.log(err.message);
+            }
+          );
+        }
+        res.json(err);
+      });
+  });
 
 module.exports = router;

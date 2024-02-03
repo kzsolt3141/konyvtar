@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Berecki könyvtár</title>
+    <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/book.css" />
+
+    <meta id="uid" name="uid" content="<%= (!!locals.uid) ? uid : '' %>" />
+  </head>
+  <body>
+    <div class="fixed_header">
+      <div class="fixed_header_left">
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
+      </div>
+      <div class="fixed_header_center">
+        <h1 class="fixed_header_title">Berecki könyvtár</h1>
+      </div>
+    </div>
+
+    <div class="book_form_container">
+      <form 
+        action=<%= (!!locals.uid) ? "/book/"+ uid : "/book" %>
+        method="POST" class="book_form_div" enctype="multipart/form-data" >
+        <div id="title" class="book_form_line">
+          <h2>Felhasznalo</h2>
+        </div>
+
+        <input type="hidden" id="id" name="id" 
+        value="<%= (!!locals.uid) ? uid :"" %>" />
+
+        <div class="book_form_line">
+          <label for="name">Nev</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Teljes Nev"
+            value="<%= (!!locals.name) ? name :"" %>"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="email">e-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your@email.please"
+            value="<%=(!!locals.email) ? email : "" %>"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="password">Jelszo</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Jelszó"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="confirm_password">Jelszo ujra</label>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="Jelszó ujra"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="address">Cim</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            placeholder="Cim"
+            value="<%=(!!locals.address) ? address : "" %>"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="phone">Tel</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="0123456789"
+            value="<%=(!!locals.phone) ? phone : "" %>"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="occupancy">Foglalkozas</label>
+          <input
+            type="text"
+            id="occupancy"
+            name="occupancy"
+            placeholder="Fogalkozas"
+            value="<%=(!!locals.occupancy) ? occupancy : "" %>"
+            required
+          />
+        </div>
+
+        <div class="book_form_line">
+          <label for="birth_date">Szuletesi ev</label>
+          <input 
+            type="date" 
+            id="birth_date" 
+            name="birth_date" 
+            value="<%=(!!locals.birth_date) ? birth_date : "" %>" 
+            required />
+        </div>
+
+        <div class="book_form_line">
+          <label for="image">Kep feltoltese</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+
+        <div class="book_form_line">
+          <button
+            onclick="window.location.href='/user/login'"
+            type="button"
+            class="general_button"
+          >
+            <img src="/styles/static/user.svg" id="register" />
+          </button>
+
+          <button type="submit" class="general_button">
+            <img src="/styles/static/ok.svg" id="login" />
+          </button>
+        </div>
+      </form>
+      <img src="<%=(!!locals.pic && pic!="") ? "/"+pic :
+      "/styles/static/default_book.png" %>" id="book_thumbnail"
+      class="book_thumbnail">
+    </div>
+
+    <div class="global_status" id="global_status"></div>
+
+    <div class="version" id="version"></div>
+  </body>
+
+  <script type="module" src="/scripts/user_register.js"></script>
+</html>
