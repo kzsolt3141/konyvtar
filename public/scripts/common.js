@@ -161,6 +161,14 @@ function showPic(id, pic, place, cb) {
   picDiv.appendChild(img);
 }
 
+async function bookIsAvailableById(bid) {
+  const rsp = await fetch(`/loan/available/${bid}`, {
+    method: "GET",
+  });
+  const available = await rsp.json();
+  return available;
+}
+
 async function getBookById(bid) {
   const rsp = await fetch(`/book/find/id=${bid}`, {
     method: "GET",
@@ -267,6 +275,7 @@ export const common = {
   disableMain,
   enableMain,
   showPic,
+  bookIsAvailableById,
   getBookById,
   getBookNotesById,
   getUserById,

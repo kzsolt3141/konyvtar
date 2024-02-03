@@ -24,11 +24,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
+router.route("/search").post(upload.none(), async (req, res) => {
+  console.log("searching book:", req.body);
+  const books = await database.findBook(req.body);
+  res.json(JSON.stringify(books));
+});
+
 router
-  .route("/find/:search?")
+  .route("/find/:search")
   .post(upload.none(), (req, res) => {
     if (req.params.search == "bulk") {
-      findBookHandler(req, res);
+      // findBookHandler(req, res);
     } else if (req.params.search == "table") {
       database.getAllBooks(req.body, res);
     } else {
@@ -58,33 +64,6 @@ router
       res.json("HIBA");
     }
   });
-
-async function findBookHandler(req, res) {
-  try {
-    const books = await database.findBook(req.body);
-    result = [];
-
-    const bookPromises = books.map(async function (book) {
-      try {
-        const notes = await database.getBookNotesById(book.id);
-        const available = await database.bookIsAvailable(book.id);
-        return [book, available, ...notes];
-      } catch (err) {
-        throw err; // or handle the error as needed
-      }
-    });
-
-    Promise.all(bookPromises)
-      .then((result) => {
-        res.json(JSON.stringify(result));
-      })
-      .catch((err) => {
-        res.json(err);
-      });
-  } catch (err) {
-    res.json(err);
-  }
-}
 
 //----------------------------------------------------------------
 
