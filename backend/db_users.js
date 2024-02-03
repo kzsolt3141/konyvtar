@@ -250,7 +250,7 @@ function editUser(body, file) {
         body.phone,
         body.birth_date,
         body.occupancy,
-        file,
+        fileName,
         body.id,
       ],
       (err) => {
