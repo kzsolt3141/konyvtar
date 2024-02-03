@@ -1,9 +1,5 @@
 //import genre related functions
-import { fillGenreSelect } from "./genre.js";
 import { common } from "./common.js";
-
-//create genre selection drop-down
-fillGenreSelect(document.getElementById("genre"));
 
 document.getElementById("image").addEventListener("change", function (event) {
   const fileInput = event.target;
@@ -46,3 +42,68 @@ if (element) {
     });
   }
 }
+
+//----------------------------------------------------------------
+fillGenreSelect(document.getElementById("genre"));
+const addGenreDiv = document.getElementById("genre_add_div");
+
+function fillGenreSelect(selector) {
+  if (!selector) return;
+
+  selector.innerHTML = "";
+  selector.addEventListener("change", () => {
+    if (selector.value === "+") addGenreDiv.style.display = "block";
+  });
+
+  fetch("/book/genres", {
+    method: "POST",
+  })
+    .then((rsp) => rsp.text())
+    .then((data) => {
+      JSON.parse(data).forEach((opt, idx) => {
+        const option = document.createElement("option");
+        option.value = opt["genre"];
+        option.text = opt["genre"];
+        selector.add(option);
+      });
+      const option = document.createElement("option");
+      option.value = "+";
+      option.text = "+";
+      selector.add(option);
+    });
+}
+
+// a selected genre is valid if it is not "+" or "down"
+function genreSelectIsValid(selector) {
+  if (!selector) return false;
+  if (selector.value === "+" || selector.value === "down") return false;
+
+  return true;
+}
+
+const input = document.getElementById("add_genre_text");
+const addButton = document.getElementById("submit_add_genre");
+const cancelButton = document.getElementById("cancel_add_genre");
+
+addButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  if (input.value.trim() === "") {
+    console.log("Input field empty");
+    return;
+  }
+  common.disableMain();
+
+  fetch("/book/genres/" + input.value, {
+    method: "POST",
+  })
+    .then((rsp) => rsp.text())
+    .then((data) => {
+      common.enableMain();
+      addGenreDiv.style.display = "none";
+      fillGenreSelect(document.getElementById("genre"));
+    });
+});
+
+cancelButton.addEventListener("click", function (event) {
+  addGenreDiv.style.display = "none";
+});
