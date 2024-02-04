@@ -33,7 +33,7 @@ function bookClickCb(id) {
 
 async function searchBook(bookFormData) {
   common.disableMain();
-  const books = await fetch("/book/search", {
+  const books = await fetch("/book/details", {
     method: "POST",
     body: bookFormData,
   }).then((res) => res.json());
@@ -41,7 +41,7 @@ async function searchBook(bookFormData) {
   BookData.length = 0;
 
   if (books) {
-    BookData.push(JSON.parse(books));
+    BookData.push(books);
     if (BookData.length > 0) {
       listBooks(BookData[0]);
     }
