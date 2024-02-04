@@ -39,8 +39,8 @@ router
   .route("/details/:id?")
   .get(async (req, res) => {
     const nextBookId = await database.getNextBookId();
-    if (isNaN(req.params.search) || req.params.search >= nextBookId) {
-      res.json(`hiba a ${req.params.search} keresese kozben`);
+    if (isNaN(req.params.id) || req.params.id >= nextBookId) {
+      res.json(`hiba a ${req.params.id} keresese kozben`);
     }
 
     try {
@@ -124,10 +124,12 @@ router
 //----------------------------------------------------------------
 router
   .route("/")
+  // GET: require page to add new book to the database
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
     res.render("book", { bid: nextBookId });
   })
+  // POST: upload new book data to the database
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     const nextBookId = await database.getNextBookId();
     var message = "";

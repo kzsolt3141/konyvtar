@@ -26,3 +26,50 @@ document.getElementById("image").addEventListener("change", function (event) {
     reader.readAsDataURL(fileInput.files[0]);
   }
 });
+
+//TODO finish the implementation
+const element = document.getElementById("uid");
+if (element) {
+  const uid = element.getAttribute("content");
+  if (uid != "") {
+    const userNotes = await common.getUserkNotesById(uid);
+    const loans = await common.getLoanByUid(uid);
+
+    const userNotesText = document.getElementById("user_notes");
+    userNotes.forEach((userNote) => {
+      for (const k in userNote) {
+        const e = document.createElement("p");
+        e.textContent = userNote[k];
+        userNotesText.appendChild(e);
+      }
+    });
+
+    const userLoanText = document.getElementById("user_loan");
+    loans.forEach((loan) => {
+      for (const k in loan) {
+        const e = document.createElement("p");
+        e.textContent = loan[k];
+        userLoanText.appendChild(e);
+      }
+    });
+  }
+}
+
+//TODO finish the implementation
+async function toggleStatus(id) {
+  const changeForm = new FormData();
+  changeForm.append("update", "status");
+  changeForm.append("notes", e.value);
+
+  common.disableMain();
+
+  fetch("/user/" + book.id, {
+    method: "PUT",
+    body: changeForm,
+  }).then((rsp) =>
+    rsp.json().then((data) => {
+      common.updateStatus(data);
+      common.enableMain();
+    })
+  );
+}

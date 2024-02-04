@@ -21,7 +21,7 @@ if (element) {
   const bid = element.getAttribute("content");
   if (bid != "") {
     const bookNotes = await common.getBookNotesById(bid);
-    const loans = await common.getLoanById(bid);
+    const loans = await common.getLoanByBid(bid);
 
     const bookNotesText = document.getElementById("book_notes");
     bookNotes.forEach((bookNote) => {
@@ -43,7 +43,7 @@ if (element) {
   }
 }
 
-//TODO this should be implemented in book.js
+//TODO finish the implementation
 async function toggleStatus(id) {
   const changeForm = new FormData();
   changeForm.append("update", "status");
