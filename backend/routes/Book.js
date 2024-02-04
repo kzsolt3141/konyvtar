@@ -29,6 +29,7 @@ router.route("/search").post(upload.none(), async (req, res) => {
   res.json(JSON.stringify(books));
 });
 
+//----------------------------------------------------------------
 router
   .route("/table")
   .get(async (req, res) => {
@@ -39,6 +40,8 @@ router
     res.json(JSON.stringify(books));
   });
 
+//----------------------------------------------------------------
+//TODO fix this
 router
   .route("/find/:search")
   .post(upload.none(), (req, res) => {
@@ -85,7 +88,6 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
 });
 
 //----------------------------------------------------------------
-
 router
   .route("/:id")
   .get(p.checkAuthAdmin, async (req, res) => {
@@ -124,7 +126,9 @@ router
     }
     res.redirect(bid);
   });
+//TODO add toggle status as a PUT method here
 
+//----------------------------------------------------------------
 router
   .route("/")
   .get(p.checkAuthAdmin, async (req, res) => {
