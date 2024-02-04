@@ -223,7 +223,7 @@ if (addBookBtn) {
 const bookTableBtn = document.getElementById("book_table_btn");
 if (bookTableBtn) {
   bookTableBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book_table";
+    window.location.href = "/book/table";
   });
 }
 

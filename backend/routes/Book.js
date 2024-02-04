@@ -25,10 +25,19 @@ const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
 router.route("/search").post(upload.none(), async (req, res) => {
-  console.log("searching book:", req.body);
   const books = await database.findBook(req.body);
   res.json(JSON.stringify(books));
 });
+
+router
+  .route("/table")
+  .get(async (req, res) => {
+    res.render("book_table", {});
+  })
+  .post(upload.none(), async (req, res) => {
+    const books = await database.getAllBooks(req.body);
+    res.json(JSON.stringify(books));
+  });
 
 router
   .route("/find/:search")
