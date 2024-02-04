@@ -34,13 +34,13 @@ function getCurrentDate() {
 }
 
 function reorderData(dataArr, prop, cb = null) {
-  if (!dataArr[0]) return;
+  if (!dataArr) return;
 
   const data = dataArr[0];
   //TODO use uppercase for not INT data
   data.sort((a, b) => {
-    const propA = a[0][prop];
-    const propB = b[0][prop];
+    const propA = a[prop];
+    const propB = b[prop];
 
     if (propA < propB) {
       return -1;
@@ -53,30 +53,6 @@ function reorderData(dataArr, prop, cb = null) {
     return 0;
   });
   if (cb) cb(data);
-}
-
-function initDetailDiv(place, okFunction, title = "") {
-  place.innerHTML = "";
-  const h2 = document.createElement("h2");
-  h2.className = "detail_title";
-  h2.textContent = title;
-  place.appendChild(h2);
-
-  const okButton = document.createElement("img");
-  place.appendChild(okButton);
-  okButton.src = "styles/static/ok.svg";
-  okButton.className = "ok_btn";
-  okButton.addEventListener("click", function () {
-    okFunction(place);
-  });
-
-  const cancelButton = document.createElement("img");
-  place.appendChild(cancelButton);
-  cancelButton.src = "styles/static/x.svg";
-  cancelButton.className = "cancel_btn";
-  cancelButton.addEventListener("click", function () {
-    place.innerHTML = "";
-  });
 }
 
 function updateStatus(data) {
@@ -269,7 +245,6 @@ export const common = {
   UserLabelNames,
   getCurrentDate,
   reorderData,
-  initDetailDiv,
   updateStatus,
   showVersion,
   disableMain,

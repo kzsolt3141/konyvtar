@@ -43,6 +43,25 @@ if (element) {
   }
 }
 
+//TODO this should be implemented in book.js
+async function toggleStatus(id) {
+  const changeForm = new FormData();
+  changeForm.append("update", "status");
+  changeForm.append("notes", e.value);
+
+  common.disableMain();
+
+  fetch("/book/" + book.id, {
+    method: "PUT",
+    body: changeForm,
+  }).then((rsp) =>
+    rsp.json().then((data) => {
+      common.updateStatus(data);
+      common.enableMain();
+    })
+  );
+}
+
 //----------------------------------------------------------------
 fillGenreSelect(document.getElementById("genre"));
 const addGenreDiv = document.getElementById("genre_add_div");
@@ -71,14 +90,6 @@ function fillGenreSelect(selector) {
       option.text = "+";
       selector.add(option);
     });
-}
-
-// a selected genre is valid if it is not "+" or "down"
-function genreSelectIsValid(selector) {
-  if (!selector) return false;
-  if (selector.value === "+" || selector.value === "down") return false;
-
-  return true;
 }
 
 const input = document.getElementById("add_genre_text");
