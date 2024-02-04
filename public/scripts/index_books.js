@@ -1,12 +1,5 @@
 import { common } from "./common.js";
 
-const detailsDiv = document.getElementById("details_div");
-function clearPlace(place) {
-  place.innerHTML = "";
-}
-
-const bookSearchBtn = document.getElementById("search_books_btn");
-
 const BookData = [];
 
 common.createOrderingSelector(
@@ -18,12 +11,15 @@ common.createOrderingSelector(
   listBooks
 );
 
-bookSearchBtn.addEventListener("click", async (event) => {
-  event.preventDefault();
-  const bookForm = document.getElementById("search_books");
-  const bookFormData = new FormData(bookForm);
-  searchBook(bookFormData);
-});
+const bookSearchBtn = document.getElementById("search_books_btn");
+if (bookSearchBtn) {
+  bookSearchBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const bookForm = document.getElementById("search_books");
+    const bookFormData = new FormData(bookForm);
+    searchBook(bookFormData);
+  });
+}
 
 function bookClickCb(id) {
   common.disableMain();

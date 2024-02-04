@@ -44,75 +44,45 @@ router
 
 //----------------------------------------------------------------
 router
-  .route("/find/:search?")
-  .post(upload.none(), (req, res) => {
-    if (req.params.search == "bulk") {
-      findUserHandler(req, res);
-    } else {
-      res.json("HIBA");
+  .route("/details/:id?")
+  .get(async (req, res) => {
+    const nextUserId = await db_users.getNextUserId();
+    if (isNaN(req.params.id) || req.params.id >= nextUserId) {
+      res.json(`hiba a ${req.params.id} keresese kozben`);
+    }
+
+    try {
+      const user = await db_users.getUserById(id);
+      res.json(user);
+    } catch (err) {
+      res.json(err);
     }
   })
-  .get(async (req, res) => {
-    if (req.params.search.startsWith("id=")) {
-      id = req.params.search.split("id=")[1];
-      try {
-        const user = await db_users.getUserById(id);
-        res.json(user);
-      } catch (err) {
-        res.json(err.message);
-      }
-    } else if (req.params.search.startsWith("nid=")) {
-      id = req.params.search.split("nid=")[1];
-      try {
-        const userNotes = await db_users.getUserNotesById(id);
-        res.json(userNotes);
-      } catch (err) {
-        res.json(err.message);
-      }
-    } else if (req.params.search.includes("loan=")) {
-      id = req.params.search.split("loan=")[1];
-      db_users.getLendedBooks(id, res);
-    } else if (req.params.search == "next") {
-      db_users.getNextUserId(res);
-    } else {
-      res.json("HIBA");
-    }
+  .post(upload.none(), async (req, res) => {
+    const users = await db_users.findUser(req.body);
+    res.json(users);
   });
 
-async function findUserHandler(req, res) {
+//----------------------------------------------------------------
+router.route("/notes/:id").get(async (req, res) => {
+  const nextUserId = await db_users.getNextUserId();
+  if (isNaN(req.params.id) || req.params.id >= nextUserId) {
+    res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
+    return;
+  }
+
   try {
-    const users = await db_users.findUser(req.body);
-    result = [];
-
-    const userPromises = users.map(async function (user) {
-      try {
-        const notes = await db_users.getUserNotesById(user.id);
-        return [user, ...notes];
-      } catch (err) {
-        throw err; // or handle the error as needed
-      }
-    });
-
-    Promise.all(userPromises)
-      .then((result) => {
-        res.json(JSON.stringify(result));
-      })
-      .catch((err) => {
-        res.json(err);
-      });
+    const notes = await db_users.getUserNotesById(req.params.id);
+    res.json(notes);
   } catch (err) {
     res.json(err);
   }
-}
-
-//----------------------------------------------------------------
-router.post("/edit", upload.single("image"), (req, res) => {
-  db_users.updateUser(req, res);
 });
 
 //----------------------------------------------------------------
 router
   .route("/:id")
+  // GET: require page to show used information (ID)
   .get(p.checkAuthenticated, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
 
@@ -136,6 +106,7 @@ router
       res.redirect("/");
     }
   })
+  // POST: update user information
   .post(p.checkAuthenticated, upload.single("image"), async (req, res) => {
     if (req.body.password != "") {
       req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -151,12 +122,15 @@ router
       res.redirect("/");
     }
   });
+//TODO add toggle status as a PUT method here
 
 router
   .route("/")
+  // GET: require page to add new user to the database
   .get(async (req, res) => {
     res.render("user");
   })
+  // POST: upload new user data to the database
   .post(upload.single("image"), async (req, res) => {
     req.body.password = await bcrypt.hash(req.body.password, 10);
     db_users
