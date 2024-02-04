@@ -146,7 +146,7 @@ async function bookIsAvailableById(bid) {
 }
 
 async function getBookById(bid) {
-  const rsp = await fetch(`/book/find/id=${bid}`, {
+  const rsp = await fetch(`/book/details/${bid}`, {
     method: "GET",
   });
   const book = await rsp.json();
@@ -154,7 +154,7 @@ async function getBookById(bid) {
 }
 
 async function getBookNotesById(bid) {
-  const rsp = await fetch(`/book/find/nid=${bid}`, {
+  const rsp = await fetch(`/book/notes/${bid}`, {
     method: "GET",
   });
   const bookNotes = await rsp.json();

@@ -24,12 +24,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
-router.route("/search").post(upload.none(), async (req, res) => {
-  const books = await database.findBook(req.body);
-  res.json(JSON.stringify(books));
-});
-
-//----------------------------------------------------------------
 router
   .route("/table")
   .get(async (req, res) => {
@@ -41,42 +35,41 @@ router
   });
 
 //----------------------------------------------------------------
-//TODO fix this
 router
-  .route("/find/:search")
-  .post(upload.none(), (req, res) => {
-    if (req.params.search == "bulk") {
-      // findBookHandler(req, res);
-    } else if (req.params.search == "table") {
-      database.getAllBooks(req.body, res);
-    } else {
-      res.json("HIBA");
+  .route("/details/:id?")
+  .get(async (req, res) => {
+    const nextBookId = await database.getNextBookId();
+    if (isNaN(req.params.search) || req.params.search >= nextBookId) {
+      res.json(`hiba a ${req.params.search} keresese kozben`);
+    }
+
+    try {
+      const book = await database.getBookById(id);
+      res.json(book);
+    } catch (err) {
+      res.json(err);
     }
   })
-  .get(async (req, res) => {
-    if (req.params.search.startsWith("id=")) {
-      id = req.params.search.split("id=")[1];
-      try {
-        const book = await database.getBookById(id);
-        res.json(book);
-      } catch (err) {
-        res.json(err.message);
-      }
-    } else if (req.params.search.startsWith("nid=")) {
-      id = req.params.search.split("nid=")[1];
-      try {
-        const bookNotes = await database.getBookNotesById(id);
-        res.json(bookNotes);
-      } catch (err) {
-        res.json(err.message);
-      }
-    } else if (req.params.search == "next") {
-      database.getNextBookId(res);
-    } else {
-      res.json("HIBA");
-    }
+  .post(upload.none(), async (req, res) => {
+    const books = await database.findBook(req.body);
+    res.json(books);
   });
 
+//----------------------------------------------------------------
+router.route("/notes/:id").get(async (req, res) => {
+  const nextBookId = await database.getNextBookId();
+  if (isNaN(req.params.id) || req.params.id >= nextBookId) {
+    res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
+    return;
+  }
+
+  try {
+    const notes = await database.getBookNotesById(req.params.id);
+    res.json(notes);
+  } catch (err) {
+    res.json(err);
+  }
+});
 //----------------------------------------------------------------
 
 router.post("/genres/:genre?", upload.none(), (req, res) => {
