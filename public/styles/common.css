@@ -167,8 +167,7 @@ button {
 
 .thumbnail:hover {
   transform: scale(2);
-  transform-origin: center left;
-  margin-left: auto;
+  transform-origin: center center;
 }
 
 .tooltip {
