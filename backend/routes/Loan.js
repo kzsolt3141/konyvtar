@@ -2,7 +2,6 @@
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
-const fs = require("fs");
 
 const database = require("../db_loan.js");
 //----------------------------------------------------------------
@@ -35,12 +34,27 @@ router.get("/available/:id", async (req, res) => {
   res.json(result);
 });
 
-router.get("/:id", async (req, res) => {
-  if (req.params.id.includes("bid=")) {
-    id = req.params.id.split("bid=")[1];
-    result = await database.getLoansByBookId(id);
-    res.json(result);
+router.get("/book/:id", async (req, res) => {
+  // TODO check param is valid
+  if (isNaN(req.params.id)) {
+    res.json("Hiba tortet");
+    return;
   }
+
+  result = await database.getLoanByBookId(id);
+  res.json(result);
+});
+
+router.get("/user/:id", async (req, res) => {
+  // TODO check param is valid
+  // TODO see: db_users.getLendedBooks(id, res);
+  if (isNaN(req.params.id)) {
+    res.json("Hiba tortet");
+    return;
+  }
+
+  result = await database.getLoanByUserId(id);
+  res.json(result);
 });
 
 module.exports = router;

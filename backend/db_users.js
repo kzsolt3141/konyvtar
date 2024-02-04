@@ -98,7 +98,7 @@ async function findUser(body) {
   key = body.key.trim();
   const status = body.status == "on" ? 1 : 0;
   const sql = `
-    SELECT id, name, address, phone, mail, pic, status
+    SELECT id, name, address, phone, email, pic, status
     FROM users
     WHERE 
       LOWER(${body.type}) LIKE LOWER(?) 

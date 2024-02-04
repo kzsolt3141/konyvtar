@@ -19,7 +19,7 @@ const UserLabelNames = {
   name: "Nev:",
   address: "Cim:",
   phone: "Telefonszam:",
-  mail: "E-Mail:",
+  email: "E-Mail:",
   status: "Allapot:",
   notes: "Megjegyzesek:",
 };
@@ -170,8 +170,17 @@ async function getUserById(bid) {
   return book;
 }
 
-async function getLoanById(uid) {
-  const rsp = await fetch(`/loan/bid=${uid}`, {
+async function getLoanByUid(uid) {
+  const rsp = await fetch(`/loan/user/${uid}`, {
+    method: "GET",
+  });
+  const loan = await rsp.json();
+
+  return loan;
+}
+
+async function getLoanByBid(uid) {
+  const rsp = await fetch(`/loan/book/${uid}`, {
     method: "GET",
   });
   const loan = await rsp.json();
@@ -254,6 +263,7 @@ export const common = {
   getBookById,
   getBookNotesById,
   getUserById,
-  getLoanById,
+  getLoanByBid,
+  getLoanByUid,
   createOrderingSelector,
 };

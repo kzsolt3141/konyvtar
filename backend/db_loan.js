@@ -95,7 +95,7 @@ async function bring(body, rsp) {
   }
 }
 
-async function getLoansByBookId(bid) {
+async function getLoanByBookId(bid) {
   return new Promise((resolve, reject) => {
     sql = `
     SELECT loan.lend_date, users.name, loan.lend_notes, loan.back_date, loan.back_notes
@@ -117,5 +117,5 @@ module.exports = {
   lend: lend,
   bring: bring,
   bookIsAvailable: bookIsAvailable,
-  getLoansByBookId: getLoansByBookId,
+  getLoanByBookId: getLoanByBookId,
 };
