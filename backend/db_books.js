@@ -149,7 +149,7 @@ async function findBook(body) {
   });
 }
 
-function getAllBooks(body, res) {
+function getAllBooks(body) {
   order = body.order;
   offset = body.offset * 50;
 
@@ -159,14 +159,15 @@ function getAllBooks(body, res) {
   //TODO add this when paging is ready
   // LIMIT 50
   // OFFSET ${offset}`;
-
-  db_.all(sql, (err, rows) => {
-    if (err) {
-      console.log(err.message);
-      res.json("Hiba!");
-      return;
-    }
-    res.json(rows);
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        console.log(err.message);
+        reject("Hiba!");
+        return;
+      }
+      resolve(rows);
+    });
   });
 }
 

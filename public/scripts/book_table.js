@@ -6,10 +6,12 @@ const bookFormData = new FormData();
 bookFormData.append("order", "id");
 bookFormData.append("offset", 0);
 
-const data = await fetch("/book/find/table", {
+var data = await fetch("/book/table", {
   method: "POST",
   body: bookFormData,
 }).then((res) => res.json());
+
+data = JSON.parse(data);
 
 listAllBooks(data);
 
