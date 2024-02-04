@@ -69,6 +69,13 @@ async function listBooks(books) {
 
     common.showPic(book.id, book.pic, bookDiv, bookClickCb);
 
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "book_radio";
+    radio.id = book.id;
+    radio.disabled = !available[0] || book.status != 1;
+    bookDiv.appendChild(radio);
+
     const boodDetailsDiv = document.createElement("div");
     boodDetailsDiv.className = "book_details_div";
     bookDiv.appendChild(boodDetailsDiv);
@@ -77,14 +84,7 @@ async function listBooks(books) {
     firstLineDiv.className = "book_first_line";
     boodDetailsDiv.appendChild(firstLineDiv);
 
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "book_radio";
-    radio.id = book.id;
-    radio.disabled = !available[0] || book.status != 1;
-    firstLineDiv.appendChild(radio);
-
-    const firstLine = [book.title, book.author];
+    const firstLine = [book.isbn, book.title, book.author, book.genre];
 
     for (const k of firstLine) {
       const element = document.createElement("p");
@@ -93,7 +93,7 @@ async function listBooks(books) {
     }
 
     const secondLineDiv = document.createElement("div");
-    secondLineDiv.className = "book_second_line";
+    secondLineDiv.className = "book_first_line";
     boodDetailsDiv.appendChild(secondLineDiv);
 
     const secondLine = [book.publ, book.ver, book.year, book.price + " lej"];
@@ -102,44 +102,6 @@ async function listBooks(books) {
       const element = document.createElement("p");
       element.textContent = k;
       secondLineDiv.appendChild(element);
-    }
-
-    const thirdLineDiv = document.createElement("div");
-    thirdLineDiv.className = "book_third_line";
-    boodDetailsDiv.appendChild(thirdLineDiv);
-    var img = document.createElement("img");
-    img.src = "styles/static/edit.png";
-    img.className = "detail_options";
-    img.addEventListener("click", function () {
-      editBook(book);
-    });
-    thirdLineDiv.appendChild(img);
-
-    img = document.createElement("img");
-    img.src = "styles/static/details.svg";
-    img.className = "detail_options";
-    img.addEventListener("click", function () {
-      details(bookObj);
-    });
-    thirdLineDiv.appendChild(img);
-
-    img = document.createElement("img");
-    img.src = "styles/static/broken.svg";
-    img.className = "detail_options";
-    img.id = "lend_" + book.id;
-    img.addEventListener("click", function () {
-      toggleStatus(book);
-    });
-    thirdLineDiv.appendChild(img);
-
-    if (!available[0]) {
-      img = document.createElement("img");
-      img.src = "styles/static/bring.svg";
-      img.className = "detail_options";
-      img.addEventListener("click", function () {
-        lendBook(book.id, available[1], detailsDiv, false);
-      });
-      thirdLineDiv.appendChild(img);
     }
   });
 }
