@@ -2,28 +2,28 @@
 <html>
   <head>
     <title>Berecki könyvtár</title>
-    <link rel="stylesheet" href="styles/common.css" />
-    <link rel="stylesheet" href="styles/book_table.css" />
+    <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/book_table.css" />
   </head>
   <body>
     <div class="fixed_header">
       <div class="fixed_header_left">
-        <img class="fixed_header_image" src="styles/static/CIMER.png" />
+        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
       </div>
       <div class="fixed_header_center">
         <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
       <div class="fixed_header_right">
         <button class="general_button" id="main_btn">
-          <img class="general_button_icon" src="styles/static/home.svg" />
+          <img class="general_button_icon" src="/styles/static/home.svg" />
           <div class="tooltip">Főoldal</div>
         </button>
         <button class="general_button" id="add_book_btn">
-          <img class="general_button_icon" src="styles/static/book-plus.svg" />
+          <img class="general_button_icon" src="/styles/static/book-plus.svg" />
           <div class="tooltip">Új Könyv</div>
         </button>
         <button class="general_button" id="backup_btn">
-          <img class="general_button_icon" src="styles/static/backup.svg" />
+          <img class="general_button_icon" src="/styles/static/backup.svg" />
           <div class="tooltip">Backup!</div>
         </button>
       </div>
@@ -34,9 +34,9 @@
     <div id="book_table" class="book_table"></div>
 
     <div id="navi" class="navi">
-      <img class="navi_icon" src="styles/static/back.svg" />
+      <img class="navi_icon" src="/styles/static/back.svg" />
       <input class="navi_input" type="text" id="navi" name="navi" value="1" />
-      <img class="navi_icon" src="styles/static/next.svg" />
+      <img class="navi_icon" src="/styles/static/next.svg" />
     </div>
 
     <!-- TODO -->
@@ -44,5 +44,5 @@
     <div class="version" id="version"></div>
   </body>
 
-  <script type="module" src="scripts/book_table.js"></script>
+  <script type="module" src="/scripts/book_table.js"></script>
 </html>
