@@ -95,7 +95,7 @@ async function bring(body, rsp) {
   }
 }
 
-async function getLoanByBookId(bid) {
+async function getLoanByBid(bid) {
   return new Promise((resolve, reject) => {
     sql = `
     SELECT loan.lend_date, users.name, loan.lend_notes, loan.back_date, loan.back_notes
@@ -111,11 +111,29 @@ async function getLoanByBookId(bid) {
     });
   });
 }
+
+async function getLoanByUid(uid) {
+  return new Promise((resolve, reject) => {
+    sql = `
+    SELECT loan.lend_date, books.title, loan.lend_notes, loan.back_date, loan.back_notes
+    FROM loan
+    JOIN books ON loan.bid = books.bid
+    WHERE loan.uid = ?
+      `;
+    db_.all(sql, [uid], (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
 //----------------------------------------------------------------
 module.exports = {
   init: init,
   lend: lend,
   bring: bring,
   bookIsAvailable: bookIsAvailable,
-  getLoanByBookId: getLoanByBookId,
+  getLoanByBid: getLoanByBid,
+  getLoanByUid: getLoanByUid,
 };

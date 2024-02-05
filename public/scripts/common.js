@@ -163,7 +163,7 @@ async function getBookNotesById(bid) {
 }
 
 async function getUserById(bid) {
-  const rsp = await fetch(`/user/find/id=${bid}`, {
+  const rsp = await fetch(`/user/details/${bid}`, {
     method: "GET",
   });
   const book = await rsp.json();
