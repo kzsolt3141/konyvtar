@@ -44,7 +44,7 @@ router
     }
 
     try {
-      const book = await database.getBookById(id);
+      const book = await database.getBookById(req.params.id);
       res.json(book);
     } catch (err) {
       res.json(err);

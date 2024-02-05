@@ -52,7 +52,7 @@ router
     }
 
     try {
-      const user = await db_users.getUserById(id);
+      const user = await db_users.getUserById(req.params.id);
       res.json(user);
     } catch (err) {
       res.json(err);
