@@ -31,6 +31,8 @@ if (button) {
     const book = await common.getBookById(bookRadio.id);
     const user = await common.getUserById(userRadio.id);
 
+    console.log(book, user);
+
     const bookTitle = book.title;
     const userName = user.name;
     info.textContent = userName + " kikolcsonzi " + bookTitle + " konyvet";
