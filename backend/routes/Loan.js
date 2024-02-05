@@ -20,15 +20,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-//----------------------------------------------------------------
-router.post("/add", upload.none(), (req, res) => {
-  if (req.body.type == "true") {
-    database.lend(req.body, res);
-  } else {
-    database.bring(req.body, res);
-  }
-});
-
 router.get("/available/:id", async (req, res) => {
   result = await database.bookIsAvailable(req.params.id);
   res.json(result);
@@ -41,7 +32,7 @@ router.get("/book/:id", async (req, res) => {
     return;
   }
 
-  result = await database.getLoanByBookId(id);
+  result = await database.getLoanByBid(req.params.id);
   res.json(result);
 });
 
@@ -53,8 +44,18 @@ router.get("/user/:id", async (req, res) => {
     return;
   }
 
-  result = await database.getLoanByUserId(id);
+  result = await database.getLoanByUid(id);
   res.json(result);
 });
+
+//----------------------------------------------------------------
+router
+  .route("/")
+  // new loan posted by the user
+  // TODO future imporvement: if body.user is empty, use req.user.id
+  .post(upload.none(), (req, res) => {
+    console.log(req.body);
+    database.lend(req.body, res);
+  });
 
 module.exports = router;
