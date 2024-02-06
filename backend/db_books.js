@@ -178,7 +178,7 @@ async function getBookNotesById(id) {
     db_.all(sql, [id], (err, rows) => {
       if (err) {
         console.log(err.message);
-        reject("Hiba!");
+        reject(err);
         return;
       }
       resolve(rows);

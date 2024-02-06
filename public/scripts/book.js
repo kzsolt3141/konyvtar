@@ -16,30 +16,35 @@ document.getElementById("image").addEventListener("change", function (event) {
   }
 });
 
-const element = document.getElementById("bid");
-if (element) {
-  const bid = element.getAttribute("content");
+//TODO check for blank (new) book
+const isBlank = document.getElementById("blank").getAttribute("content");
+if (!isBlank) {
+  const bid = document.getElementById("bid").getAttribute("content");
   if (bid != "") {
     const bookNotes = await common.getBookNotesById(bid);
     const loans = await common.getLoanByBid(bid);
 
     const bookNotesText = document.getElementById("book_notes");
-    bookNotes.forEach((bookNote) => {
-      for (const k in bookNote) {
-        const e = document.createElement("p");
-        e.textContent = bookNote[k];
-        bookNotesText.appendChild(e);
-      }
-    });
+    if (bookNotesText && bookNotes) {
+      bookNotes.forEach((bookNote) => {
+        for (const k in bookNote) {
+          const e = document.createElement("p");
+          e.textContent = bookNote[k];
+          bookNotesText.appendChild(e);
+        }
+      });
+    }
 
     const bookLoanText = document.getElementById("book_loan");
-    loans.forEach((loan) => {
-      for (const k in loan) {
-        const e = document.createElement("p");
-        e.textContent = loan[k];
-        bookLoanText.appendChild(e);
-      }
-    });
+    if (bookLoanText && loans) {
+      loans.forEach((loan) => {
+        for (const k in loan) {
+          const e = document.createElement("p");
+          e.textContent = loan[k];
+          bookLoanText.appendChild(e);
+        }
+      });
+    }
   }
 }
 

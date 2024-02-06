@@ -56,10 +56,11 @@ router
   });
 
 //----------------------------------------------------------------
+//TODO implement status codes like this everywhere!!!
 router.route("/notes/:id").get(async (req, res) => {
   const nextBookId = await database.getNextBookId();
   if (isNaN(req.params.id) || req.params.id >= nextBookId) {
-    res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
+    res.status(400).send(`Hiba a jegyzet keresese kozben`);
     return;
   }
 
@@ -67,7 +68,7 @@ router.route("/notes/:id").get(async (req, res) => {
     const notes = await database.getBookNotesById(req.params.id);
     res.json(notes);
   } catch (err) {
-    res.json(err);
+    res.status(500).send(err.message || err);
   }
 });
 //----------------------------------------------------------------
@@ -127,16 +128,18 @@ router
   // GET: require page to add new book to the database
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
-    res.render("book", { bid: nextBookId });
+    res.status(200).render("book", { bid: nextBookId, blank: true });
   })
   // POST: upload new book data to the database
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     const nextBookId = await database.getNextBookId();
     var message = "";
+    var sts = 200;
     try {
       message = await database.registerBook(req);
     } catch (err) {
       message = err.message;
+      sts = 500;
       if (req.file) {
         fs.unlink(
           path.join(__dirname, "../../uploads", req.file.filename),
@@ -151,7 +154,7 @@ router
       }
     }
 
-    res.render("book", { message: message, bid: nextBookId + 1 });
+    res.status(sts).render("book", { message: message, bid: nextBookId + 1 });
   });
 
 module.exports = router;
