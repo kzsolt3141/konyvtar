@@ -153,11 +153,22 @@ async function getBookById(bid) {
   return book;
 }
 
+//TODO secure all fetches like this
 async function getBookNotesById(bid) {
-  const rsp = await fetch(`/book/notes/${bid}`, {
-    method: "GET",
-  });
-  const bookNotes = await rsp.json();
+  var bookNotes = null;
+  try {
+    const rsp = await fetch(`/book/notes/${bid}`, {
+      method: "GET",
+    });
+
+    if (rsp.ok) {
+      bookNotes = await rsp.json();
+    } else {
+      rsp.text().then((text) => console.log(text));
+    }
+  } catch (err) {
+    console.log(err);
+  }
 
   return bookNotes;
 }
