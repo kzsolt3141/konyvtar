@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/styles/book.css" />
 
     <meta id="bid" name="bid" content="<%= (!!locals.bid) ? bid : '' %>" />
+    <meta id="blank" name="blank" content=<%= (!!locals.blank) ? blank : false %> />
+
   </head>
   <body>
     <div class="fixed_header">
@@ -129,6 +131,42 @@
       </form>
       <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>"
         id="book_thumbnail" class="book_thumbnail">
+    </div>
+
+    <div class="seach_results_block" id="lend_div">
+      <button class="general_button" id="lend_button">
+        <img class="general_button_icon" src="/styles/static/edit.png" />
+      </button>
+      <div id="loan_details" class="loan_details" hidden>
+        <p id="loan_info"></p>
+        <input type="text" id="loan_text" placeholder="Megjegyzes" />
+        <div>
+          <button type="button" id="submit_loan" class="general_button">
+            <img src="/styles/static/ok.svg" class="general_button_icon" />
+          </button>
+          <button type="button" id="cancel_loan" class="general_button">
+            <img src="/styles/static/x.svg" class="general_button_icon" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="seach_results_block" id="lend_div">
+      <button class="general_button" id="lend_button">
+        <img class="general_button_icon" src="/styles/static/edit.png" />
+      </button>
+      <div id="loan_details" class="loan_details" hidden>
+        <p id="loan_info"></p>
+        <input type="text" id="loan_text" placeholder="Megjegyzes" />
+        <div>
+          <button type="button" id="submit_loan" class="general_button">
+            <img src="/styles/static/ok.svg" class="general_button_icon" />
+          </button>
+          <button type="button" id="cancel_loan" class="general_button">
+            <img src="/styles/static/x.svg" class="general_button_icon" />
+          </button>
+        </div>
+      </div>
     </div>
 
     <div id="book_xt" class="book_xt">
