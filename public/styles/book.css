@@ -1,8 +1,8 @@
 .book_form_container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 30px;
-  width: 800px;
+  width: 1000px;
   align-items: center;
   justify-content: center;
   margin-left: auto;
@@ -56,6 +56,11 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+/*book action buttons */
+.book_actions {
+  display: flex;
+  justify-content: space-around;
+}
 /* book extanded details */
 
 .book_xt {
