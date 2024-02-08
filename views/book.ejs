@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="/styles/book.css" />
 
     <meta id="bid" name="bid" content="<%= (!!locals.bid) ? bid : '' %>" />
-    <meta id="blank" name="blank" content=<%= (!!locals.blank) ? blank : false %> />
-
+    <meta
+      id="blank"
+      name="blank"
+      content=<%=(!!locals.blank) ? blank : false %>
+    />
   </head>
   <body>
     <div class="fixed_header">
@@ -40,8 +43,11 @@
     <div class="enable_div" id="disable_div"></div>
 
     <div class="book_form_container">
+      <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>" id="book_thumbnail"
+      class="book_thumbnail">
+
       <form
-        action=<%= (!!locals.isbn) ? "/book/"+ bid : "/book" %>
+       action=<%= (!!locals.isbn) ? "/book/"+ bid : "/book" %>
         method="POST"
         id="add_book"
         class="book_form_div"
@@ -51,16 +57,19 @@
           <h2>Könyv <%= (!!locals.bid) ? bid : '' %></h2>
         </div>
 
-        <input type="hidden" id="id" name="id" 
-        value="<%= (!!locals.bid) ? bid :"" %>" />
+        <input type="hidden" id="id" name="id" value="<%= (!!locals.bid) ? bid :"" %>" />
 
         <div id="genre_div" class="book_form_line">
-            <label for="genre">Tipus</label>
-            <select id="genre" name="genre"></select>
+          <label for="genre">Tipus</label>
+          <select id="genre" name="genre"></select>
         </div>
 
         <div id="genre_add_div" class="genre_adder_div" hidden>
-          <input type="text" id="add_genre_text" placeholder="Uj tipus hozzaadasa"/>
+          <input
+            type="text"
+            id="add_genre_text"
+            placeholder="Uj tipus hozzaadasa"
+          />
           <div>
             <button type="button" id="submit_add_genre" class="general_button">
               <img src="/styles/static/ok.svg" class="general_button_icon" />
@@ -129,54 +138,52 @@
           </button>
         </div>
       </form>
-      <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>"
-        id="book_thumbnail" class="book_thumbnail">
-    </div>
 
-    <!-- TODO implement book return for this div -->
-    <div class="seach_results_block" id="lend_div">
-      <button class="general_button" id="lend_button">
-        <img class="general_button_icon" src="/styles/static/edit.png" />
-      </button>
-      <div id="loan_details" class="loan_details" hidden>
-        <p id="loan_info"></p>
-        <input type="text" id="loan_text" placeholder="Megjegyzes" />
-        <div>
-          <button type="button" id="submit_loan" class="general_button">
-            <img src="/styles/static/ok.svg" class="general_button_icon" />
+      <!-- TODO implement book return for this div -->
+      <div>
+        <div class="book_actions">
+          <button class="general_button" id="return_book_btn">
+            <img class="general_button_icon" src="/styles/static/register.svg" />
           </button>
-          <button type="button" id="cancel_loan" class="general_button">
-            <img src="/styles/static/x.svg" class="general_button_icon" />
+
+          <button class="general_button" id="lend_button">
+            <img class="general_button_icon" src="/styles/static/broken.svg" />
           </button>
         </div>
-      </div>
-    </div>
 
-    <!-- TODO implement book activate/deactivate for this div -->
-    <div class="seach_results_block" id="lend_div">
-      <button class="general_button" id="lend_button">
-        <img class="general_button_icon" src="/styles/static/edit.png" />
-      </button>
-      <div id="loan_details" class="loan_details" hidden>
-        <p id="loan_info"></p>
-        <input type="text" id="loan_text" placeholder="Megjegyzes" />
-        <div>
-          <button type="button" id="submit_loan" class="general_button">
-            <img src="/styles/static/ok.svg" class="general_button_icon" />
-          </button>
-          <button type="button" id="cancel_loan" class="general_button">
-            <img src="/styles/static/x.svg" class="general_button_icon" />
-          </button>
-        </div>
+          <!-- TODO implement book activate/deactivate for this div -->
+
+        <form
+          action="/book/status/<%= (!!locals.bid) ? + bid : ""%>"
+          method="POST"
+          id="action_details"
+          class="action_details"
+          hidden
+          >
+          <p id="loan_info"></p>
+          <input type="text" id="loan_text" placeholder="Megjegyzes" />
+          <div>
+            <button type="button" id="submit_loan" class="general_button">
+              <img src="/styles/static/ok.svg" class="general_button_icon" />
+            </button>
+            <button type="button" id="cancel_loan" class="general_button">
+              <img src="/styles/static/x.svg" class="general_button_icon" />
+            </button>
+          </div>
+        </form>
       </div>
+      
     </div>
+    
 
     <div id="book_xt" class="book_xt">
       <div id="book_notes" class="book_notes"></div>
       <div id="book_loan" class="book_loan"></div>
     </div>
 
-    <div id="global_status" class="global_status"><%=(!!locals.message) ? message : "" %></div>
+    <div id="global_status" class="global_status">
+      <%=(!!locals.message) ? message : "" %>
+    </div>
     <div class="version" id="version"></div>
   </body>
 
