@@ -139,14 +139,15 @@
         </div>
       </form>
 
+      <% if (!locals.blank) { %>
       <!-- TODO implement book return for this div -->
       <div>
         <div class="book_actions">
-          <button class="general_button" id="return_book_btn">
+          <button class="general_button" id="return_btn">
             <img class="general_button_icon" src="/styles/static/register.svg" />
           </button>
 
-          <button class="general_button" id="lend_button">
+          <button class="general_button" id="lend_btn">
             <img class="general_button_icon" src="/styles/static/broken.svg" />
           </button>
         </div>
@@ -160,19 +161,18 @@
           class="action_details"
           hidden
           >
-          <p id="loan_info"></p>
           <input type="text" id="loan_text" placeholder="Megjegyzes" />
           <div>
-            <button type="button" id="submit_loan" class="general_button">
+            <button type="submit" id="submit_action" class="general_button">
               <img src="/styles/static/ok.svg" class="general_button_icon" />
             </button>
-            <button type="button" id="cancel_loan" class="general_button">
+            <button type="button" id="cancel_action" class="general_button">
               <img src="/styles/static/x.svg" class="general_button_icon" />
             </button>
           </div>
         </form>
       </div>
-      
+      <% } %>
     </div>
     
 
