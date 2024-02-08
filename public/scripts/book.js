@@ -1,6 +1,7 @@
 //import genre related functions
 import { common } from "./common.js";
 
+//----------------------------------------------------------------
 document.getElementById("image").addEventListener("change", function (event) {
   const fileInput = event.target;
   const imagePreview = document.getElementById("book_thumbnail");
@@ -16,7 +17,7 @@ document.getElementById("image").addEventListener("change", function (event) {
   }
 });
 
-//TODO check for blank (new) book
+//----------------------------------------------------------------
 const isBlank = document.getElementById("blank").getAttribute("content");
 if (!isBlank) {
   const bid = document.getElementById("bid").getAttribute("content");
@@ -47,6 +48,17 @@ if (!isBlank) {
     }
   }
 }
+
+//----------------------------------------------------------------
+document.getElementById("lend_button").addEventListener("click", function () {
+  document.getElementById("action_details").style.display = "block";
+});
+
+document
+  .getElementById("return_book_btn")
+  .addEventListener("click", function () {
+    document.getElementById("action_details").style.display = "block";
+  });
 
 //TODO finish the implementation
 async function toggleStatus(id) {
