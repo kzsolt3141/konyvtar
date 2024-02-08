@@ -50,15 +50,26 @@ if (!isBlank) {
 }
 
 //----------------------------------------------------------------
-document.getElementById("lend_button").addEventListener("click", function () {
-  document.getElementById("action_details").style.display = "block";
-});
-
-document
-  .getElementById("return_book_btn")
-  .addEventListener("click", function () {
+const loanBtn = document.getElementById("lend_btn");
+if (loanBtn) {
+  loanBtn.addEventListener("click", function () {
     document.getElementById("action_details").style.display = "block";
   });
+}
+
+const returnBtn = document.getElementById("return_btn");
+if (returnBtn) {
+  returnBtn.addEventListener("click", function () {
+    document.getElementById("action_details").style.display = "block";
+  });
+}
+
+const cancelBtn = document.getElementById("cancel_action");
+if (cancelBtn) {
+  cancelBtn.addEventListener("click", function () {
+    document.getElementById("action_details").style.display = "none";
+  });
+}
 
 //TODO finish the implementation
 async function toggleStatus(id) {
