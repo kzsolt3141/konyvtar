@@ -35,6 +35,7 @@ router.get("/book/:id", async (req, res) => {
   result = await database.getLoanByBid(req.params.id);
   res.json(result);
 });
+//TODO use POST to return a book
 
 router.get("/user/:id", async (req, res) => {
   // TODO check param is valid
@@ -47,8 +48,11 @@ router.get("/user/:id", async (req, res) => {
   result = await database.getLoanByUid(id);
   res.json(result);
 });
+//TODO use  POST to loan a book
 
 //----------------------------------------------------------------
+
+//TODO eliminate this...
 router
   .route("/")
   // new loan posted by the user
