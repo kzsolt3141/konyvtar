@@ -51,16 +51,26 @@ if (!isBlank) {
 
 //----------------------------------------------------------------
 const loanBtn = document.getElementById("lend_btn");
+//TODO update form action to: loan/book/1
+//TODO check if the book is available, if not, activate this button
+//TODO if lended, show the name of the User who owns it
 if (loanBtn) {
   loanBtn.addEventListener("click", function () {
     document.getElementById("action_details").style.display = "block";
+    const input = document.getElementById("action_notes");
+    input.value = "";
+    input.placeholder = "Visszahozott konyv; megjegyzes";
   });
 }
 
-const returnBtn = document.getElementById("return_btn");
-if (returnBtn) {
-  returnBtn.addEventListener("click", function () {
+//TODO update form action to: book/status/1 to toggle it SEE toggleStatus(id)
+const toggleStatusBtn = document.getElementById("status_btn");
+if (toggleStatusBtn) {
+  toggleStatusBtn.addEventListener("click", function () {
     document.getElementById("action_details").style.display = "block";
+    const input = document.getElementById("action_notes");
+    input.value = "";
+    input.placeholder = "Aktivalas/Deaktivalas oka";
   });
 }
 
