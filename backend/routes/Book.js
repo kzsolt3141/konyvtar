@@ -56,6 +56,9 @@ router
   });
 
 //----------------------------------------------------------------
+//TODO toggle status post
+
+//----------------------------------------------------------------
 //TODO implement status codes like this everywhere!!!
 router.route("/notes/:id").get(async (req, res) => {
   const nextBookId = await database.getNextBookId();
@@ -120,7 +123,6 @@ router
     }
     res.redirect(bid);
   });
-//TODO add toggle status as a PUT method here
 
 //----------------------------------------------------------------
 router

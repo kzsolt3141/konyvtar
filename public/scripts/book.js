@@ -19,7 +19,7 @@ document.getElementById("image").addEventListener("change", function (event) {
 
 //----------------------------------------------------------------
 const isBlank = document.getElementById("blank").getAttribute("content");
-if (!isBlank) {
+if (isBlank === "false") {
   const bid = document.getElementById("bid").getAttribute("content");
   if (bid != "") {
     const bookNotes = await common.getBookNotesById(bid);
@@ -46,22 +46,30 @@ if (!isBlank) {
         }
       });
     }
+
+    const avl = await common.bookIsAvailableById(bid);
+    if (avl[0] == true) {
+      document.getElementById("action_title").innerHTML = "A konyv elerheto";
+      document.getElementById("lend_btn").style.display = "none";
+    } else {
+      const loanBtn = document.getElementById("lend_btn");
+      if (loanBtn) {
+        loanBtn.addEventListener("click", function () {
+          document.getElementById("action_details").style.display = "block";
+          const input = document.getElementById("action_notes");
+          document.getElementById("action_details").action =
+            "/loan/book/" + bid;
+          console.log(document.getElementById("action_details"));
+          input.value = "";
+          input.placeholder = "Visszahozott konyv; megjegyzes";
+        });
+      }
+      // TODO make this nicer
+      document.getElementById("action_title").innerHTML = avl[1];
+    }
   }
 }
-
 //----------------------------------------------------------------
-const loanBtn = document.getElementById("lend_btn");
-//TODO update form action to: loan/book/1
-//TODO check if the book is available, if not, activate this button
-//TODO if lended, show the name of the User who owns it
-if (loanBtn) {
-  loanBtn.addEventListener("click", function () {
-    document.getElementById("action_details").style.display = "block";
-    const input = document.getElementById("action_notes");
-    input.value = "";
-    input.placeholder = "Visszahozott konyv; megjegyzes";
-  });
-}
 
 //TODO update form action to: book/status/1 to toggle it SEE toggleStatus(id)
 const toggleStatusBtn = document.getElementById("status_btn");
