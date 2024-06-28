@@ -24,7 +24,7 @@ if (userSearchBtn) {
 
 function userClickCb(id) {
   common.disableMain();
-  window.location.href = `/user/full/${id}`;
+  window.location.href = `/user/${id}`;
   common.enableMain();
 }
 

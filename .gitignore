@@ -1,7 +1,7 @@
 *.db
 *.csv
 *.exe
-uploads/*
+uploads/*.jpg
 entrypoint*
 package-lock.json
 
