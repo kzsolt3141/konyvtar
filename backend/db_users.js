@@ -37,7 +37,7 @@ function registerUser(body, file) {
   if (file) filename = file.filename;
 
   return new Promise((resolve, reject) => {
-    // seach for incopatible user data (phone and mail both used by other user)
+    // seach for incompatible user data (phone and email both used by other user)
     var sql = `SELECT * FROM users WHERE email = ?`;
     db_.all(sql, [body.email], (err, rows) => {
       if (err) {

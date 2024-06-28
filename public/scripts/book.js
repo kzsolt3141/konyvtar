@@ -110,15 +110,11 @@ async function toggleStatus(id) {
 
 //----------------------------------------------------------------
 fillGenreSelect(document.getElementById("genre"));
-const addGenreDiv = document.getElementById("genre_add_div");
 
 function fillGenreSelect(selector) {
   if (!selector) return;
 
   selector.innerHTML = "";
-  selector.addEventListener("change", () => {
-    if (selector.value === "+") addGenreDiv.style.display = "block";
-  });
 
   fetch("/book/genres", {
     method: "POST",
@@ -131,16 +127,20 @@ function fillGenreSelect(selector) {
         option.text = opt["genre"];
         selector.add(option);
       });
-      const option = document.createElement("option");
-      option.value = "+";
-      option.text = "+";
-      selector.add(option);
     });
 }
+
+const addGenreBtn = document.getElementById("add_genre_btn");
+const addGenreDiv = document.getElementById("genre_add_div");
 
 const input = document.getElementById("add_genre_text");
 const addButton = document.getElementById("submit_add_genre");
 const cancelButton = document.getElementById("cancel_add_genre");
+
+addGenreBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  addGenreDiv.style.display = "block";
+});
 
 addButton.addEventListener("click", function (event) {
   event.preventDefault();
