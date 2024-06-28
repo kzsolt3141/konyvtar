@@ -177,8 +177,8 @@ async function getUserById(bid) {
   const rsp = await fetch(`/user/details/${bid}`, {
     method: "GET",
   });
-  const book = await rsp.json();
-  return book;
+  const user = await rsp.json();
+  return user;
 }
 
 async function getLoanByUid(uid) {
