@@ -1,4 +1,5 @@
 // default route /user
+
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
@@ -11,6 +12,7 @@ const p = require("../passport_config.js");
 const router = express.Router();
 
 //----------------------------------------------------------------
+// user profile pictures will be placed in uploads folder
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../../uploads"));
@@ -24,11 +26,15 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //----------------------------------------------------------------
+// login should happen only when the user is not logged in
 router
   .route("/login")
+  // route to login page the unauthenticated user
   .get(p.checkNotAuthenticated, (req, res) => {
     res.render("user_login", {});
   })
+  // authenticate with the posted email and password, for datils see
+  // passport_config.js initialize
   .post(
     p.checkNotAuthenticated,
     p.passport.authenticate("local", {
@@ -37,53 +43,63 @@ router
       failureFlash: true,
     })
   )
+  // logout current user
   .delete((req, res) => {
     req.logOut(() => {});
     res.json("logout");
   });
 
 //----------------------------------------------------------------
+// [ADMIN] retreive user details in JSON
 router
   .route("/details/:id?")
-  .get(async (req, res) => {
+  // [ADMIN] retreive an existing user by it's ID
+  .get(p.checkAuthAdmin, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
     if (isNaN(req.params.id) || req.params.id >= nextUserId) {
       res.json(`hiba a ${req.params.id} keresese kozben`);
     }
 
     try {
+      //TODO should not return the crypted password
       const user = await db_users.getUserById(req.params.id);
       res.json(user);
     } catch (err) {
       res.json(err);
     }
   })
-  .post(upload.none(), async (req, res) => {
+  // [ADMIN] find a user by its details and return all the other details
+  .post(p.checkAuthAdmin, upload.none(), async (req, res) => {
     const users = await db_users.findUser(req.body);
     res.json(users);
   });
 
 //----------------------------------------------------------------
-router.route("/notes/:id").get(async (req, res) => {
-  const nextUserId = await db_users.getNextUserId();
-  if (isNaN(req.params.id) || req.params.id >= nextUserId) {
-    res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
-    return;
-  }
+// [ADMIN] return user notes
+router
+  .route("/notes/:id")
+  // [ADMIN] find all notes for a user ID
+  .get(p.checkAuthAdmin, async (req, res) => {
+    const nextUserId = await db_users.getNextUserId();
+    if (isNaN(req.params.id) || req.params.id >= nextUserId) {
+      res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
+      return;
+    }
 
-  try {
-    const notes = await db_users.getUserNotesById(req.params.id);
-    res.json(notes);
-  } catch (err) {
-    res.json(err);
-  }
-});
+    try {
+      const notes = await db_users.getUserNotesById(req.params.id);
+      res.json(notes);
+    } catch (err) {
+      res.json(err);
+    }
+  });
 
 //----------------------------------------------------------------
 router
   .route("/:id")
-  // GET: require page to show used information (ID)
-  .get(p.checkAuthenticated, async (req, res) => {
+  // [ADMIN] require page to show used information (ID)
+  // TODO future improvement user shoudl be able to require its own data
+  .get(p.checkAuthAdmin, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
 
     if (
@@ -106,8 +122,9 @@ router
       res.redirect("/");
     }
   })
-  // POST: update user information
-  .post(p.checkAuthenticated, upload.single("image"), async (req, res) => {
+  // [ADMIN] update user information
+  // TODO future improvement user shoudl be able to require its own data
+  .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     if (req.body.password != "") {
       req.body.password = await bcrypt.hash(req.body.password, 10);
     } else req.body.password = null;
@@ -126,11 +143,11 @@ router
 
 router
   .route("/")
-  // GET: require page to add new user to the database
+  // [PUBLIC] require page to add new user to the database
   .get(async (req, res) => {
     res.render("user");
   })
-  // POST: upload new user data to the database
+  // [PUBLIC] upload new user data to the database
   .post(upload.single("image"), async (req, res) => {
     req.body.password = await bcrypt.hash(req.body.password, 10);
     db_users
