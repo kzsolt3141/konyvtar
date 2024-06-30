@@ -26,9 +26,12 @@ const upload = multer({ storage: storage });
 //----------------------------------------------------------------
 router
   .route("/table")
+  // return all books in a simple table
+  // TODO: table should show the first 50 books the have a next
   .get(async (req, res) => {
     res.render("book_table", {});
   })
+  // do the same but return it in json, will be used to display books in frintend
   .post(upload.none(), async (req, res) => {
     const books = await database.getAllBooks(req.body);
     res.json(JSON.stringify(books));
@@ -37,6 +40,7 @@ router
 //----------------------------------------------------------------
 router
   .route("/details/:id?")
+  // only GET uses the ID, will retrun json with the book details
   .get(async (req, res) => {
     const nextBookId = await database.getNextBookId();
     if (isNaN(req.params.id) || req.params.id >= nextBookId) {
@@ -50,14 +54,11 @@ router
       res.json(err);
     }
   })
+  // POSt is NOT using ID, will search in the database using body instead
   .post(upload.none(), async (req, res) => {
     const books = await database.findBook(req.body);
     res.json(books);
   });
-
-//----------------------------------------------------------------
-//TODO toggle status post
-
 //----------------------------------------------------------------
 //TODO implement status codes like this everywhere!!!
 router.route("/notes/:id").get(async (req, res) => {
@@ -111,6 +112,7 @@ router
     }
   })
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
+    // TODO: this message should be returned to frotend
     var message = "";
     var bid = "/book/";
     if (!isNaN(req.params.id)) {
@@ -122,6 +124,25 @@ router
       bid += req.params.id;
     }
     res.redirect(bid);
+  })
+  .put(upload.none(), async (req, res) => {
+    var message = "init";
+    if (
+      !isNaN(req.params.id) &&
+      Object.keys(req.body).length &&
+      "status" in req.body &&
+      "message" in req.body
+    ) {
+      try {
+        message = await database.toggleBookStatus(
+          req.params.id,
+          req.body.message
+        );
+      } catch (err) {
+        message = err.message;
+      }
+    }
+    res.json(message);
   });
 
 //----------------------------------------------------------------

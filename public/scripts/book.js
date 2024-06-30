@@ -48,11 +48,11 @@ if (isBlank === "false") {
     }
 
     const avl = await common.bookIsAvailableById(bid);
+    const loanBtn = document.getElementById("lend_btn");
     if (avl[0] == true) {
       document.getElementById("action_title").innerHTML = "A konyv elerheto";
-      document.getElementById("lend_btn").style.display = "none";
+      loanBtn.style.display = "none";
     } else {
-      const loanBtn = document.getElementById("lend_btn");
       if (loanBtn) {
         loanBtn.addEventListener("click", function () {
           document.getElementById("action_details").style.display = "block";
@@ -71,7 +71,10 @@ if (isBlank === "false") {
 }
 //----------------------------------------------------------------
 
-//TODO update form action to: book/status/1 to toggle it SEE toggleStatus(id)
+//TODO update form action to: book/1 to toggle it SEE toggleStatus(id)
+// TODO backend solved waiting for PUT /book/1 with "status"-"update" and "message"-"message_text"
+// TODO disable submit button and handle here the act/deact action
+
 const toggleStatusBtn = document.getElementById("status_btn");
 if (toggleStatusBtn) {
   toggleStatusBtn.addEventListener("click", function () {

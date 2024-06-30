@@ -216,7 +216,7 @@ function getNextBookId() {
 }
 
 //----------------------------------------------------------------
-function toggleBookStatus(body, res) {
+async function toggleBookStatus(id, notes) {
   sql = `
   UPDATE books 
   SET status = 
@@ -224,18 +224,21 @@ function toggleBookStatus(body, res) {
       WHEN status = 0 
         THEN 1 
         ELSE 0
-      END 
+    END 
   WHERE id = ?`;
-  db_.run(sql, [body.id], (err) => {
-    if (err) {
-      console.log(err.message);
-      res.json(`Book ${body.title} could not be modified`);
-      return;
-    }
-    const currentDate = new Date();
-    registerBookNotes(body.id, currentDate, body.notes);
-    // update book pic table
-    res.json(`Book ${body.id} modified successfully`);
+
+  return new Promise((resolve, reject) => {
+    db_.run(sql, [id], (err) => {
+      if (err) {
+        console.log(err.message);
+        reject(`Book ${id} could not be modified`);
+        return;
+      }
+      const currentDate = new Date();
+      registerBookNotes(id, currentDate, notes);
+      // update book pic table
+      resolve(`Book ${id} modified successfully`);
+    });
   });
 }
 

@@ -157,10 +157,11 @@
         </div>
 
           <!-- TODO implement book activate/deactivate for this div -->
+           <!-- TODO use togglestatus -->
 
         <form
-          action="/book/status/<%= (!!locals.bid) ? + bid : ""%>"
-          method="POST"
+          action="/book/<%= (!!locals.bid) ? + bid : ""%>"
+          method="PUT"
           id="action_details"
           class="action_details"
           hidden

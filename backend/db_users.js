@@ -140,6 +140,7 @@ function getUserById(id, res) {
         reject(err);
         return;
       }
+      // TODO delete rows[0].password;
       resolve(rows[0]);
     });
   });
