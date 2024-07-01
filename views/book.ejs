@@ -156,19 +156,15 @@
           </button>
         </div>
 
-          <!-- TODO implement book activate/deactivate for this div -->
-           <!-- TODO use togglestatus -->
-
         <form
-          action="/book/<%= (!!locals.bid) ? + bid : ""%>"
-          method="PUT"
           id="action_details"
           class="action_details"
           hidden
           >
-          <input type="text" id="action_notes" placeholder="Megjegyzes" />
+          <input type="text" id="action_type" name="action_type"  value="status" hidden/>
+          <input type="text" id="action_notes" name="action_notes" placeholder="Megjegyzes" />
           <div class="book_actions">
-            <button type="submit" id="submit_action" class="general_button">
+            <button type="button" id="submit_action" class="general_button">
               <img src="/styles/static/ok.svg" class="general_button_icon" />
             </button>
             <button type="button" id="cancel_action" class="general_button">

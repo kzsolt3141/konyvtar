@@ -130,13 +130,14 @@ router
     if (
       !isNaN(req.params.id) &&
       Object.keys(req.body).length &&
-      "status" in req.body &&
-      "message" in req.body
+      "action_type" in req.body &&
+      "action_notes" in req.body &&
+      req.body.action_type == "status"
     ) {
       try {
         message = await database.toggleBookStatus(
           req.params.id,
-          req.body.message
+          req.body.action_notes
         );
       } catch (err) {
         message = err.message;

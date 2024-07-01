@@ -104,7 +104,7 @@ function disableMain() {
   p.className = "disable_text";
 
   const img = document.createElement("img");
-  img.src = "styles/static/progress.svg";
+  img.src = "/styles/static/progress.svg";
   img.className = "disable_thumbnail";
 
   div.appendChild(p);
