@@ -53,62 +53,61 @@ if (isBlank === "false") {
       document.getElementById("action_title").innerHTML = "A konyv elerheto";
       loanBtn.style.display = "none";
     } else {
-      if (loanBtn) {
-        loanBtn.addEventListener("click", function () {
-          document.getElementById("action_details").style.display = "block";
-          const input = document.getElementById("action_notes");
-          document.getElementById("action_details").action =
-            "/loan/book/" + bid;
-          console.log(document.getElementById("action_details"));
-          input.value = "";
-          input.placeholder = "Visszahozott konyv; megjegyzes";
-        });
-      }
+      loanBtn.addEventListener("click", function () {
+        const actionDetForm = document.getElementById("action_details");
+        actionDetForm.style.display = "block";
+        actionDetForm.action = "/loan/book/" + bid;
+
+        const input = document.getElementById("action_notes");
+        input.value = "";
+        input.placeholder = "Kolcsonzes/visszahozas oka";
+      });
+
       // TODO make this nicer
       document.getElementById("action_title").innerHTML = avl[1];
     }
+
+    const toggleStatusBtn = document.getElementById("status_btn");
+    if (toggleStatusBtn) {
+      toggleStatusBtn.addEventListener("click", function () {
+        const actionDetForm = document.getElementById("action_details");
+        actionDetForm.style.display = "block";
+        actionDetForm.action = "/book/" + bid;
+
+        const input = document.getElementById("action_notes");
+        input.value = "";
+        input.placeholder = "Aktivalas/Deaktivalas oka";
+      });
+    }
+
+    const submitBtn = document.getElementById("submit_action");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const actionForm = document.getElementById("action_details");
+        const actionFormData = new FormData(actionForm);
+
+        common.disableMain();
+        fetch(`/book/${bid}`, {
+          method: "PUT",
+          body: actionFormData,
+        })
+          .then((rsp) => rsp.text())
+          .then((data) => {
+            common.updateStatus(data);
+            common.enableMain();
+          });
+      });
+    }
+
+    const cancelBtn = document.getElementById("cancel_action");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function () {
+        document.getElementById("action_details").style.display = "none";
+      });
+    }
   }
-}
-//----------------------------------------------------------------
-
-//TODO update form action to: book/1 to toggle it SEE toggleStatus(id)
-// TODO backend solved waiting for PUT /book/1 with "status"-"update" and "message"-"message_text"
-// TODO disable submit button and handle here the act/deact action
-
-const toggleStatusBtn = document.getElementById("status_btn");
-if (toggleStatusBtn) {
-  toggleStatusBtn.addEventListener("click", function () {
-    document.getElementById("action_details").style.display = "block";
-    const input = document.getElementById("action_notes");
-    input.value = "";
-    input.placeholder = "Aktivalas/Deaktivalas oka";
-  });
-}
-
-const cancelBtn = document.getElementById("cancel_action");
-if (cancelBtn) {
-  cancelBtn.addEventListener("click", function () {
-    document.getElementById("action_details").style.display = "none";
-  });
-}
-
-//TODO finish the implementation
-async function toggleStatus(id) {
-  const changeForm = new FormData();
-  changeForm.append("update", "status");
-  changeForm.append("notes", e.value);
-
-  common.disableMain();
-
-  fetch("/book/" + book.id, {
-    method: "PUT",
-    body: changeForm,
-  }).then((rsp) =>
-    rsp.json().then((data) => {
-      common.updateStatus(data);
-      common.enableMain();
-    })
-  );
 }
 
 //----------------------------------------------------------------
