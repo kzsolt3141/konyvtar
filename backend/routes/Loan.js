@@ -25,17 +25,22 @@ router.get("/available/:id", async (req, res) => {
   res.json(result);
 });
 
-router.get("/book/:id", async (req, res) => {
-  // TODO check param is valid
-  if (isNaN(req.params.id)) {
-    res.json("Hiba tortet");
-    return;
-  }
+router
+  .route("/book/:id")
+  .get(async (req, res) => {
+    // TODO check param is valid
+    if (isNaN(req.params.id)) {
+      res.json("Hiba tortet");
+      return;
+    }
 
-  result = await database.getLoanByBid(req.params.id);
-  res.json(result);
-});
-//TODO use POST to return a book
+    result = await database.getLoanByBid(req.params.id);
+    res.json(result);
+  })
+  .put(upload.none(), async (req, res) => {
+    message = await database.bring(req.params.id, req.body.action_notes);
+    res.json(message);
+  });
 
 router.get("/user/:id", async (req, res) => {
   // TODO check param is valid

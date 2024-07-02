@@ -68,31 +68,34 @@ async function lend(body, rsp) {
 }
 
 //----------------------------------------------------------------
-async function bring(body, rsp) {
-  try {
-    const isAvailable = await bookIsAvailable(body.bid);
-    if (isAvailable[0]) {
-      rsp.json("failed by checking: book is available");
-      return;
-    }
-    sql = `UPDATE loan
-        SET back_date = ?, back_notes = ?
-        WHERE uid = ? AND bid = ?`;
-    const date = new Date();
-    db_.run(
-      sql,
-      [date.toISOString().split("T")[0], body.notes, body.uid, body.bid],
-      (err) => {
-        if (err) {
-          rsp.json(err.message);
-          return;
-        }
-        rsp.json("Done!");
+async function bring(bid, notes) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const isAvailable = await bookIsAvailable(bid);
+      if (isAvailable[0]) {
+        reject("failed by checking: book is available");
+        return;
       }
-    );
-  } catch (err) {
-    rsp.json(err.message);
-  }
+      sql = `UPDATE loan
+        SET back_date = ?, back_notes = ?
+        WHERE uid = ? AND bid = ? AND back_date IS NULL`;
+      const date = new Date();
+
+      db_.run(
+        sql,
+        [date.toISOString().split("T")[0], notes, isAvailable[1], bid],
+        (err) => {
+          if (err) {
+            reject(err.message);
+            return;
+          }
+          resolve("Done!");
+        }
+      );
+    } catch (err) {
+      reject(err.message);
+    }
+  });
 }
 
 async function getLoanByBid(bid) {

@@ -61,20 +61,23 @@ router
   });
 //----------------------------------------------------------------
 //TODO implement status codes like this everywhere!!!
-router.route("/notes/:id").get(async (req, res) => {
-  const nextBookId = await database.getNextBookId();
-  if (isNaN(req.params.id) || req.params.id >= nextBookId) {
-    res.status(400).send(`Hiba a jegyzet keresese kozben`);
-    return;
-  }
+router
+  .route("/notes/:id")
+  // Return all the book notes identified by the ID
+  .get(async (req, res) => {
+    const nextBookId = await database.getNextBookId();
+    if (isNaN(req.params.id) || req.params.id >= nextBookId) {
+      res.status(400).send(`Hiba a jegyzet keresese kozben`);
+      return;
+    }
 
-  try {
-    const notes = await database.getBookNotesById(req.params.id);
-    res.json(notes);
-  } catch (err) {
-    res.status(500).send(err.message || err);
-  }
-});
+    try {
+      const notes = await database.getBookNotesById(req.params.id);
+      res.json(notes);
+    } catch (err) {
+      res.status(500).send(err.message || err);
+    }
+  });
 //----------------------------------------------------------------
 
 router.post("/genres/:genre?", upload.none(), (req, res) => {
@@ -88,6 +91,7 @@ router.post("/genres/:genre?", upload.none(), (req, res) => {
 //----------------------------------------------------------------
 router
   .route("/:id")
+  // show book details page identified by book ID
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
 
@@ -111,6 +115,7 @@ router
       res.redirect("/");
     }
   })
+  // update a book details identified by ID
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
     // TODO: this message should be returned to frotend
     var message = "";
@@ -125,14 +130,14 @@ router
     }
     res.redirect(bid);
   })
+  // toggle book status identified by book ID
   .put(upload.none(), async (req, res) => {
     var message = "init";
+    console.log(req.body);
     if (
       !isNaN(req.params.id) &&
       Object.keys(req.body).length &&
-      "action_type" in req.body &&
-      "action_notes" in req.body &&
-      req.body.action_type == "status"
+      "action_notes" in req.body
     ) {
       try {
         message = await database.toggleBookStatus(
