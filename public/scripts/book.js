@@ -47,6 +47,7 @@ if (isBlank === "false") {
       });
     }
 
+    var fetch_link = "";
     const avl = await common.bookIsAvailableById(bid);
     const loanBtn = document.getElementById("lend_btn");
     if (avl[0] == true) {
@@ -56,11 +57,12 @@ if (isBlank === "false") {
       loanBtn.addEventListener("click", function () {
         const actionDetForm = document.getElementById("action_details");
         actionDetForm.style.display = "block";
-        actionDetForm.action = "/loan/book/" + bid;
 
         const input = document.getElementById("action_notes");
         input.value = "";
         input.placeholder = "Kolcsonzes/visszahozas oka";
+
+        fetch_link = `/loan/book/${bid}`;
       });
 
       // TODO make this nicer
@@ -72,11 +74,12 @@ if (isBlank === "false") {
       toggleStatusBtn.addEventListener("click", function () {
         const actionDetForm = document.getElementById("action_details");
         actionDetForm.style.display = "block";
-        actionDetForm.action = "/book/" + bid;
 
         const input = document.getElementById("action_notes");
         input.value = "";
         input.placeholder = "Aktivalas/Deaktivalas oka";
+
+        fetch_link = `/book/${bid}`;
       });
     }
 
@@ -89,13 +92,14 @@ if (isBlank === "false") {
         const actionFormData = new FormData(actionForm);
 
         common.disableMain();
-        fetch(`/book/${bid}`, {
+        fetch(fetch_link, {
           method: "PUT",
           body: actionFormData,
         })
           .then((rsp) => rsp.text())
           .then((data) => {
             common.updateStatus(data);
+            document.getElementById("action_details").style.display = "none";
             common.enableMain();
           });
       });
