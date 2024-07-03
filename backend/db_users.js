@@ -230,8 +230,11 @@ function editUser(body, file) {
       fileName = file.filename;
     }
 
+    const admin = "admin" in body;
+
     sql = `UPDATE users 
       SET 
+        admin = ?,
         name = ?,
         email = ?,
         password = COALESCE(?, password),
@@ -241,9 +244,11 @@ function editUser(body, file) {
         occupancy = ?,
         pic = COALESCE(?, pic)
       WHERE id = ?`;
+
     db_.run(
       sql,
       [
+        admin,
         body.name,
         body.email,
         body.password,

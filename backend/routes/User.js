@@ -110,6 +110,7 @@ router
       const user = await db_users.getUserById(req.params.id);
       res.render("user", {
         uid: user.id,
+        admin: user.admin,
         name: user.name,
         email: user.email,
         address: user.address,

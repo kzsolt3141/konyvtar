@@ -25,6 +25,16 @@
           <h2>Felhasznalo</h2>
         </div>
 
+        <div class="book_form_line">
+          <label for="admin">Admin ?</label>
+          <input
+            type="checkbox"
+            id="admin"
+            name="admin"
+            <%= (!!locals.admin) ? "checked" : "" %>
+          />
+        </div>
+
         <input type="hidden" id="id" name="id" 
         value="<%= (!!locals.uid) ? uid :"" %>" />
 
