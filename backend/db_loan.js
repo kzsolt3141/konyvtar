@@ -38,33 +38,36 @@ async function bookIsAvailable(bid) {
 }
 
 //----------------------------------------------------------------
-async function lend(body, rsp) {
-  try {
-    const isAvailable = await bookIsAvailable(body.bid);
-    if (!isAvailable[0]) {
-      rsp.json(`failed by checking: book is at a user ${isAvailable[1]}`);
-      return;
-    }
+async function lend(uid, bid, notes) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const isAvailable = await bookIsAvailable(bid);
+      if (!isAvailable[0]) {
+        reject(`failed by checking: book is at a user ${isAvailable[1]}`);
+        return;
+      }
 
-    sql = `
+      sql = `
         INSERT INTO loan 
         (bid, uid, lend_date, lend_notes) 
         VALUES (?, ?, ?, ?)`;
-    const date = new Date();
-    db_.run(
-      sql,
-      [body.bid, body.uid, date.toISOString().split("T")[0], body.notes],
-      (err) => {
-        if (err) {
-          rsp.json(err.message);
-          return;
+      const date = new Date();
+
+      db_.run(
+        sql,
+        [bid, uid, date.toISOString().split("T")[0], notes],
+        (err) => {
+          if (err) {
+            reject(err.message);
+            return;
+          }
+          resolve("Done");
         }
-        rsp.json("Done");
-      }
-    );
-  } catch {
-    rsp.json("failed");
-  }
+      );
+    } catch {
+      reject("failed");
+    }
+  });
 }
 
 //----------------------------------------------------------------

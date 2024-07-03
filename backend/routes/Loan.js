@@ -42,29 +42,33 @@ router
     res.json(message);
   });
 
-router.get("/user/:id", async (req, res) => {
-  // TODO check param is valid
-  // TODO see: db_users.getLendedBooks(id, res);
-  if (isNaN(req.params.id)) {
-    res.json("Hiba tortet");
-    return;
-  }
-
-  result = await database.getLoanByUid(id);
-  res.json(result);
-});
-//TODO use  POST to loan a book
-
-//----------------------------------------------------------------
-
-//TODO eliminate this...
 router
-  .route("/")
-  // new loan posted by the user
-  // TODO future imporvement: if body.user is empty, use req.user.id
-  .post(upload.none(), (req, res) => {
-    console.log(req.body);
-    database.lend(req.body, res);
+  .route("/user/:id")
+  .get(async (req, res) => {
+    // TODO check param is valid
+    // TODO see: db_users.getLendedBooks(id, res);
+    if (isNaN(req.params.id)) {
+      res.json("Hiba tortet");
+      return;
+    }
+
+    result = await database.getLoanByUid(id);
+    res.json(result);
+  })
+  .put(upload.none(), async (req, res) => {
+    // TODO check param is valid (see max user ID and others ?)
+    // TODO check if has message loan_text ?)
+    if (isNaN(req.params.id)) {
+      res.json("Hiba tortet");
+      return;
+    }
+
+    const message = await database.lend(
+      req.params.id,
+      req.body.bid,
+      req.body.loan_text
+    );
+    res.json(message);
   });
 
 module.exports = router;
