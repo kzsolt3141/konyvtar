@@ -4,6 +4,7 @@
     <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="styles/common.css" />
     <link rel="stylesheet" href="styles/index-grid.css" />
+    <link rel="stylesheet" href="styles/lend.css" />
   </head>
   <body>
     <div class="fixed_header">
@@ -99,22 +100,31 @@
 
     <div class="list_div" id="users_div"></div>
 
-    <div class="seach_results_block" id="lend_div">
+    <div class="loan_header" id="lend_div">
       <img class="search_icon" src="/styles/static/register.svg" />
       <button class="general_button" id="lend_button">
         <img class="general_button_icon" src="/styles/static/edit.png" />
       </button>
+    </div>
+    <div>
       <div id="loan_details" class="loan_details" hidden>
-        <p id="loan_info"></p>
-        <input type="text" id="loan_text" placeholder="Megjegyzes" />
-        <div>
-          <button type="button" id="submit_loan" class="general_button">
-            <img src="/styles/static/ok.svg" class="general_button_icon" />
-          </button>
-          <button type="button" id="cancel_loan" class="general_button">
-            <img src="/styles/static/x.svg" class="general_button_icon" />
-          </button>
-        </div>
+        <p id="loan_info" class="loan_info_text"></p>
+        <form id="loan_form">
+          <input
+            type="text"
+            id="loan_text"
+            name="loan_text"
+            placeholder="Megjegyzes"
+          />
+          <div>
+            <button type="submit" id="submit_loan" class="general_button">
+              <img src="/styles/static/ok.svg" class="general_button_icon" />
+            </button>
+            <button type="button" id="cancel_loan" class="general_button">
+              <img src="/styles/static/x.svg" class="general_button_icon" />
+            </button>
+          </div>
+        </form>
       </div>
     </div>
     <% } %>
