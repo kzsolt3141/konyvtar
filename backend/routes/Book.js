@@ -183,7 +183,9 @@ router
       }
     }
 
-    res.status(sts).render("book", { message: message, bid: nextBookId + 1 });
+    res
+      .status(sts)
+      .render("book", { message: message, bid: nextBookId + 1, blank: true });
   });
 
 module.exports = router;

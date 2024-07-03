@@ -2,6 +2,8 @@
 *.csv
 *.exe
 uploads/*.jpg
+uploads/*.jpeg
+uploads/*.jfif
 entrypoint*
 package-lock.json
 
