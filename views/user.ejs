@@ -25,6 +25,7 @@
           <h2>Felhasznalo</h2>
         </div>
 
+        <% if (locals.useradmin == 1) { %>
         <div class="book_form_line">
           <label for="admin">Admin ?</label>
           <input
@@ -34,6 +35,7 @@
             <%= (!!locals.admin) ? "checked" : "" %>
           />
         </div>
+        <% } %>
 
         <input type="hidden" id="id" name="id" 
         value="<%= (!!locals.uid) ? uid :"" %>" />
