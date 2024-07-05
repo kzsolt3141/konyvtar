@@ -181,6 +181,26 @@ async function getUserById(bid) {
   return user;
 }
 
+//TODO secure all fetches like this
+async function getUserNotesById(uid) {
+  var userNotes = null;
+  try {
+    const rsp = await fetch(`/user/notes/${uid}`, {
+      method: "GET",
+    });
+
+    if (rsp.ok) {
+      userNotes = await rsp.json();
+    } else {
+      rsp.text().then((text) => console.log(text));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  return userNotes;
+}
+
 async function getLoanByUid(uid) {
   const rsp = await fetch(`/loan/user/${uid}`, {
     method: "GET",
@@ -274,6 +294,7 @@ export const common = {
   getBookById,
   getBookNotesById,
   getUserById,
+  getUserNotesById,
   getLoanByBid,
   getLoanByUid,
   createOrderingSelector,

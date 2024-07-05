@@ -134,7 +134,6 @@ router
   // toggle book status identified by book ID
   .put(upload.none(), async (req, res) => {
     var message = "init";
-    console.log(req.body);
     if (
       !isNaN(req.params.id) &&
       Object.keys(req.body).length &&
