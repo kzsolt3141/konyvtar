@@ -109,6 +109,7 @@ router
         ver: book.ver,
         keys: book.keys,
         price: book.price,
+        status: book.status,
         pic: book.pic,
       });
     } else {

@@ -11,6 +11,11 @@
       name="blank"
       content=<%=(!!locals.blank) ? blank : false %>
     />
+    <meta
+      id="sts"
+      name="sts"
+      content=<%=(!!locals.status) ? status : false %>
+    />
   </head>
   <body>
     <div class="fixed_header">
@@ -43,8 +48,41 @@
     <div class="enable_div" id="disable_div"></div>
 
     <div class="book_form_container">
-      <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>" id="book_thumbnail"
-      class="book_thumbnail">
+      <div class="book_form_div">
+        <img src="<%=(!!locals.pic && pic!="") ? "/"+pic : "/styles/static/default_book.png" %>" id="book_thumbnail"
+        class="book_thumbnail">
+
+        <% if (!locals.blank) { %>       
+          <div class="book_form_div">
+            <h3 id="action_title" class="action_title"></h3>
+            <div class="book_actions">
+              <button class="general_button" id="lend_btn">
+                <img class="general_button_icon" src="/styles/static/register.svg" />
+              </button>
+    
+              <button class="general_button" id="status_btn">
+                <img class="general_button_icon" src="/styles/static/broken.svg" />
+              </button>
+            </div>
+    
+            <form
+              id="action_details"
+              class="action_details"
+              hidden
+              >
+              <input type="text" id="action_notes" name="action_notes" placeholder="Megjegyzes" />
+              <div class="book_actions">
+                <button type="button" id="submit_action" class="general_button">
+                  <img src="/styles/static/ok.svg" class="general_button_icon" />
+                </button>
+                <button type="button" id="cancel_action" class="general_button">
+                  <img src="/styles/static/x.svg" class="general_button_icon" />
+                </button>
+              </div>
+            </form>
+          </div>
+          <% } %>
+      </div>
 
       <form
        action=<%= (!!locals.isbn) ? "/book/"+ bid : "/book" %>
@@ -139,37 +177,6 @@
           </button>
         </div>
       </form>
-
-      <% if (!locals.blank) { %>       
-      <div>
-        <p id="action_title" class="action_title"></p>
-        <div class="book_actions">
-          <button class="general_button" id="lend_btn">
-            <img class="general_button_icon" src="/styles/static/register.svg" />
-          </button>
-
-          <button class="general_button" id="status_btn">
-            <img class="general_button_icon" src="/styles/static/broken.svg" />
-          </button>
-        </div>
-
-        <form
-          id="action_details"
-          class="action_details"
-          hidden
-          >
-          <input type="text" id="action_notes" name="action_notes" placeholder="Megjegyzes" />
-          <div class="book_actions">
-            <button type="button" id="submit_action" class="general_button">
-              <img src="/styles/static/ok.svg" class="general_button_icon" />
-            </button>
-            <button type="button" id="cancel_action" class="general_button">
-              <img src="/styles/static/x.svg" class="general_button_icon" />
-            </button>
-          </div>
-        </form>
-      </div>
-      <% } %>
     </div>
     
 

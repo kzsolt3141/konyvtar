@@ -19,6 +19,8 @@ document.getElementById("image").addEventListener("change", function (event) {
 
 //----------------------------------------------------------------
 const isBlank = document.getElementById("blank").getAttribute("content");
+const bookSts = document.getElementById("sts").getAttribute("content");
+
 if (isBlank === "false") {
   const bid = document.getElementById("bid").getAttribute("content");
   if (bid != "") {
@@ -50,10 +52,12 @@ if (isBlank === "false") {
     var fetch_link = "";
     const avl = await common.bookIsAvailableById(bid);
     const loanBtn = document.getElementById("lend_btn");
-    if (avl[0] == true) {
-      document.getElementById("action_title").innerHTML = "A konyv elerheto";
+    const action_title = document.getElementById("action_title");
+
+    if (bookSts == true && avl[0] == true) {
+      action_title.innerHTML = "A konyv elerheto";
       loanBtn.style.display = "none";
-    } else {
+    } else if (bookSts == true && avl[0] == false) {
       loanBtn.addEventListener("click", function () {
         const actionDetForm = document.getElementById("action_details");
         actionDetForm.style.display = "block";
@@ -66,7 +70,9 @@ if (isBlank === "false") {
       });
 
       // TODO make this nicer
-      document.getElementById("action_title").innerHTML = avl[1];
+      action_title.innerHTML = `A konyv kiadva a ${avl[1]} felhasznalonak`;
+    } else {
+      action_title.innerHTML = `A konyv inaktiv`;
     }
 
     const toggleStatusBtn = document.getElementById("status_btn");
