@@ -102,9 +102,13 @@ if (isBlank === "false") {
           method: "PUT",
           body: actionFormData,
         })
-          .then((rsp) => rsp.text())
+          .then((rsp) => rsp.json())
           .then((data) => {
-            common.updateStatus(data);
+            console.log(data);
+            const bookStatus = data.bookStatus == 1 ? "Aktiv" : "Inaktiv";
+            common.updateStatus(
+              `${data.bookTitle} -> ${data.message}. new status: ${bookStatus}`
+            );
             document.getElementById("action_details").style.display = "none";
             common.enableMain();
           });

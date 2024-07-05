@@ -134,6 +134,7 @@ router
   // toggle book status identified by book ID
   .put(upload.none(), async (req, res) => {
     var message = "init";
+    var book = "";
     if (
       !isNaN(req.params.id) &&
       Object.keys(req.body).length &&
@@ -144,11 +145,17 @@ router
           req.params.id,
           req.body.action_notes
         );
+
+        book = await database.getBookById(req.params.id);
       } catch (err) {
         message = err.message;
       }
     }
-    res.json(message);
+    res.json({
+      message: message,
+      bookTitle: book.title,
+      bookStatus: book.status,
+    });
   });
 
 //----------------------------------------------------------------

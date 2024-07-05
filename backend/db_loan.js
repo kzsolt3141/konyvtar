@@ -92,7 +92,7 @@ async function bring(bid, notes) {
             reject(err.message);
             return;
           }
-          resolve("Done!");
+          resolve("Book was brought back!");
         }
       );
     } catch (err) {
