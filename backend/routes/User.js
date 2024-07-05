@@ -147,7 +147,7 @@ router
   .route("/")
   // [PUBLIC] require page to add new user to the database
   .get(async (req, res) => {
-    res.render("user");
+    res.render("user", { blank: true });
   })
   // [PUBLIC] upload new user data to the database
   .post(upload.single("image"), async (req, res) => {

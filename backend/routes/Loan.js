@@ -52,7 +52,7 @@ router
       return;
     }
 
-    result = await database.getLoanByUid(id);
+    result = await database.getLoanByUid(req.params.id);
     res.json(result);
   })
   .put(upload.none(), async (req, res) => {

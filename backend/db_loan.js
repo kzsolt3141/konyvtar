@@ -123,7 +123,7 @@ async function getLoanByUid(uid) {
     sql = `
     SELECT loan.lend_date, books.title, loan.lend_notes, loan.back_date, loan.back_notes
     FROM loan
-    JOIN books ON loan.bid = books.bid
+    JOIN books ON loan.bid = books.id
     WHERE loan.uid = ?
       `;
     db_.all(sql, [uid], (err, rows) => {

@@ -1,3 +1,5 @@
+import { common } from "./common.js";
+
 const password = document.getElementById("password");
 const confirm_password = document.getElementById("confirm_password");
 
@@ -27,12 +29,12 @@ document.getElementById("image").addEventListener("change", function (event) {
   }
 });
 
-//TODO finish the implementation
+//TODO finish the implementation: see book notes, loans and status update
 const element = document.getElementById("uid");
 if (element) {
   const uid = element.getAttribute("content");
   if (uid != "") {
-    const userNotes = await common.getUserkNotesById(uid);
+    const userNotes = await common.getUserNotesById(uid);
     const loans = await common.getLoanByUid(uid);
 
     const userNotesText = document.getElementById("user_notes");
