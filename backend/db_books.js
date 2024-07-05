@@ -193,7 +193,7 @@ function getBookById(id) {
     db_.all(sql, [id], (err, rows) => {
       if (err) {
         console.log(err.message);
-        reject("Hiba!");
+        reject(err);
         return;
       }
       resolve(rows[0]);
@@ -238,7 +238,7 @@ async function toggleBookStatus(id, notes) {
       registerBookNotes(id, currentDate, notes);
       //TODO generate a meaningful message: current status, book title
       //TODO may require an other querry
-      resolve(`Book ${id} modified successfully`);
+      resolve(`Status updated!`);
     });
   });
 }
