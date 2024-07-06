@@ -69,7 +69,8 @@ if (isBlank === "false") {
         fetch_link = `/loan/book/${bid}`;
       });
 
-      // TODO make this nicer
+      // TODO use user name in the message
+      // TODO make it hyperlink -> to user page
       action_title.innerHTML = `A konyv kiadva a ${avl[1]} felhasznalonak`;
     } else {
       action_title.innerHTML = `A konyv inaktiv`;

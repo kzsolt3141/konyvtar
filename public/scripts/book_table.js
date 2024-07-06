@@ -1,54 +1,44 @@
 import { common } from "./common.js";
 
 const bookTable = document.getElementById("book_table");
+const naviBackBtn = document.getElementById("navi_back");
+const naviNextBtn = document.getElementById("navi_next");
+const naviPage = document.getElementById("navi_page");
+var tablePage = 0;
+var maxBookCount = 0;
+var globalOrderKey = "";
 
-const bookFormData = new FormData();
-bookFormData.append("order", "id");
-bookFormData.append("offset", 0);
+async function getOrderedData(orderBy) {
+  const bookFormData = new FormData();
+  bookFormData.append("order", orderBy);
+  bookFormData.append("offset", tablePage);
 
-var data = await fetch("/book/table", {
-  method: "POST",
-  body: bookFormData,
-}).then((res) => res.json());
+  //TODO add waiting window here (enable / disable main)
+  var data = await fetch("/book/table", {
+    method: "POST",
+    body: bookFormData,
+  }).then((res) => res.json());
 
-data = JSON.parse(data);
+  return data;
+}
 
-listAllBooks(data);
+listAllBooks("id");
 
 common.createOrderingSelector(
   "book_order",
   document.getElementById("book_order_div"),
-  data,
   common.BookLabelNames,
-  reorderData,
   listAllBooks
 );
 
-function reorderData(data, prop, cb = null) {
-  if (!data) return;
-
-  //TODO use uppercase for not INT data
-  data.sort((a, b) => {
-    const propA = a[prop];
-    const propB = b[prop];
-
-    if (propA < propB) {
-      return -1;
-    }
-
-    if (propA > propB) {
-      return 1;
-    }
-
-    return 0;
-  });
-  if (cb) cb(data);
-}
-
-function listAllBooks(data) {
+async function listAllBooks(key) {
   bookTable.innerHTML = "";
+  const data = await getOrderedData(key);
   if (data) {
-    data.forEach(async (book) => {
+    const books = data.books;
+    maxBookCount = data.total;
+    naviPage.value = `${tablePage} ${maxBookCount}`;
+    books.forEach(async (book) => {
       const notes = await common.getBookNotesById(book["id"]);
       const register_notes = notes.filter((entry) => /^\d+$/.test(entry.notes));
       var register_note = "";
@@ -58,6 +48,7 @@ function listAllBooks(data) {
       for (const k in book) {
         if (k == "pic") continue;
         if (k == "id") continue;
+        if (k == "keys") continue;
         const e = document.createElement("p");
         e.textContent = book[k];
         bookTable.appendChild(e);
@@ -65,3 +56,15 @@ function listAllBooks(data) {
     });
   }
 }
+
+naviBackBtn.addEventListener("click", () => {
+  //TODO keep order value, do something with createOrderingSelector
+  tablePage = tablePage > 0 ? tablePage - 1 : tablePage;
+  listAllBooks("id");
+});
+
+naviNextBtn.addEventListener("click", () => {
+  //TODO implement pagination
+  tablePage = tablePage < maxBookCount ? tablePage + 1 : tablePage;
+  listAllBooks("id");
+});
