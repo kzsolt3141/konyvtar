@@ -150,11 +150,10 @@ async function findBook(body) {
 }
 
 function getAllBooks(body) {
+  // TODO check body for input sanity
   order = body.order;
-  // TODO change to 20 or 50 maybe ?
-  const limit = 3;
-
-  offset = body.offset * limit;
+  limit = body.limit;
+  offset = body.offset * body.limit;
 
   const sql = `
     SELECT * FROM books 
