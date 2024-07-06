@@ -9,7 +9,7 @@
 
 .navi {
   display: grid;
-  grid-template-columns: 30px 30px 30px;
+  grid-template-columns: 70px 50px 50px 70px;
   align-items: center;
   justify-content: center;
 }
@@ -19,6 +19,6 @@
 }
 
 .navi_input {
-  width: 20px;
+  width: 30px;
   text-align: center;
 }
