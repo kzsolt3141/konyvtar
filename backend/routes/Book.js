@@ -34,7 +34,8 @@ router
   // do the same but return it in json, will be used to display books in frintend
   .post(upload.none(), async (req, res) => {
     const books = await database.getAllBooks(req.body);
-    res.json(JSON.stringify(books));
+    const total = await database.getTotalBookNumber();
+    res.json({ total, books });
   });
 
 //----------------------------------------------------------------

@@ -151,14 +151,17 @@ async function findBook(body) {
 
 function getAllBooks(body) {
   order = body.order;
-  offset = body.offset * 50;
+  // TODO change to 20 or 50 maybe ?
+  const limit = 3;
+
+  offset = body.offset * limit;
 
   const sql = `
     SELECT * FROM books 
-    ORDER BY ${order} ASC`;
-  //TODO add this when paging is ready
-  // LIMIT 50
-  // OFFSET ${offset}`;
+    ORDER BY ${order} ASC
+    LIMIT ${limit}
+    OFFSET ${offset}`;
+
   return new Promise((resolve, reject) => {
     db_.all(sql, (err, rows) => {
       if (err) {
@@ -167,6 +170,20 @@ function getAllBooks(body) {
         return;
       }
       resolve(rows);
+    });
+  });
+}
+
+async function getTotalBookNumber() {
+  const sql = `SELECT COUNT(*) AS total FROM books`;
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        console.log(err.message);
+        reject("");
+        return;
+      }
+      resolve(rows[0].total);
     });
   });
 }
@@ -304,6 +321,7 @@ module.exports = {
   registerBook: registerBook,
   findBook: findBook,
   getAllBooks: getAllBooks,
+  getTotalBookNumber: getTotalBookNumber,
   getBookNotesById: getBookNotesById,
   getBookById: getBookById,
   addGenre: addGenre,

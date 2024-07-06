@@ -219,7 +219,7 @@ async function getLoanByBid(uid) {
   return loan;
 }
 
-function createOrderingSelector(id, place, data, label, sortcb, nextcb) {
+function createOrderingSelector(id, place, label, sortcb) {
   if (!place) return;
   const typeSelect = document.createElement("select");
   typeSelect.id = id;
@@ -239,7 +239,7 @@ function createOrderingSelector(id, place, data, label, sortcb, nextcb) {
 
   typeSelect.addEventListener("change", () => {
     if (typeSelect.value !== "Rendezes") {
-      sortcb(data, typeSelect.value, nextcb);
+      sortcb(typeSelect.value);
     }
   });
 
