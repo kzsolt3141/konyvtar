@@ -2,12 +2,11 @@ import { common } from "./common.js";
 
 const BookData = [];
 
+// TODO fixme: listBooks and reorder function are no longer supported in selector event
 common.createOrderingSelector(
   "book_order",
   document.getElementById("book_order_div"),
-  BookData,
   common.BookLabelNames,
-  common.reorderData,
   listBooks
 );
 

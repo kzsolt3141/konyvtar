@@ -2,12 +2,11 @@ import { common } from "./common.js";
 
 let UserData = [];
 
+// TODO fixme: listUsers and reorder function are no longer supported in selector event, see book_table.js
 common.createOrderingSelector(
   "user_order",
   document.getElementById("user_order_div"),
-  UserData,
   common.UserLabelNames,
-  common.reorderData,
   listUsers
 );
 
