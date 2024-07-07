@@ -43,17 +43,7 @@
     <div class="seach_results_block">
       <img class="search_icon" src="styles/static/book.svg" />
       <form class="search" id="search_books">
-        <select id="book_type" name="type">
-          <option value="title">Konyvcim</option>
-          <option value="author">Szerzo</option>
-          <option value="genre">Tipus</option>
-          <option value="id">Azonosito</option>
-          <option value="isbn">ISBN</option>
-          <option value="year">Megjelent</option>
-          <option value="publ">Kiado</option>
-          <option value="ver">Kiadas</option>
-          <option value="keys">Kulcsszo</option>
-        </select>
+        <div class="order_div" id="book_key_div"></div>
 
         <input type="search" id="book_key" name="key" placeholder="Kereses" />
 
@@ -78,11 +68,8 @@
     <div class="seach_results_block">
       <img class="search_icon" src="styles/static/user.svg" />
       <form class="search" id="search_users">
-        <select id="user_type" name="type">
-          <option value="name">Nev</option>
-          <option value="phone">Telefonszam</option>
-          <option value="email">e-Mail</option>
-        </select>
+        <div class="order_div" id="user_key_div"></div>
+
         <input type="search" id="user_key" name="key" placeholder="Kereses" />
 
         <div class="order_div" id="user_order_div"></div>

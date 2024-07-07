@@ -1,6 +1,13 @@
 import { common } from "./common.js";
 
 common.createOrderingSelector(
+  "book_type",
+  document.getElementById("book_key_div"),
+  common.BookLabelNames,
+  null
+);
+
+common.createOrderingSelector(
   "book_order",
   document.getElementById("book_order_div"),
   common.BookLabelNames,

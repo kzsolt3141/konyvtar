@@ -131,7 +131,7 @@ async function findBook(body) {
   const status = body.status == "on" ? 1 : 0;
   const sql = `
     SELECT * FROM books WHERE 
-    LOWER(${body.type}) LIKE LOWER(?) 
+    LOWER(${body.book_type}) LIKE LOWER(?) 
     AND 
     status = ?
     ORDER BY ${body.book_order} ASC
