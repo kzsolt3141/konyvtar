@@ -1,6 +1,13 @@
 import { common } from "./common.js";
 
 common.createOrderingSelector(
+  "user_type",
+  document.getElementById("user_key_div"),
+  common.UserLabelNames,
+  null
+);
+
+common.createOrderingSelector(
   "user_order",
   document.getElementById("user_order_div"),
   common.UserLabelNames,

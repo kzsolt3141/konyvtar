@@ -101,7 +101,7 @@ async function findUser(body) {
     SELECT id, name, address, phone, email, pic, status
     FROM users
     WHERE 
-      LOWER(${body.type}) LIKE LOWER(?) 
+      LOWER(${body.user_type}) LIKE LOWER(?) 
         AND 
       status = ?
       ORDER BY ${body.user_order} ASC
