@@ -1,13 +1,10 @@
 import { common } from "./common.js";
 
-const BookData = [];
-
-// TODO fixme: listBooks and reorder function are no longer supported in selector event
 common.createOrderingSelector(
   "book_order",
   document.getElementById("book_order_div"),
   common.BookLabelNames,
-  listBooks
+  null
 );
 
 const bookSearchBtn = document.getElementById("search_books_btn");
@@ -33,13 +30,8 @@ async function searchBook(bookFormData) {
     body: bookFormData,
   }).then((res) => res.json());
 
-  BookData.length = 0;
-
   if (books) {
-    BookData.push(books);
-    if (BookData.length > 0) {
-      listBooks(BookData[0]);
-    }
+    listBooks(books);
   }
   common.enableMain();
 }

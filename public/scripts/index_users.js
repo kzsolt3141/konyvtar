@@ -1,13 +1,10 @@
 import { common } from "./common.js";
 
-let UserData = [];
-
-// TODO fixme: listUsers and reorder function are no longer supported in selector event, see book_table.js
 common.createOrderingSelector(
   "user_order",
   document.getElementById("user_order_div"),
   common.UserLabelNames,
-  listUsers
+  null
 );
 
 const userSearchBtn = document.getElementById("search_user");
@@ -29,17 +26,14 @@ function userClickCb(id) {
 
 async function searchUser(formData) {
   common.disableMain();
-  UserData.length = 0;
 
   const users = await fetch("/user/details", {
     method: "POST",
     body: formData,
   }).then((rsp) => rsp.json());
 
-  UserData.push(users);
-
-  if (UserData.length > 0) {
-    listUsers(UserData[0]);
+  if (users) {
+    listUsers(users);
   }
   common.enableMain();
 }

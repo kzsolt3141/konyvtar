@@ -1,27 +1,27 @@
 const BookLabelNames = {
-  id: "Azonosito:",
-  isbn: "ISBN:",
-  title: "Cim:",
-  author: "Szerzo:",
-  genre: "Tipus:",
-  year: "Megjelent:",
-  publ: "Kiado:",
-  ver: "Kiadas:",
-  status: "Allapot:",
+  id: "Azonosito",
+  isbn: "ISBN",
+  title: "Cim",
+  author: "Szerzo",
+  genre: "Tipus",
+  year: "Megjelent",
+  publ: "Kiado",
+  ver: "Kiadas",
+  status: "Allapot",
   keys: "Kulcsszavak",
-  notes: "Megjegyzesek:",
-  available: "Elerheto:",
-  price: "Ar(lej):",
+  notes: "Megjegyzesek",
+  available: "Elerheto",
+  price: "Ar(lej)",
 };
 
 const UserLabelNames = {
-  id: "Azonosito:",
-  name: "Nev:",
-  address: "Cim:",
-  phone: "Telefonszam:",
-  email: "E-Mail:",
-  status: "Allapot:",
-  notes: "Megjegyzesek:",
+  id: "Azonosito",
+  name: "Nev",
+  address: "Cim",
+  phone: "Telefonszam",
+  email: "E-Mail",
+  status: "Allapot",
+  notes: "Megjegyzesek",
 };
 
 function getCurrentDate() {
@@ -223,6 +223,7 @@ function createOrderingSelector(id, place, label, sortcb) {
   if (!place) return;
   const typeSelect = document.createElement("select");
   typeSelect.id = id;
+  typeSelect.name = id;
 
   for (const key in label) {
     if (key == "id" || key == "available" || key == "notes" || key == "status")
@@ -234,7 +235,7 @@ function createOrderingSelector(id, place, label, sortcb) {
   }
 
   typeSelect.addEventListener("change", () => {
-    if (typeSelect.value !== "Rendezes") {
+    if (sortcb) {
       sortcb(typeSelect.value);
     }
   });
