@@ -134,7 +134,7 @@ async function findBook(body) {
     LOWER(${body.type}) LIKE LOWER(?) 
     AND 
     status = ?
-    ORDER BY ${body.type} ASC
+    ORDER BY ${body.book_order} ASC
     LIMIT 20`;
 
   return new Promise((resolve, reject) => {
