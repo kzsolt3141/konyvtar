@@ -17,10 +17,13 @@ async function getOrderedData(orderBy) {
   bookFormData.append("limit", pageLimit);
 
   //TODO add waiting window here (enable / disable main)
+  common.disableMain();
   var data = await fetch("/book/table", {
     method: "POST",
     body: bookFormData,
   }).then((res) => res.json());
+  common.enableMain();
+  common.updateStatus(data.message);
 
   return data;
 }
