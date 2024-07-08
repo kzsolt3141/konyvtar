@@ -27,15 +27,23 @@ const upload = multer({ storage: storage });
 router
   .route("/table")
   // return all books in a simple table
-  // TODO: table should show the first 50 books the have a next
   .get(async (req, res) => {
     res.render("book_table", {});
   })
   // do the same but return it in json, will be used to display books in frintend
   .post(upload.none(), async (req, res) => {
-    const books = await database.getAllBooks(req.body);
-    const total = await database.getTotalBookNumber();
-    res.json({ total, books });
+    let message = "Done!";
+    let total = 0;
+    let books = null;
+
+    try {
+      books = await database.getAllBooks(req.body);
+      total = await database.getTotalBookNumber();
+    } catch (err) {
+      message = err.message;
+    }
+
+    res.json({ total, books, message });
   });
 
 //----------------------------------------------------------------

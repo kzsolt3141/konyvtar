@@ -149,23 +149,36 @@ async function findBook(body) {
   });
 }
 
-function getAllBooks(body) {
-  // TODO check body for input sanity
-  order = body.order;
-  limit = body.limit;
-  offset = body.offset * body.limit;
+async function getAllBooks(body) {
+  if (!body || typeof body !== "object") {
+    throw new Error("Invalid input: 'body' must be an object.");
+  }
+
+  let { order, limit, offset } = body;
+
+  if (!order || !limit || !offset) {
+    throw new Error("'order', 'limit', 'offset' must be provided.");
+  }
+
+  offset = Number(offset);
+  limit = Number(limit);
+
+  if (isNaN(offset) || isNaN(limit) || !isFinite(offset) || !isFinite(limit)) {
+    throw new Error("'limit' and 'offset' must be valid numbers.");
+  }
+
+  const book_offset = offset * limit;
 
   const sql = `
     SELECT * FROM books 
     ORDER BY ${order} ASC
     LIMIT ${limit}
-    OFFSET ${offset}`;
+    OFFSET ${book_offset}`;
 
   return new Promise((resolve, reject) => {
     db_.all(sql, (err, rows) => {
       if (err) {
-        console.log(err.message);
-        reject("Hiba!");
+        reject(err);
         return;
       }
       resolve(rows);

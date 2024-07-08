@@ -29,6 +29,8 @@
       </div>
     </div>
 
+    <div class="enable_div" id="disable_div"></div>
+
     <div class="order_div" id="book_order_div"></div>
 
     <div id="book_table_header" class="book_table">
@@ -58,6 +60,10 @@
       />
       <h3 id="navi_text"></h3>
       <img id="navi_next" class="navi_icon" src="/styles/static/next.svg" />
+    </div>
+
+    <div id="global_status" class="global_status">
+      <%=(!!locals.message) ? message : "" %>
     </div>
 
     <div class="version" id="version"></div>
