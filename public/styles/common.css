@@ -113,6 +113,11 @@ button {
   justify-content: center;
 }
 
+.user_icon {
+  width: 50px;
+  border-radius: 25px;
+}
+
 .general_button {
   width: 70px;
   align-items: center;

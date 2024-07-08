@@ -47,8 +47,13 @@ app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
+// TODO send meaningful data or at least user ID
 app.get("/", p.checkAuthenticated, (req, res) => {
-  res.render("index", { admin: req.user.admin });
+  res.render("index", {
+    admin: req.user.admin,
+    user_pic: "1720032581046_clara_profile.jpg",
+    user_name: "Clara",
+  });
 });
 
 //----------------------------------------------------------------

@@ -34,6 +34,14 @@
           <img class="general_button_icon" src="styles/static/logout.svg" />
           <div class="tooltip">Kijelentkezes</div>
         </button>
+
+        <!-- TODO When clicked, go to the user details page -->
+        <!-- TODO maybe this should be in javascript ? -->
+        <div>
+          <img class="user_icon" src=<%=(!!locals.user_pic) ? "/"+user_pic :
+          "/styles/static/default_book.png"%> />
+          <p><%=(!!locals.user_name) ? user_name : "???"%></p>
+        </div>
       </div>
     </div>
 
