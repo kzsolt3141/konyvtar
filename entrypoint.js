@@ -51,8 +51,9 @@ app.use("/loan", loanRoute);
 app.get("/", p.checkAuthenticated, (req, res) => {
   res.render("index", {
     admin: req.user.admin,
-    user_pic: "1720032581046_clara_profile.jfif",
-    user_name: "Clara",
+    user_id: req.user.id,
+    user_pic: req.user.pic,
+    user_name: req.user.name,
   });
 });
 

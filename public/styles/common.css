@@ -113,9 +113,22 @@ button {
   justify-content: center;
 }
 
+.user_icon_div {
+  display: grid;
+  width: 70px;
+  align-items: center;
+  justify-items: center;
+}
+
 .user_icon {
   width: 50px;
   border-radius: 25px;
+}
+
+.user_icon_text {
+  background-color: rgb(209, 240, 197, 0.7);
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .general_button {

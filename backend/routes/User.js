@@ -98,8 +98,7 @@ router
 router
   .route("/:id")
   // [ADMIN] require page to show used information (ID)
-  // TODO future improvement user shoudl be able to require its own data
-  .get(p.checkAuthAdmin, async (req, res) => {
+  .get(p.checkAuthenticated, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
 
     if (
@@ -125,15 +124,17 @@ router
     }
   })
   // [ADMIN] update user information
-  // TODO future improvement user shoudl be able to require its own data
-  .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
+  .post(p.checkAuthenticated, upload.single("image"), async (req, res) => {
+    const nextUserId = await db_users.getNextUserId();
     if (req.body.password != "") {
       req.body.password = await bcrypt.hash(req.body.password, 10);
     } else req.body.password = null;
 
-    if (isNaN(req.params.id)) {
-      res.redirect("/");
-    } else if (req.params.id == req.user.id || req.user.admin == 1) {
+    if (
+      !isNaN(req.params.id) &&
+      req.params.id < nextUserId &&
+      (req.params.id == req.user.id || req.user.admin == 1)
+    ) {
       const message = await db_users.editUser(req.body, req.file);
       console.log(message);
       res.redirect("/user/" + req.params.id);
