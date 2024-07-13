@@ -36,9 +36,26 @@ function ipLoggerMW(req, res, next) {
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
-  console.log(
-    `${year}-${month}-${day}; ${hours}:${minutes}:${seconds} => ` + clientIp
-  );
+  var logMessage = `${year}-${month}-${day}; ${hours}:${minutes}:${seconds} | ${clientIp} -> ${req.method} ${req.originalUrl}`;
+
+  if (req.user) {
+    logMessage += ` user: ${req.user.id}`;
+  }
+
+  if (req.body && Object.keys(req.body).length > 0) {
+    logMessage += `\n body:  ${JSON.stringify(req.body, null, 2)}`;
+  }
+
+  logMessage += "\n";
+
+  console.log(logMessage);
+
+  fs.appendFile("log.txt", logMessage, (err) => {
+    if (err) {
+      console.error("Error writing to log file", err);
+    }
+  });
+
   next();
 }
 
