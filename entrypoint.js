@@ -47,7 +47,6 @@ app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
-// TODO send meaningful data or at least user ID
 app.get("/", p.checkAuthenticated, (req, res) => {
   res.render("index", {
     admin: req.user.admin,
