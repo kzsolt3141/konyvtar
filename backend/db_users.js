@@ -274,6 +274,31 @@ function editUser(body, file) {
   });
 }
 
+async function toggleUserStatus(id, notes) {
+  sql = `
+  UPDATE users 
+  SET status = 
+    CASE 
+      WHEN status = 0 
+        THEN 1 
+        ELSE 0
+    END 
+  WHERE id = ?`;
+
+  return new Promise((resolve, reject) => {
+    db_.run(sql, [id], (err) => {
+      if (err) {
+        console.log(err.message);
+        reject(`User ${id} could not be modified`);
+        return;
+      }
+      const currentDate = new Date();
+      registerUserNotes(id, currentDate, notes);
+      resolve(`Status updated!`);
+    });
+  });
+}
+
 module.exports = {
   init: init,
   registerUser: registerUser,
@@ -284,4 +309,5 @@ module.exports = {
   getLendedBooks: getLendedBooks,
   getNextUserId: getNextUserId,
   editUser: editUser,
+  toggleUserStatus: toggleUserStatus,
 };
