@@ -1,5 +1,8 @@
 import { common } from "./common.js";
 
+const userMessage = document.getElementById("message").getAttribute("content");
+common.updateStatus(userMessage);
+
 const password = document.getElementById("password");
 const confirm_password = document.getElementById("confirm_password");
 
