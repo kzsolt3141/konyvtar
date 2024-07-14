@@ -33,28 +33,6 @@ function getCurrentDate() {
   return `${year}-${month}-${day}`;
 }
 
-function reorderData(dataArr, prop, cb = null) {
-  if (!dataArr) return;
-
-  const data = dataArr[0];
-  //TODO use uppercase for not INT data
-  data.sort((a, b) => {
-    const propA = a[prop];
-    const propB = b[prop];
-
-    if (propA < propB) {
-      return -1;
-    }
-
-    if (propA > propB) {
-      return 1;
-    }
-
-    return 0;
-  });
-  if (cb) cb(data);
-}
-
 function updateStatus(data) {
   document.getElementById("global_status").textContent = data;
   setTimeout(() => {
@@ -281,7 +259,6 @@ export const common = {
   BookLabelNames,
   UserLabelNames,
   getCurrentDate,
-  reorderData,
   updateStatus,
   showVersion,
   disableMain,

@@ -70,6 +70,7 @@ router
   });
 //----------------------------------------------------------------
 //TODO implement status codes like this everywhere!!!
+// TODO also use the .ok check in frontend
 router
   .route("/notes/:id")
   // Return all the book notes identified by the ID

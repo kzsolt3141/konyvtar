@@ -35,8 +35,6 @@
           <div class="tooltip">Kijelentkezes</div>
         </button>
 
-        <!-- TODO When clicked, go to the user details page -->
-        <!-- TODO maybe this should be in javascript ? -->
         <a href= <%=(!!locals.user_id) ? "/user/"+user_id :"/"%> class="user_icon_div">
           <img class="user_icon" src=<%=(!!locals.user_pic) ? "/"+user_pic :
           "/styles/static/default_book.png"%> />
