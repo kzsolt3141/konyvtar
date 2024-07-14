@@ -72,10 +72,10 @@ if (isBlank === "false") {
         fetch_link = `/loan/book/${bid}`;
       });
 
-      // TODO use user name in the message
-      // TODO make it hyperlink -> to user page
-      action_title.innerHTML = `A konyv kiadva a ${avl[1]} felhasznalonak`;
+      const user = await common.getUserById(avl[1]);
+      action_title.innerHTML = `A konyv kiadva <a href="/user/${user.id}">${user.name}</a> felhasznalonak`;
     } else {
+      loanBtn.style.display = "none";
       action_title.innerHTML = `A konyv inaktiv`;
     }
 
