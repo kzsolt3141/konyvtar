@@ -25,10 +25,10 @@ router.get("/available/:id", async (req, res) => {
   res.json(result);
 });
 
+//TODO use passport for authentication
 router
   .route("/book/:id")
   .get(async (req, res) => {
-    // TODO check param is valid
     if (isNaN(req.params.id)) {
       res.json("Hiba tortet");
       return;

@@ -84,18 +84,21 @@ router
       const notes = await database.getBookNotesById(req.params.id);
       res.json(notes);
     } catch (err) {
-      res.status(500).send(err.message || err);
+      res.status(500).send(err.message);
     }
   });
 //----------------------------------------------------------------
 
-router.post("/genres/:genre?", upload.none(), (req, res) => {
-  if (req.params.genre) {
-    database.addGenre(req.params.genre, res);
-  } else {
+router
+  .route("/genres/:genre?")
+  .get((req, res) => {
     database.getGenres(res);
-  }
-});
+  })
+  .post(upload.none(), (req, res) => {
+    if (req.params.genre) {
+      database.addGenre(req.params.genre, res);
+    }
+  });
 
 //----------------------------------------------------------------
 router
@@ -103,9 +106,9 @@ router
   // show book details page identified by book ID
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
-
+    //TODO: handle message as status in frontend
     if (isNaN(req.params.id)) {
-      res.render("book", { bid: nextBookId });
+      res.render("book", { bid: nextBookId, message: "Add new book" });
     } else if (req.params.id < nextBookId) {
       const book = await database.getBookById(req.params.id);
       res.render("book", {
@@ -120,6 +123,7 @@ router
         price: book.price,
         status: book.status,
         pic: book.pic,
+        message: `Required book with ID ${book.id}`,
       });
     } else {
       res.redirect("/");

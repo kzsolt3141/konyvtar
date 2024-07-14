@@ -61,7 +61,6 @@ router
     }
 
     try {
-      //TODO should not return the crypted password
       const user = await db_users.getUserById(req.params.id);
       res.json(user);
     } catch (err) {
