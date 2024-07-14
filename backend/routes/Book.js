@@ -106,10 +106,13 @@ router
   // show book details page identified by book ID
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
-    //TODO: handle message as status in frontend
-    if (isNaN(req.params.id)) {
-      res.render("book", { bid: nextBookId, message: "Add new book" });
-    } else if (req.params.id < nextBookId) {
+    if (isNaN(req.params.id) || req.params.id >= nextBookId) {
+      res.status(500).render("book", {
+        bid: nextBookId,
+        blank: true,
+        message: "Invalid book ID! Redirecting...",
+      });
+    } else {
       const book = await database.getBookById(req.params.id);
       res.render("book", {
         bid: book.id,
@@ -125,31 +128,50 @@ router
         pic: book.pic,
         message: `Required book with ID ${book.id}`,
       });
-    } else {
-      res.redirect("/");
     }
   })
   // update a book details identified by ID
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
-    // TODO: this message should be returned to frotend
+    const nextBookId = await database.getNextBookId();
     var message = "";
-    var bid = "/book/";
-    if (!isNaN(req.params.id)) {
+    if (isNaN(req.params.id) || req.params.id >= nextBookId) {
+      res.status(500).render("book", {
+        bid: nextBookId,
+        blank: true,
+        message: "Invalid ID: redirecting...",
+      });
+    } else {
       try {
         message = await database.editBook(req.body, req.file);
       } catch (err) {
         message = err.message;
       }
-      bid += req.params.id;
+      const book = await database.getBookById(req.params.id);
+      res.render("book", {
+        bid: book.id,
+        isbn: book.isbn,
+        title: book.title,
+        author: book.author,
+        year: book.year,
+        publ: book.publ,
+        ver: book.ver,
+        keys: book.keys,
+        price: book.price,
+        status: book.status,
+        pic: book.pic,
+        message: message,
+      });
     }
-    res.redirect(bid);
   })
   // toggle book status identified by book ID
   .put(upload.none(), async (req, res) => {
+    const nextBookId = await database.getNextBookId();
     var message = "init";
     var book = "";
+    var status = 200;
     if (
       !isNaN(req.params.id) &&
+      req.params.id < nextBookId &&
       Object.keys(req.body).length &&
       "action_notes" in req.body
     ) {
@@ -162,9 +184,10 @@ router
         book = await database.getBookById(req.params.id);
       } catch (err) {
         message = err.message;
+        status = 500;
       }
     }
-    res.json({
+    res.status(status).json({
       message: message,
       bookTitle: book.title,
       bookStatus: book.status,
