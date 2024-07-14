@@ -6,6 +6,21 @@
     <link rel="stylesheet" href="/styles/book.css" />
 
     <meta id="uid" name="uid" content="<%= (!!locals.uid) ? uid : '' %>" />
+    <meta
+      id="blank"
+      name="blank"
+      content=<%=(!!locals.blank) ? blank : false %>
+    />
+    <meta
+      id="sts"
+      name="sts"
+      content=<%=(!!locals.status) ? status : false %>
+    />
+    <meta
+      id="message"
+      name="message"
+      content="<%=(!!locals.message) ? message : false %>"
+    />
   </head>
   <body>
     <div class="fixed_header">
@@ -16,6 +31,8 @@
         <h1 class="fixed_header_title">Berecki könyvtár</h1>
       </div>
     </div>
+
+    <div class="enable_div" id="disable_div"></div>
 
     <div class="book_form_container">
       <div class="book_form_div">
@@ -196,9 +213,7 @@
       <div id="user_loan" class="book_loan"></div>
     </div>
 
-    <div id="global_status" class="global_status">
-      <%=(!!locals.message) ? message : "" %>
-    </div>
+    <div id="global_status" class="global_status"></div>
 
     <div class="version" id="version"></div>
   </body>

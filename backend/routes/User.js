@@ -99,12 +99,17 @@ router
   // [ADMIN] require page to show used information (ID)
   .get(p.checkAuthenticated, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
-
     if (
-      !isNaN(req.params.id) &&
-      req.params.id < nextUserId &&
-      (req.params.id == req.user.id || req.user.admin == 1)
+      isNaN(req.params.id) ||
+      req.params.id >= nextUserId ||
+      (req.params.id != req.user.id && req.user.admin != 1)
     ) {
+      res.status(500).render("user", {
+        uid: nextBookId,
+        blank: true,
+        message: "Invalid book ID! Redirecting...",
+      });
+    } else {
       const user = await db_users.getUserById(req.params.id);
       res.render("user", {
         uid: user.id,
@@ -116,32 +121,83 @@ router
         phone: user.phone,
         birth_date: user.birth_date,
         occupancy: user.occupancy,
+        status: user.status,
         pic: user.pic,
+        message: `Required user with ID ${user.id}`,
       });
-    } else {
-      res.redirect("/");
     }
   })
   // [ADMIN] update user information
   .post(p.checkAuthenticated, upload.single("image"), async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
+    var message = "";
     if (req.body.password != "") {
       req.body.password = await bcrypt.hash(req.body.password, 10);
     } else req.body.password = null;
 
     if (
+      isNaN(req.params.id) ||
+      req.params.id < nextUserId ||
+      (req.params.id != req.user.id && req.user.admin != 1)
+    ) {
+      res.status(500).render("user", {
+        uid: nextBookId,
+        blank: true,
+        message: "Invalid user ID! Redirecting...",
+      });
+    } else {
+      try {
+        message = await db_users.editUser(req.body, req.file);
+      } catch (err) {
+        message = err.message;
+      }
+      console.log(message);
+      const user = await db_users.getUserById(req.params.id);
+      res.render("user", {
+        uid: user.id,
+        useradmin: req.user.admin,
+        admin: user.admin,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        phone: user.phone,
+        birth_date: user.birth_date,
+        occupancy: user.occupancy,
+        status: user.status,
+        pic: user.pic,
+        message: message,
+      });
+    }
+  })
+  .put(upload.none(), async (req, res) => {
+    const nextUserId = await db_users.getNextUserId();
+    var message = "init";
+    var user = "";
+    var status = 200;
+    if (
       !isNaN(req.params.id) &&
       req.params.id < nextUserId &&
-      (req.params.id == req.user.id || req.user.admin == 1)
+      Object.keys(req.body).length &&
+      "action_notes" in req.body
     ) {
-      const message = await db_users.editUser(req.body, req.file);
-      console.log(message);
-      res.redirect("/user/" + req.params.id);
-    } else {
-      res.redirect("/");
+      try {
+        message = await db_users.toggleUserStatus(
+          req.params.id,
+          req.body.action_notes
+        );
+
+        user = await db_users.getUserById(req.params.id);
+      } catch (err) {
+        message = err.message;
+        status = 500;
+      }
     }
+    res.status(status).json({
+      message: message,
+      userName: user.name,
+      userStatus: user.status,
+    });
   });
-//TODO add toggle status as a PUT method here
 
 router
   .route("/")
