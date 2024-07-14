@@ -265,8 +265,6 @@ async function toggleBookStatus(id, notes) {
       }
       const currentDate = new Date();
       registerBookNotes(id, currentDate, notes);
-      //TODO generate a meaningful message: current status, book title
-      //TODO may require an other querry
       resolve(`Status updated!`);
     });
   });

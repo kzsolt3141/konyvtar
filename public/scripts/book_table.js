@@ -16,7 +16,6 @@ async function getOrderedData(orderBy) {
   bookFormData.append("offset", tablePage);
   bookFormData.append("limit", pageLimit);
 
-  //TODO add waiting window here (enable / disable main)
   common.disableMain();
   var data = await fetch("/book/table", {
     method: "POST",
@@ -53,13 +52,12 @@ async function listAllBooks(key) {
       if (register_notes.length > 0) register_note = register_notes[0].notes;
       book["register"] = register_note;
 
-      //TODO use linkt for each listed book to detailed page
-
       for (const k in book) {
         if (k == "pic") continue;
         if (k == "id") continue;
         if (k == "keys") continue;
-        const e = document.createElement("p");
+        const e = document.createElement(k === "title" ? "a" : "p");
+        e.href = `/book/${book.id}`;
         e.textContent = book[k];
         bookTable.appendChild(e);
       }

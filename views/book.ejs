@@ -16,6 +16,11 @@
       name="sts"
       content=<%=(!!locals.status) ? status : false %>
     />
+    <meta
+      id="message"
+      name="message"
+      content="<%=(!!locals.message) ? message : false %>"
+    />
   </head>
   <body>
     <div class="fixed_header">
@@ -185,9 +190,7 @@
       <div id="book_loan" class="book_loan"></div>
     </div>
 
-    <div id="global_status" class="global_status">
-      <%=(!!locals.message) ? message : "" %>
-    </div>
+    <div id="global_status" class="global_status"></div>
     <div class="version" id="version"></div>
   </body>
 

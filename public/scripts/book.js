@@ -1,6 +1,9 @@
 //import genre related functions
 import { common } from "./common.js";
 
+const bookMessage = document.getElementById("message").getAttribute("content");
+common.updateStatus(bookMessage);
+
 //----------------------------------------------------------------
 document.getElementById("image").addEventListener("change", function (event) {
   const fileInput = event.target;
@@ -134,7 +137,7 @@ function fillGenreSelect(selector) {
   selector.innerHTML = "";
 
   fetch("/book/genres", {
-    method: "POST",
+    method: "GET",
   })
     .then((rsp) => rsp.text())
     .then((data) => {
