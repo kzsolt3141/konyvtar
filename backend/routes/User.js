@@ -137,11 +137,11 @@ router
 
     if (
       isNaN(req.params.id) ||
-      req.params.id < nextUserId ||
+      req.params.id >= nextUserId ||
       (req.params.id != req.user.id && req.user.admin != 1)
     ) {
       res.status(500).render("user", {
-        uid: nextBookId,
+        uid: nextUserId,
         blank: true,
         message: "Invalid user ID! Redirecting...",
       });

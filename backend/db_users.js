@@ -197,7 +197,7 @@ function getLendedBooks(id, res) {
   });
 }
 
-function toggleUserStatus(body, res) {
+async function toggleUserStatus(id, notes) {
   sql = `
   UPDATE users 
   SET status = 
@@ -205,21 +205,22 @@ function toggleUserStatus(body, res) {
       WHEN status = 0 
         THEN 1 
         ELSE 0
-      END 
+    END 
   WHERE id = ?`;
-  db_.run(sql, [body.id], (err) => {
-    if (err) {
-      console.log(err.message);
-      res.json(`User ${body.id} could not be modified`);
-      return;
-    }
-    const currentDate = new Date();
-    registerUserNotes(body.id, currentDate, body.notes);
-    // update book pic table
-    res.json(`User ${body.id} modified successfully`);
+
+  return new Promise((resolve, reject) => {
+    db_.run(sql, [id], (err) => {
+      if (err) {
+        console.log(err.message);
+        reject(`User ${id} could not be modified`);
+        return;
+      }
+      const currentDate = new Date();
+      registerUserNotes(id, currentDate, notes);
+      resolve(`Status updated!`);
+    });
   });
 }
-
 function editUser(body, file) {
   return new Promise((resolve, reject) => {
     if (body == null) {
@@ -271,31 +272,6 @@ function editUser(body, file) {
         resolve(`User ${body.name} modified successfully`);
       }
     );
-  });
-}
-
-async function toggleUserStatus(id, notes) {
-  sql = `
-  UPDATE users 
-  SET status = 
-    CASE 
-      WHEN status = 0 
-        THEN 1 
-        ELSE 0
-    END 
-  WHERE id = ?`;
-
-  return new Promise((resolve, reject) => {
-    db_.run(sql, [id], (err) => {
-      if (err) {
-        console.log(err.message);
-        reject(`User ${id} could not be modified`);
-        return;
-      }
-      const currentDate = new Date();
-      registerUserNotes(id, currentDate, notes);
-      resolve(`Status updated!`);
-    });
   });
 }
 
