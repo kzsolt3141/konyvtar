@@ -19,19 +19,23 @@ function init(db) {
 }
 
 //----------------------------------------------------------------
-async function bookIsAvailable(bid) {
+async function getActiveLoanByBid(bid) {
   return new Promise((resolve, reject) => {
     sql = `
-      SELECT uid FROM loan 
-      WHERE bid = ? AND back_date IS NULL`;
+      SELECT uid, users.name, loan.lend_date
+      FROM loan
+      JOIN users ON loan.uid = users.id
+      WHERE loan.bid = ? AND back_date IS NULL
+      `;
     db_.all(sql, [bid], (err, rows) => {
       if (err) {
         reject(err.message);
+        return;
       }
-      if (rows.length > 0) {
-        resolve([false, rows[0].uid]);
+      if (rows) {
+        resolve(rows[0]);
       } else {
-        resolve([true, null]);
+        resolve(null);
       }
     });
   });
@@ -41,9 +45,9 @@ async function bookIsAvailable(bid) {
 async function lend(uid, bid, notes) {
   return new Promise(async (resolve, reject) => {
     try {
-      const isAvailable = await bookIsAvailable(bid);
-      if (!isAvailable[0]) {
-        reject(`failed by checking: book is at a user ${isAvailable[1]}`);
+      const activeLoan = await getActiveLoanByBid(bid);
+      if (activeLoan) {
+        reject(`failed by checking: book is at a user ${activeLoan.name}`);
         return;
       }
 
@@ -74,8 +78,8 @@ async function lend(uid, bid, notes) {
 async function bring(bid, notes) {
   return new Promise(async (resolve, reject) => {
     try {
-      const isAvailable = await bookIsAvailable(bid);
-      if (isAvailable[0]) {
+      const activeLoan = await getActiveLoanByBid(bid);
+      if (activeLoan === null) {
         reject("failed by checking: book is available");
         return;
       }
@@ -86,7 +90,7 @@ async function bring(bid, notes) {
 
       db_.run(
         sql,
-        [date.toISOString().split("T")[0], notes, isAvailable[1], bid],
+        [date.toISOString().split("T")[0], notes, activeLoan.uid, bid],
         (err) => {
           if (err) {
             reject(err.message);
@@ -104,7 +108,7 @@ async function bring(bid, notes) {
 async function getLoanByBid(bid) {
   return new Promise((resolve, reject) => {
     sql = `
-    SELECT loan.lend_date, users.name, loan.lend_notes, loan.back_date, loan.back_notes
+    SELECT loan.lend_date, users.id, users.name, loan.lend_notes, loan.back_date, loan.back_notes
     FROM loan
     JOIN users ON loan.uid = users.id
     WHERE loan.bid = ?
@@ -139,7 +143,7 @@ module.exports = {
   init: init,
   lend: lend,
   bring: bring,
-  bookIsAvailable: bookIsAvailable,
+  getActiveLoanByBid: getActiveLoanByBid,
   getLoanByBid: getLoanByBid,
   getLoanByUid: getLoanByUid,
 };

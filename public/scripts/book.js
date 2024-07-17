@@ -53,14 +53,14 @@ if (isBlank === "false") {
     }
 
     var fetch_link = "";
-    const avl = await common.bookIsAvailableById(bid);
+    const activeLoan = await common.getActiveBookLoan(bid);
     const loanBtn = document.getElementById("lend_btn");
     const action_title = document.getElementById("action_title");
 
-    if (bookSts == true && avl[0] == true) {
+    if (bookSts == true && !activeLoan) {
       action_title.innerHTML = "A konyv elerheto";
       loanBtn.style.display = "none";
-    } else if (bookSts == true && avl[0] == false) {
+    } else if (bookSts == true && activeLoan) {
       loanBtn.addEventListener("click", function () {
         const actionDetForm = document.getElementById("action_details");
         actionDetForm.style.display = "block";
@@ -72,8 +72,7 @@ if (isBlank === "false") {
         fetch_link = `/loan/book/${bid}`;
       });
 
-      const user = await common.getUserById(avl[1]);
-      action_title.innerHTML = `A konyv kiadva <a href="/user/${user.id}">${user.name}</a> felhasznalonak`;
+      action_title.innerHTML = `A konyv kiadva <a href="/user/${activeLoan.uid}">${activeLoan.name}</a> felhasznalonak`;
     } else {
       loanBtn.style.display = "none";
       action_title.innerHTML = `A konyv inaktiv`;
