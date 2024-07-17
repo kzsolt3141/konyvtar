@@ -4,6 +4,7 @@ const path = require("path");
 const multer = require("multer");
 
 const database = require("../db_loan.js");
+const p = require("../passport_config.js");
 //----------------------------------------------------------------
 const router = express.Router();
 
@@ -20,14 +21,26 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/available/:id", async (req, res) => {
-  result = await database.bookIsAvailable(req.params.id);
-  res.json(result);
-});
+//TODO handle errors, use status codes for error
+//TODO define status codes in common for each error status
+//TODO use passport for authentication
+router
+  .route("/active/:id")
+  // return active loan of a book: if the book is in stock, return null
+  // if not, return the user info (one row) who has the book
+  .get(async (req, res) => {
+    try {
+      result = await database.getActiveLoanByBid(req.params.id);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  });
 
 //TODO use passport for authentication
 router
   .route("/book/:id")
+  // return all the loan hitory of a book
   .get(async (req, res) => {
     if (isNaN(req.params.id)) {
       res.json("Hiba tortet");
@@ -37,6 +50,7 @@ router
     result = await database.getLoanByBid(req.params.id);
     res.json(result);
   })
+  // bring back lended book in stock from user
   .put(upload.none(), async (req, res) => {
     // TODO use try and catch error
     // TODO add json response Book title and User name
@@ -46,6 +60,7 @@ router
 
 router
   .route("/user/:id")
+  // return all the loan hitory of a user
   .get(async (req, res) => {
     // TODO check param is valid
     // TODO see: db_users.getLendedBooks(id, res);
@@ -57,6 +72,8 @@ router
     result = await database.getLoanByUid(req.params.id);
     res.json(result);
   })
+  // give available book from stock to user
+  //TODO future inmpovement: is the one who sends this request is NOT admin, put the data into a waiting list (queue)
   .put(upload.none(), async (req, res) => {
     // TODO check param is valid (see max user ID and others ?)
     // TODO check if has message loan_text ?)

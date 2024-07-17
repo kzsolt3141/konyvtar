@@ -51,8 +51,10 @@ async function listBooks(books) {
   const avlCheck = document.getElementById("avl");
 
   books.forEach(async function (book) {
-    const available = await common.bookIsAvailableById(book.id);
-    if (available[0] != avlCheck.checked) return;
+    const activeLoan = await common.getActiveBookLoan(book.id);
+
+    if ((activeLoan && avlCheck.checked) || (!activeLoan && !avlCheck.checked))
+      return;
 
     const bookDiv = document.createElement("div");
     booksDiv.appendChild(bookDiv);
@@ -65,7 +67,7 @@ async function listBooks(books) {
     radio.type = "radio";
     radio.name = "book_radio";
     radio.id = book.id;
-    radio.disabled = !available[0] || book.status != 1;
+    radio.disabled = activeLoan || book.status != 1;
     bookDiv.appendChild(radio);
 
     const boodDetailsDiv = document.createElement("div");

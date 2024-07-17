@@ -105,7 +105,7 @@ router
       (req.params.id != req.user.id && req.user.admin != 1)
     ) {
       res.status(500).render("user", {
-        uid: nextBookId,
+        uid: nextUserId,
         blank: true,
         message: "Invalid book ID! Redirecting...",
       });

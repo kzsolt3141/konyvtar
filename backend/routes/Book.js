@@ -31,7 +31,7 @@ router
     res.render("book_table", {});
   })
   // do the same but return it in json, will be used to display books in frintend
-  .post(upload.none(), async (req, res) => {
+  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
     let message = "Done!";
     let total = 0;
     let books = null;
@@ -50,7 +50,7 @@ router
 router
   .route("/details/:id?")
   // only GET uses the ID, will retrun json with the book details
-  .get(async (req, res) => {
+  .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
     if (isNaN(req.params.id) || req.params.id >= nextBookId) {
       res.json(`hiba a ${req.params.id} keresese kozben`);
@@ -63,18 +63,18 @@ router
       res.json(err);
     }
   })
-  // POSt is NOT using ID, will search in the database using body instead
-  .post(upload.none(), async (req, res) => {
+  // POST is NOT using ID, will search in the database using body instead
+  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
     const books = await database.findBook(req.body);
     res.json(books);
   });
 //----------------------------------------------------------------
 //TODO implement status codes like this everywhere!!!
-// TODO also use the .ok check in frontend
+//TODO also use the .ok check in frontend
 router
   .route("/notes/:id")
   // Return all the book notes identified by the ID
-  .get(async (req, res) => {
+  .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
     if (isNaN(req.params.id) || req.params.id >= nextBookId) {
       res.status(400).send(`Hiba a jegyzet keresese kozben`);
@@ -92,10 +92,12 @@ router
 
 router
   .route("/genres/:genre?")
-  .get((req, res) => {
+  // GET returns all previously registered book genres
+  .get(p.checkAuthAdmin, (req, res) => {
     database.getGenres(res);
   })
-  .post(upload.none(), (req, res) => {
+  // POST adds a new book genre to the database
+  .post(p.checkAuthAdmin, upload.none(), (req, res) => {
     if (req.params.genre) {
       database.addGenre(req.params.genre, res);
     }
@@ -165,7 +167,7 @@ router
     }
   })
   // toggle book status identified by book ID
-  .put(upload.none(), async (req, res) => {
+  .put(p.checkAuthAdmin, upload.none(), async (req, res) => {
     const nextBookId = await database.getNextBookId();
     var message = "init";
     var book = "";
