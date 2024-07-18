@@ -169,7 +169,7 @@ router
       });
     }
   })
-  .put(upload.none(), async (req, res) => {
+  .put(p.checkAuthAdmin, upload.none(), async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
     var message = "init";
     var user = "";

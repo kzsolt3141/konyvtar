@@ -31,46 +31,51 @@ router
     res.render("book_table", {});
   })
   // do the same but return it in json, will be used to display books in frintend
-  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
+  .post(upload.none(), async (req, res) => {
     let message = "Done!";
     let total = 0;
     let books = null;
+    let sts = 200;
 
     try {
       books = await database.getAllBooks(req.body);
       total = await database.getTotalBookNumber();
     } catch (err) {
       message = err.message;
+      sts = 500;
     }
 
-    res.json({ total, books, message });
+    res.status(sts).json({ total, books, message });
   });
 
 //----------------------------------------------------------------
 router
   .route("/details/:id?")
-  // only GET uses the ID, will retrun json with the book details
+  // only GET uses the ID. retrun json with the book details
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
     if (isNaN(req.params.id) || req.params.id >= nextBookId) {
-      res.json(`hiba a ${req.params.id} keresese kozben`);
+      res.status(500).json(`hiba a ${req.params.id} keresese kozben`);
+      return;
     }
 
     try {
       const book = await database.getBookById(req.params.id);
       res.json(book);
     } catch (err) {
-      res.json(err);
+      res.status(500).json(err);
     }
   })
   // POST is NOT using ID, will search in the database using body instead
   .post(p.checkAuthenticated, upload.none(), async (req, res) => {
-    const books = await database.findBook(req.body);
-    res.json(books);
+    try {
+      const books = await database.findBook(req.body);
+      res.json(books);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
   });
 //----------------------------------------------------------------
-//TODO implement status codes like this everywhere!!!
-//TODO also use the .ok check in frontend
 router
   .route("/notes/:id")
   // Return all the book notes identified by the ID
@@ -116,21 +121,25 @@ router
         message: "Invalid book ID! Redirecting...",
       });
     } else {
-      const book = await database.getBookById(req.params.id);
-      res.render("book", {
-        bid: book.id,
-        isbn: book.isbn,
-        title: book.title,
-        author: book.author,
-        year: book.year,
-        publ: book.publ,
-        ver: book.ver,
-        keys: book.keys,
-        price: book.price,
-        status: book.status,
-        pic: book.pic,
-        message: `Required book with ID ${book.id}`,
-      });
+      try {
+        const book = await database.getBookById(req.params.id);
+        res.render("book", {
+          bid: book.id,
+          isbn: book.isbn,
+          title: book.title,
+          author: book.author,
+          year: book.year,
+          publ: book.publ,
+          ver: book.ver,
+          keys: book.keys,
+          price: book.price,
+          status: book.status,
+          pic: book.pic,
+          message: `Required book with ID ${book.id}`,
+        });
+      } catch (err) {
+        res.status(500);
+      }
     }
   })
   // update a book details identified by ID
@@ -149,21 +158,29 @@ router
       } catch (err) {
         message = err.message;
       }
-      const book = await database.getBookById(req.params.id);
-      res.render("book", {
-        bid: book.id,
-        isbn: book.isbn,
-        title: book.title,
-        author: book.author,
-        year: book.year,
-        publ: book.publ,
-        ver: book.ver,
-        keys: book.keys,
-        price: book.price,
-        status: book.status,
-        pic: book.pic,
-        message: message,
-      });
+      try {
+        const book = await database.getBookById(req.params.id);
+        if (book) {
+          res.render("book", {
+            bid: book.id,
+            isbn: book.isbn,
+            title: book.title,
+            author: book.author,
+            year: book.year,
+            publ: book.publ,
+            ver: book.ver,
+            keys: book.keys,
+            price: book.price,
+            status: book.status,
+            pic: book.pic,
+            message: message,
+          });
+        } else {
+          res.redirect("/");
+        }
+      } catch (err) {
+        res.status(500).json(err);
+      }
     }
   })
   // toggle book status identified by book ID
