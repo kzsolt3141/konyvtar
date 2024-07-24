@@ -116,5 +116,20 @@ if (isBlank === "false") {
         document.getElementById("action_details").style.display = "none";
       });
     }
+
+    //TODO make it nicer: MAX should be RED, book links in a table of 1 row
+    const activeLoanDiv = document.getElementById("active_loan");
+    const activeLoans = await common.getActiveUserLoan(uid);
+    if (activeLoans.length > 2) {
+      const h3 = document.createElement("h3");
+      h3.textContent = "MAX kolcsonzes!!";
+      activeLoanDiv.appendChild(h3);
+    }
+    activeLoans.forEach((activeLoan) => {
+      const a = document.createElement("a");
+      a.textContent = `${activeLoan.title} ||  `;
+      a.href = `/book/${activeLoan.bid}`;
+      activeLoanDiv.appendChild(a);
+    });
   }
 }

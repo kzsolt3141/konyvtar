@@ -24,12 +24,27 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router
-  .route("/active/:id")
+  .route("/book/active/:bid")
   // return active loan of a book: if the book is in stock, return null
   // if not, return the user info (one row) who has the book
+  // TODO check book id
   .get(p.checkAuthenticated, async (req, res) => {
     try {
-      result = await database.getActiveLoanByBid(req.params.id);
+      result = await database.getActiveLoanByBid(req.params.bid);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  });
+
+router
+  .route("/user/active/:uid")
+  // return active loan of a user: if tthere is none, return null
+  // if not, return the book info one row for each book
+  // TODO check user id
+  .get(p.checkAuthenticated, async (req, res) => {
+    try {
+      result = await database.getActiveLoanByUid(req.params.uid);
       res.json(result);
     } catch (err) {
       res.status(500).json(err.message);
@@ -98,10 +113,6 @@ router
       res.status(400).json("Invalid ID");
       return;
     }
-
-    //TODO use this in a separate route maybe ? "/active/:id" => "book/active/:bid and "user/active/:uid""
-    const al = await database.getActiveLoanByUid(req.params.uid);
-    console.log(al, al.length);
 
     var sts = 200;
     try {
