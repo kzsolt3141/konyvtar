@@ -116,7 +116,17 @@ function showPic(id, pic, place, cb) {
 }
 
 async function getActiveBookLoan(bid) {
-  const text = await fetch(`/loan/active/${bid}`, {
+  const text = await fetch(`/loan/book/active/${bid}`, {
+    method: "GET",
+  }).then((res) => {
+    return res.ok ? res.text() : null;
+  });
+
+  return text ? JSON.parse(text) : null;
+}
+
+async function getActiveUserLoan(uid) {
+  const text = await fetch(`/loan/user/active/${uid}`, {
     method: "GET",
   }).then((res) => {
     return res.ok ? res.text() : null;
@@ -267,6 +277,7 @@ export const common = {
   enableMain,
   showPic,
   getActiveBookLoan,
+  getActiveUserLoan,
   getBookById,
   getBookNotesById,
   getUserById,
