@@ -4,6 +4,8 @@ const path = require("path");
 const multer = require("multer");
 
 const database = require("../db_loan.js");
+const bookDB = require("../db_books.js");
+const userDB = require("../db_users.js");
 const p = require("../passport_config.js");
 //----------------------------------------------------------------
 const router = express.Router();
@@ -48,42 +50,108 @@ router
   })
   // bring back lended book in stock from user
   .put(p.checkAuthAdmin, upload.none(), async (req, res) => {
-    // TODO use try and catch error
-    // TODO add json response Book title and User name
-    message = await database.bring(req.params.id, req.body.action_notes);
-    res.json(message);
+    message = "";
+    sts = 200;
+
+    try {
+      const nextBookId = await bookDB.getNextBookId();
+      if (
+        isNaN(req.params.id) ||
+        req.params.id >= nextBookId ||
+        Object.keys(req.body).length == 0 ||
+        !("action_notes" in req.body)
+      ) {
+        throw new Error("Invalid input");
+      }
+
+      const activeLoan = await database.getActiveLoanByBid(req.params.id);
+      if (activeLoan === null) {
+        throw new Error("No active loan found for the given bid");
+      }
+      message = await database.bring(
+        activeLoan.uid,
+        req.params.id,
+        req.body.action_notes
+      );
+
+      const book = await bookDB.getBookById(req.params.id);
+
+      message = `${book.title} ${message} by ${activeLoan.name}`;
+    } catch (err) {
+      if (err.message) {
+        message = err.message;
+      } else {
+        message = err;
+      }
+      sts = 500;
+    }
+    res.status(sts).json(message);
   });
 
 router
-  .route("/user/:id")
+  .route("/user/:uid")
   // return all the loan hitory of a user
   .get(p.checkAuthAdmin, async (req, res) => {
-    // TODO check param is valid
-    // TODO see: db_users.getLendedBooks(id, res);
-    if (isNaN(req.params.id)) {
-      res.json("Hiba tortet");
+    const nextUserId = await userDB.getNextUserId();
+
+    if (isNaN(req.params.uid) || req.params.uid >= nextUserId) {
+      res.status(400).json("Invalid ID");
       return;
     }
 
-    result = await database.getLoanByUid(req.params.id);
-    res.json(result);
+    //TODO use this in a separate route maybe ? "/active/:id" => "book/active/:bid and "user/active/:uid""
+    const al = await database.getActiveLoanByUid(req.params.uid);
+    console.log(al, al.length);
+
+    var sts = 200;
+    try {
+      result = await database.getLoanByUid(req.params.uid);
+    } catch (err) {
+      sts = 500;
+      result = err.message;
+    }
+
+    res.status(sts).json(result);
   })
   // give available book from stock to user
   //TODO future inmpovement: is the one who sends this request is NOT admin, put the data into a waiting list (queue)
   .put(p.checkAuthAdmin, upload.none(), async (req, res) => {
-    // TODO check param is valid (see max user ID and others ?)
-    // TODO check if has message loan_text ?)
-    if (isNaN(req.params.id)) {
-      res.json("Hiba tortet");
+    // TODO check if user has already 3 books given: see getActiveLoanByUid(uid);
+
+    const nextUserId = await userDB.getNextUserId();
+    const nextBookId = await bookDB.getNextBookId();
+
+    if (
+      isNaN(req.params.uid) ||
+      req.params.uid >= nextUserId ||
+      Object.keys(req.body).length == 0 ||
+      !("bid" in req.body) ||
+      !("loan_text" in req.body) ||
+      isNaN(req.body.bid) ||
+      req.body.bid >= nextBookId
+    ) {
+      res.status(400).json("Invalid ID");
       return;
     }
+    var message = "";
+    var sts = 200;
+    try {
+      message = await database.lend(
+        req.params.uid,
+        req.body.bid,
+        req.body.loan_text
+      );
 
-    const message = await database.lend(
-      req.params.id,
-      req.body.bid,
-      req.body.loan_text
-    );
-    res.json(message);
+      const book = await bookDB.getBookById(req.body.bid);
+      const user = await userDB.getUserById(req.params.uid);
+
+      message = `${book.title} ${message} to ${user.name}`;
+    } catch (err) {
+      message = err.message;
+      sts = 500;
+    }
+
+    res.status(sts).json(message);
   });
 
 module.exports = router;

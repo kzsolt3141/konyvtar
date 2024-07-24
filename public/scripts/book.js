@@ -45,6 +45,7 @@ if (isBlank === "false") {
     if (bookLoanText && loans) {
       loans.forEach((loan) => {
         for (const k in loan) {
+          if (k == "id") continue;
           const e = document.createElement("p");
           e.textContent = loan[k];
           bookLoanText.appendChild(e);
@@ -105,15 +106,20 @@ if (isBlank === "false") {
           method: "PUT",
           body: actionFormData,
         })
-          .then((rsp) => rsp.json())
+          .then((rsp) => {
+            if (rsp.ok) {
+              return rsp.json();
+            } else {
+              throw new Error(`HTTP error! Status: ${rsp.status}`);
+            }
+          })
           .then((data) => {
-            console.log(data);
-            const bookStatus = data.bookStatus == 1 ? "Aktiv" : "Inaktiv";
-            common.updateStatus(
-              `${data.bookTitle} -> ${data.message}. new status: ${bookStatus}`
-            );
+            common.updateStatus(data);
             document.getElementById("action_details").style.display = "none";
             common.enableMain();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
           });
       });
     }

@@ -29,11 +29,34 @@ async function getActiveLoanByBid(bid) {
       `;
     db_.all(sql, [bid], (err, rows) => {
       if (err) {
-        reject(err.message);
+        reject(err);
         return;
       }
       if (rows) {
         resolve(rows[0]);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+}
+
+//----------------------------------------------------------------
+async function getActiveLoanByUid(uid) {
+  return new Promise((resolve, reject) => {
+    sql = `
+      SELECT bid, books.title, loan.lend_date
+      FROM loan
+      JOIN books ON loan.bid = books.id
+      WHERE loan.uid = ? AND back_date IS NULL
+      `;
+    db_.all(sql, [uid], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (rows) {
+        resolve(rows);
       } else {
         resolve(null);
       }
@@ -47,7 +70,9 @@ async function lend(uid, bid, notes) {
     try {
       const activeLoan = await getActiveLoanByBid(bid);
       if (activeLoan) {
-        reject(`failed by checking: book is at a user ${activeLoan.name}`);
+        reject(
+          new Error(`failed by checking: book is at a user ${activeLoan.name}`)
+        );
         return;
       }
 
@@ -62,27 +87,22 @@ async function lend(uid, bid, notes) {
         [bid, uid, date.toISOString().split("T")[0], notes],
         (err) => {
           if (err) {
-            reject(err.message);
+            reject(err);
             return;
           }
-          resolve("Done");
+          resolve("Has been given");
         }
       );
-    } catch {
-      reject("failed");
+    } catch (err) {
+      reject(err);
     }
   });
 }
 
 //----------------------------------------------------------------
-async function bring(bid, notes) {
+async function bring(uid, bid, notes) {
   return new Promise(async (resolve, reject) => {
     try {
-      const activeLoan = await getActiveLoanByBid(bid);
-      if (activeLoan === null) {
-        reject("failed by checking: book is available");
-        return;
-      }
       sql = `UPDATE loan
         SET back_date = ?, back_notes = ?
         WHERE uid = ? AND bid = ? AND back_date IS NULL`;
@@ -90,17 +110,17 @@ async function bring(bid, notes) {
 
       db_.run(
         sql,
-        [date.toISOString().split("T")[0], notes, activeLoan.uid, bid],
+        [date.toISOString().split("T")[0], notes, uid, bid],
         (err) => {
           if (err) {
-            reject(err.message);
+            reject(err);
             return;
           }
-          resolve("Book was brought back!");
+          resolve("Was brought back");
         }
       );
     } catch (err) {
-      reject(err.message);
+      reject(err);
     }
   });
 }
@@ -132,7 +152,7 @@ async function getLoanByUid(uid) {
       `;
     db_.all(sql, [uid], (err, rows) => {
       if (err) {
-        reject(err.message);
+        reject(err);
       }
       resolve(rows);
     });
@@ -144,6 +164,7 @@ module.exports = {
   lend: lend,
   bring: bring,
   getActiveLoanByBid: getActiveLoanByBid,
+  getActiveLoanByUid: getActiveLoanByUid,
   getLoanByBid: getLoanByBid,
   getLoanByUid: getLoanByUid,
 };

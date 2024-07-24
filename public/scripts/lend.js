@@ -44,6 +44,7 @@ if (button) {
       loanFormData.append("bid", bookRadio.id);
 
       // lendBook(bookRadio.id, userRadio.id);
+      common.disableMain();
       fetch(`/loan/user/${userRadio.id}`, {
         method: "PUT",
         body: loanFormData,

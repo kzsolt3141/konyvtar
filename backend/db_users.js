@@ -176,27 +176,6 @@ function getNextUserId(res) {
   });
 }
 
-function getLendedBooks(id, res) {
-  const sql = `
-    SELECT books.title
-    FROM loan
-    JOIN books 
-      ON loan.bid = books.id
-    WHERE loan.uid = ? AND loan.back_date IS NULL;`;
-
-  db_.all(sql, [id], (err, rows) => {
-    if (err) {
-      res.json(err.message);
-      return;
-    }
-    list = [];
-    rows.forEach((element) => {
-      list.push(element.title);
-    });
-    res.json(list);
-  });
-}
-
 async function toggleUserStatus(id, notes) {
   sql = `
   UPDATE users 
@@ -282,7 +261,6 @@ module.exports = {
   getUserNotesById: getUserNotesById,
   getUserById: getUserById,
   getUserByEmail: getUserByEmail,
-  getLendedBooks: getLendedBooks,
   getNextUserId: getNextUserId,
   editUser: editUser,
   toggleUserStatus: toggleUserStatus,
