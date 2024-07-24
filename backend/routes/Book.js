@@ -200,18 +200,17 @@ router
           req.params.id,
           req.body.action_notes
         );
-
         book = await database.getBookById(req.params.id);
+
+        message = `${book.title} ${message} to ${
+          book.status ? "Aktiv" : "Inaktiv"
+        }`;
       } catch (err) {
         message = err.message;
         status = 500;
       }
     }
-    res.status(status).json({
-      message: message,
-      bookTitle: book.title,
-      bookStatus: book.status,
-    });
+    res.status(status).json(message);
   });
 
 //----------------------------------------------------------------

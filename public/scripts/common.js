@@ -133,7 +133,6 @@ async function getBookById(bid) {
   return book;
 }
 
-//TODO see the .ok check in here
 //TODO secure all fetches like this
 async function getBookNotesById(bid) {
   var bookNotes = null;
