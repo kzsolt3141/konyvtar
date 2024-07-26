@@ -116,46 +116,62 @@ function showPic(id, pic, place, cb) {
 }
 
 async function getActiveBookLoan(bid) {
-  const text = await fetch(`/loan/book/active/${bid}`, {
-    method: "GET",
-  }).then((res) => {
-    return res.ok ? res.text() : null;
-  });
+  var text = null;
+  try {
+    text = await fetch(`/loan/book/active/${bid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.text() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   return text ? JSON.parse(text) : null;
 }
 
 async function getActiveUserLoan(uid) {
-  const text = await fetch(`/loan/user/active/${uid}`, {
-    method: "GET",
-  }).then((res) => {
-    return res.ok ? res.text() : null;
-  });
+  var text = null;
+  try {
+    text = await fetch(`/loan/user/active/${uid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.text() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   return text ? JSON.parse(text) : null;
 }
 
 async function getBookById(bid) {
-  const rsp = await fetch(`/book/details/${bid}`, {
-    method: "GET",
-  });
-  const book = await rsp.json();
+  var book = null;
+  try {
+    book = await fetch(`/book/details/${bid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.json() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
   return book;
 }
 
-//TODO secure all fetches like this
 async function getBookNotesById(bid) {
   var bookNotes = null;
   try {
-    const rsp = await fetch(`/book/notes/${bid}`, {
+    bookNotes = await fetch(`/book/notes/${bid}`, {
       method: "GET",
-    });
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error("Couldn't get book notes");
+      }
 
-    if (rsp.ok) {
-      bookNotes = await rsp.json();
-    } else {
-      rsp.text().then((text) => console.log(text));
-    }
+      return res.json();
+    });
   } catch (err) {
     console.log(err);
   }
@@ -164,14 +180,20 @@ async function getBookNotesById(bid) {
 }
 
 async function getUserById(bid) {
-  const rsp = await fetch(`/user/details/${bid}`, {
-    method: "GET",
-  });
-  const user = await rsp.json();
+  var user = null;
+  try {
+    user = await fetch(`/user/details/${bid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.json() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
   return user;
 }
 
-//TODO secure all fetches like this
 async function getUserNotesById(uid) {
   var userNotes = null;
   try {
@@ -192,19 +214,31 @@ async function getUserNotesById(uid) {
 }
 
 async function getLoanByUid(uid) {
-  const rsp = await fetch(`/loan/user/${uid}`, {
-    method: "GET",
-  });
-  const loan = await rsp.json();
+  var loan = null;
+  try {
+    loan = await fetch(`/loan/user/${uid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.json() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   return loan;
 }
 
 async function getLoanByBid(uid) {
-  const rsp = await fetch(`/loan/book/${uid}`, {
-    method: "GET",
-  });
-  const loan = await rsp.json();
+  var loan = null;
+  try {
+    loan = await fetch(`/loan/book/${uid}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.ok ? res.json() : null;
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   return loan;
 }
@@ -257,13 +291,17 @@ if (bookTableBtn) {
 const logoutBtn = document.getElementById("logout");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async (event) => {
-    const rsp = await fetch("/user/login", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (rsp) window.location.reload();
+    try {
+      const rsp = await fetch("/user/login", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (err) {
+      console.error("Error logging out:", err);
+    }
+    window.location.reload();
   });
 }
 

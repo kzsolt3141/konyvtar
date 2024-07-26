@@ -17,12 +17,25 @@ async function getOrderedData(orderBy) {
   bookFormData.append("limit", pageLimit);
 
   common.disableMain();
-  var data = await fetch("/book/table", {
-    method: "POST",
-    body: bookFormData,
-  }).then((res) => res.json());
+  var data = null;
+  try {
+    data = await fetch("/book/table", {
+      method: "POST",
+      body: bookFormData,
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error(`Failed to load book data from database`);
+      }
+      // TODO check if response has json or just text
+      return res.json();
+    });
+  } catch (error) {
+    console.error(error);
+  }
   common.enableMain();
-  common.updateStatus(data.message);
+  if (data && "message" in data) {
+    common.updateStatus(data.message);
+  }
 
   return data;
 }

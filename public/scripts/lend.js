@@ -29,6 +29,7 @@ if (button) {
 
     loanDetails.style.display = "block";
 
+    //TODO check if book and user are valid responses
     const book = await common.getBookById(bookRadio.id);
     const user = await common.getUserById(userRadio.id);
 
