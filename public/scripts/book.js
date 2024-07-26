@@ -141,18 +141,28 @@ function fillGenreSelect(selector) {
 
   selector.innerHTML = "";
 
-  fetch("/book/genres", {
-    method: "GET",
-  })
-    .then((rsp) => rsp.text())
-    .then((data) => {
-      JSON.parse(data).forEach((opt, idx) => {
-        const option = document.createElement("option");
-        option.value = opt["genre"];
-        option.text = opt["genre"];
-        selector.add(option);
+  try {
+    fetch("/book/genres", {
+      method: "GET",
+    })
+      .then((rsp) => {
+        if (rsp.ok) {
+          return rsp.text();
+        } else {
+          throw new Error("Couldn't get genres from database");
+        }
+      })
+      .then((data) => {
+        JSON.parse(data).forEach((opt, idx) => {
+          const option = document.createElement("option");
+          option.value = opt["genre"];
+          option.text = opt["genre"];
+          selector.add(option);
+        });
       });
-    });
+  } catch (e) {
+    console.error("Error fetching genres:", e);
+  }
 }
 
 const addGenreBtn = document.getElementById("add_genre_btn");
@@ -174,16 +184,20 @@ addButton.addEventListener("click", function (event) {
     return;
   }
   common.disableMain();
-
-  fetch("/book/genres/" + input.value, {
-    method: "POST",
-  })
-    .then((rsp) => rsp.text())
-    .then((data) => {
-      common.enableMain();
+  try {
+    fetch("/book/genres/" + input.value, {
+      method: "POST",
+    }).then((rsp) => {
+      if (!rsp.ok) {
+        throw new Error("Could not add genre to database");
+      }
       addGenreDiv.style.display = "none";
       fillGenreSelect(document.getElementById("genre"));
     });
+  } catch (e) {
+    console.log(" error: " + e);
+  }
+  common.enableMain();
 });
 
 cancelButton.addEventListener("click", function (event) {
