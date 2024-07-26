@@ -94,7 +94,7 @@ router
     }
   });
 //----------------------------------------------------------------
-//TODO use status codes and
+//TODO use status codes and remove res from function
 router
   .route("/genres/:genre?")
   // GET returns all previously registered book genres
