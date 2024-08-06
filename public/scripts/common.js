@@ -151,6 +151,7 @@ async function getBookById(bid) {
     book = await fetch(`/book/details/${bid}`, {
       method: "GET",
     }).then((res) => {
+      //TODO check if res has json else throw error
       return res.ok ? res.json() : null;
     });
   } catch (err) {
@@ -185,6 +186,7 @@ async function getUserById(bid) {
     user = await fetch(`/user/details/${bid}`, {
       method: "GET",
     }).then((res) => {
+      //TODO check if res has json else throw error
       return res.ok ? res.json() : null;
     });
   } catch (err) {

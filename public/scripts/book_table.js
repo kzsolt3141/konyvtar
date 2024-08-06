@@ -26,8 +26,12 @@ async function getOrderedData(orderBy) {
       if (!res.ok) {
         throw new Error(`Failed to load book data from database`);
       }
-      // TODO check if response has json or just text
-      return res.json();
+      const contentType = res.headers.get("content-type");
+      if (contentType.includes("application/json")) {
+        return res.json();
+      } else {
+        throw new Error(res.text());
+      }
     });
   } catch (error) {
     console.error(error);

@@ -147,13 +147,21 @@ function fillGenreSelect(selector) {
     })
       .then((rsp) => {
         if (rsp.ok) {
-          return rsp.text();
+          const contentType = rsp.headers.get("content-type");
+          if (contentType.includes("application/json")) {
+            return rsp.json();
+          } else {
+            throw new Error(rsp.text());
+          }
         } else {
           throw new Error("Couldn't get genres from database");
         }
       })
       .then((data) => {
-        JSON.parse(data).forEach((opt, idx) => {
+        if (!data) {
+          throw new Error("Couldn't get genres from database");
+        }
+        data.forEach((opt, idx) => {
           const option = document.createElement("option");
           option.value = opt["genre"];
           option.text = opt["genre"];
