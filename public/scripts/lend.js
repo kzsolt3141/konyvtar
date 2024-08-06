@@ -7,7 +7,6 @@ if (button) {
     const loanDetails = document.getElementById("loan_details");
     const cancelButton = document.getElementById("cancel_loan");
     const submitButton = document.getElementById("submit_loan");
-    const info = document.getElementById("loan_info");
 
     var bookRadio = document.querySelector('input[name="book_radio"]:checked');
     var userRadio = document.querySelector('input[name="user_radio"]:checked');
@@ -29,13 +28,24 @@ if (button) {
 
     loanDetails.style.display = "block";
 
-    //TODO check if book and user are valid responses
-    const book = await common.getBookById(bookRadio.id);
-    const user = await common.getUserById(userRadio.id);
+    try {
+      const book = await common.getBookById(bookRadio.id);
+      const user = await common.getUserById(userRadio.id);
 
-    const bookTitle = book.title;
-    const userName = user.name;
-    info.innerHTML = userName + " kikolcsonzi " + bookTitle + " konyvet";
+      if (!book || !user) {
+        throw new Error("book / user not found");
+      }
+
+      const bookTitle = book.title;
+      const userName = user.name;
+      const info = document.getElementById("loan_info");
+      if (info) {
+        info.innerHTML = userName + " kikolcsonzi " + bookTitle + " konyvet";
+      }
+    } catch (error) {
+      common.updateStatus(error.message);
+      return;
+    }
 
     submitButton.addEventListener("click", async (event) => {
       event.preventDefault();
