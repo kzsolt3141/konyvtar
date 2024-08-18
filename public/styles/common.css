@@ -8,6 +8,7 @@
 body {
   background: var(--primary-color);
   padding-top: 120px;
+  font-family: "Roboto", monospace;
   color: var(--primary-font);
 }
 
