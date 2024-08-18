@@ -300,7 +300,7 @@ if (logoutBtn) {
     } catch (err) {
       console.error("Error logging out:", err);
     }
-    window.location.reload();
+    window.location.href = "/";
   });
 }
 

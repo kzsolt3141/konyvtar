@@ -213,14 +213,20 @@ router
   .route("/")
   // [PUBLIC] require page to add new user to the database
   .get(async (req, res) => {
-    res.render("user", {
-      blank: true,
+    if (req.user == null) {
+      res.render("user", {
+        blank: true,
+      });
+    } else {
+      res.render("user", {
+        blank: true,
 
-      admin: req.user.admin,
-      user_id: req.user.id,
-      user_pic: req.user.pic,
-      user_name: req.user.name,
-    });
+        admin: req.user.admin,
+        user_id: req.user.id,
+        user_pic: req.user.pic,
+        user_name: req.user.name,
+      });
+    }
   })
   // [PUBLIC] upload new user data to the database
   .post(upload.single("image"), async (req, res) => {
