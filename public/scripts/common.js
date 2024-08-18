@@ -24,6 +24,17 @@ const UserLabelNames = {
   notes: "Megjegyzesek",
 };
 
+document.addEventListener("click", (e) => {
+  document.querySelectorAll(".dropdown-menu img.active").forEach((btn) => {
+    btn.classList.remove("active");
+  });
+
+  const dropdownBtn = e.target.closest("img");
+  if (dropdownBtn) {
+    dropdownBtn.classList.add("active");
+  }
+});
+
 function getCurrentDate() {
   const date = new Date();
   var year = date.getFullYear();
@@ -273,20 +284,6 @@ const mainBtn = document.getElementById("main_btn");
 if (mainBtn) {
   mainBtn.addEventListener("click", async (event) => {
     window.location.href = "/";
-  });
-}
-
-const addBookBtn = document.getElementById("add_book_btn");
-if (addBookBtn) {
-  addBookBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book";
-  });
-}
-
-const bookTableBtn = document.getElementById("book_table_btn");
-if (bookTableBtn) {
-  bookTableBtn.addEventListener("click", async (event) => {
-    window.location.href = "/book/table";
   });
 }
 

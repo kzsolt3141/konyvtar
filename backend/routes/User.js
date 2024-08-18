@@ -124,6 +124,11 @@ router
         status: user.status,
         pic: user.pic,
         message: `Required user with ID ${user.id}`,
+
+        admin: req.user.admin,
+        user_id: req.user.id,
+        user_pic: req.user.pic,
+        user_name: req.user.name,
       });
     }
   })
@@ -166,6 +171,11 @@ router
         status: user.status,
         pic: user.pic,
         message: message,
+
+        admin: req.user.admin,
+        user_id: req.user.id,
+        user_pic: req.user.pic,
+        user_name: req.user.name,
       });
     }
   })
@@ -203,7 +213,14 @@ router
   .route("/")
   // [PUBLIC] require page to add new user to the database
   .get(async (req, res) => {
-    res.render("user", { blank: true });
+    res.render("user", {
+      blank: true,
+
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
   })
   // [PUBLIC] upload new user data to the database
   .post(upload.single("image"), async (req, res) => {
@@ -211,7 +228,14 @@ router
     db_users
       .registerUser(req.body, req.file)
       .then((message) => {
-        res.render("user", { message: message });
+        res.render("user", {
+          message: message,
+
+          admin: req.user.admin,
+          user_id: req.user.id,
+          user_pic: req.user.pic,
+          user_name: req.user.name,
+        });
       })
       .catch((err) => {
         if (req.file) {
@@ -222,7 +246,14 @@ router
             }
           );
         }
-        res.render("user", { message: err });
+        res.render("user", {
+          message: err,
+
+          admin: req.user.admin,
+          user_id: req.user.id,
+          user_pic: req.user.pic,
+          user_name: req.user.name,
+        });
       });
   });
 module.exports = router;

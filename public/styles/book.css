@@ -1,3 +1,7 @@
+:root {
+  --primary-box-color: #488291;
+}
+
 .book_form_container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -16,7 +20,7 @@
   width: 400px;
   column-gap: 20px;
   row-gap: 10px;
-  background-color: #b2b9af;
+  background-color: var(--secondary-box-color);
   border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   padding: 10px;

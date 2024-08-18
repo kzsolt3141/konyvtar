@@ -1,46 +1,70 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto"
+    />
+    <style>
+      body {
+        font-family: "Roboto", monospace;
+      }
+    </style>
+
     <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="styles/common.css" />
+    <link rel="stylesheet" href="styles/header.css" />
     <link rel="stylesheet" href="styles/index-grid.css" />
     <link rel="stylesheet" href="styles/lend.css" />
   </head>
+
   <body>
-    <div class="fixed_header">
-      <div class="fixed_header_left">
-        <img class="fixed_header_image" src="styles/static/CIMER.png" />
-      </div>
-      <div class="fixed_header_center">
-        <h1 class="fixed_header_title">Berecki könyvtár</h1>
-      </div>
+    <div class="header">
+      <a href="/">
+        <img src="styles/static/CIMER.png" />
+      </a>
+      <h1>Berecki könyvtár</h1>
 
-      <div class="fixed_header_right">
+      <nav>
         <% if (admin) { %>
-        <button class="general_button" id="add_book_btn">
-          <img class="general_button_icon" src="styles/static/book-plus.svg" />
-          <div class="tooltip">Új Könyv</div>
-        </button>
-        <button class="general_button" id="book_table_btn">
-          <img class="general_button_icon" src="styles/static/list.svg" />
-          <div class="tooltip">Könyv Lista</div>
-        </button>
-        <button class="general_button" id="backup_btn">
-          <img class="general_button_icon" src="styles/static/backup.svg" />
-          <div class="tooltip">Backup!</div>
-        </button>
-        <% } %>
-        <button class="general_button" id="logout">
-          <img class="general_button_icon" src="styles/static/logout.svg" />
-          <div class="tooltip">Kijelentkezes</div>
-        </button>
-
-        <a href= <%=(!!locals.user_id) ? "/user/"+user_id :"/"%> class="user_icon_div">
-          <img class="user_icon" src=<%=(!!locals.user_pic) ? "/"+user_pic :
+        <div class="dropdown-menu">
+          <img src="styles/static/menu.svg" />
+          <div class="dropdown">
+            <a href="/book">
+              <img src="styles/static/book-plus.svg" />
+              <p>Uj Konyv</p>
+            </a>
+            <a href="/user">
+              <img src="styles/static/user-plus.svg" />
+              <p>Uj Felhasznalo</p>
+            </a>
+            <a href="/book/table">
+              <img src="styles/static/list.svg" />
+              <p>Konyv Lista</p>
+            </a>
+            <a href="#" id="backup_btn">
+              <img src="styles/static/backup.svg" />
+              <p>Backup</p>
+            </a>
+          </div>
+        </div>
+        <% } %> 
+        <div class="dropdown-menu">
+          <img src=<%=(!!locals.user_pic) ? "/"+user_pic :
           "/styles/static/default_book.png"%> />
-          <p class="user_icon_text"><%=(!!locals.user_name) ? user_name : "???"%></p>
-        </a>
-      </div>
+          <div class="dropdown">
+            <a href=<%=(!!locals.user_id) ? "/user/"+user_id :"/"%> >
+              <img src="styles/static/user.svg" />
+              <p><%=(!!locals.user_name) ? user_name : "???"%></p>
+            </a>
+            <a href="#" id="logout">
+              <img src="styles/static/logout.svg" />
+              <p>Kijelentkezes</p>
+            </a>
+          </div>
+        </div>
+      </nav>
     </div>
 
     <div class="global_status" id="global_status"></div>

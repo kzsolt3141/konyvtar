@@ -3,6 +3,7 @@
   <head>
     <title>Berecki könyvtár</title>
     <link rel="stylesheet" href="/styles/common.css" />
+    <link rel="stylesheet" href="/styles/header.css" />
     <link rel="stylesheet" href="/styles/book.css" />
 
     <meta id="uid" name="uid" content="<%= (!!locals.uid) ? uid : '' %>" />
@@ -23,13 +24,49 @@
     />
   </head>
   <body>
-    <div class="fixed_header">
-      <div class="fixed_header_left">
-        <img class="fixed_header_image" src="/styles/static/CIMER.png" />
-      </div>
-      <div class="fixed_header_center">
-        <h1 class="fixed_header_title">Berecki könyvtár</h1>
-      </div>
+    <div class="header">
+      <a href="/">
+        <img src="/styles/static/CIMER.png" />
+      </a>
+      <h1>Berecki könyvtár</h1>
+
+      <nav>
+        <div class="dropdown-menu">
+          <img src="/styles/static/menu.svg" />
+          <div class="dropdown">
+            <a href="/book">
+              <img src="/styles/static/book-plus.svg" />
+              <p>Uj Konyv</p>
+            </a>
+            <a href="/user">
+              <img src="/styles/static/user-plus.svg" />
+              <p>Uj Felhasznalo</p>
+            </a>
+            <a href="/book/table">
+              <img src="/styles/static/list.svg" />
+              <p>Konyv Lista</p>
+            </a>
+            <a href="#" id="backup_btn">
+              <img src="/styles/static/backup.svg" />
+              <p>Backup</p>
+            </a>
+          </div>
+        </div>
+        <div class="dropdown-menu">
+          <img src=<%=(!!locals.user_pic) ? "/"+user_pic :
+          "/styles/static/default_book.png"%> />
+          <div class="dropdown">
+            <a href=<%=(!!locals.user_id) ? "/user/"+user_id :"/"%> >
+              <img src="/styles/static/user.svg" />
+              <p><%=(!!locals.user_name) ? user_name : "???"%></p>
+            </a>
+            <a href="#" id="logout">
+              <img src="/styles/static/logout.svg" />
+              <p>Kijelentkezes</p>
+            </a>
+          </div>
+        </div>
+      </nav>
     </div>
 
     <div class="enable_div" id="disable_div"></div>

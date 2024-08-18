@@ -1,0 +1,118 @@
+:root {
+  --primary-head-color: #488291;
+  --primary-font: #f9ae65;
+  --secondary-color: #e0e2ee;
+  --secondary-color-hover: #2c5058;
+  --secondary-color-click: #65b3c7;
+
+  --header-height: 60px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr;
+  align-items: center;
+
+  background: var(--primary-head-color);
+  z-index: 100;
+
+  list-style: none;
+}
+
+.header a {
+  height: var(--header-height);
+  width: auto;
+}
+
+.header a img {
+  height: 100%;
+  width: auto;
+  /* Use contain instead of cover if you don't want to crop the image */
+  object-fit: contain;
+  margin-left: 10px;
+  /* Prevent the image from exceeding its container */
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.header h1 {
+  font-size: clamp(20px, 3.5vw, 45px);
+  text-align: left;
+  color: var(--primary-font);
+
+  margin: 0;
+  max-width: 100%; /* Ensures the h1 doesn't exceed its container */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: nowrap;
+}
+
+.header nav {
+  height: var(--header-height); /* Ensure nav is as tall as the header */
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* 2 columns with auto width */
+  column-gap: 30px;
+  justify-self: end; /* Align nav to the right */
+  align-items: center; /* Align items vertically */
+  padding-right: 50px;
+}
+
+.header nav .dropdown-menu {
+  position: relative;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.header nav .dropdown-menu img {
+  height: var(--header-height);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.header nav .dropdown-menu .dropdown {
+  width: 200px;
+  background-color: var(--primary-head-color);
+  position: absolute;
+  top: 100%;
+
+  right: 0px;
+  display: none;
+}
+
+.header nav .dropdown-menu img.active + .dropdown {
+  display: block;
+}
+
+.header nav .dropdown-menu .dropdown a {
+  text-decoration: none;
+  display: grid;
+  grid-template-columns: 50px 120px;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-font);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 300ms ease-in-out;
+  height: 30px;
+}
+
+.header nav .dropdown-menu .dropdown img {
+  height: 100%;
+  width: auto;
+}
+
+.header nav .dropdown-menu .dropdown a:hover {
+  background-color: var(--secondary-color-hover);
+}
+
+.header nav .dropdown-menu .dropdown a:active {
+  background-color: var(--secondary-color-click);
+}

@@ -136,6 +136,11 @@ router
           status: book.status,
           pic: book.pic,
           message: `Required book with ID ${book.id}`,
+
+          admin: req.user.admin,
+          user_id: req.user.id,
+          user_pic: req.user.pic,
+          user_name: req.user.name,
         });
       } catch (err) {
         res.status(500);
@@ -174,6 +179,11 @@ router
             status: book.status,
             pic: book.pic,
             message: message,
+
+            admin: req.user.admin,
+            user_id: req.user.id,
+            user_pic: req.user.pic,
+            user_name: req.user.name,
           });
         } else {
           res.redirect("/");
@@ -219,7 +229,15 @@ router
   // GET: require page to add new book to the database
   .get(p.checkAuthAdmin, async (req, res) => {
     const nextBookId = await database.getNextBookId();
-    res.status(200).render("book", { bid: nextBookId, blank: true });
+    res.status(200).render("book", {
+      bid: nextBookId,
+      blank: true,
+
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
   })
   // POST: upload new book data to the database
   .post(p.checkAuthAdmin, upload.single("image"), async (req, res) => {
@@ -245,9 +263,16 @@ router
       }
     }
 
-    res
-      .status(sts)
-      .render("book", { message: message, bid: nextBookId + 1, blank: true });
+    res.status(sts).render("book", {
+      message: message,
+      bid: nextBookId + 1,
+      blank: true,
+
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
   });
 
 module.exports = router;
