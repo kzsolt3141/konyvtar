@@ -1,14 +1,22 @@
+:root {
+  --primary-color: #3c6d79;
+  --primary-font: #f9ae65;
+  --secondary-color: #e0e2ee;
+  --primary-box-color: #488291;
+  --search-height: 40px;
+}
+
 .user_login_form {
   display: grid;
-  width: 300px;
+  width: 350px;
   align-items: center;
   justify-content: center;
-  row-gap: 10px;
+  row-gap: 20px;
 
-  background-color: #b2b9af;
-  border-radius: 20px;
+  background-color: var(--primary-box-color);
+  border-radius: 5%;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  padding: 50px 0px;
 
   margin-left: auto;
   margin-right: auto;
@@ -16,6 +24,7 @@
 
 .user_login_buttons {
   display: flex;
+  padding-top: 20px;
   align-items: center;
   justify-content: space-between;
 }
