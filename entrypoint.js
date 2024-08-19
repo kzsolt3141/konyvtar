@@ -50,7 +50,7 @@ app.use("/loan", loanRoute);
 app
   .route("/") // default route to index
   .get(p.checkAuthenticated, (req, res) => {
-    console.log("[WRN!]Indec redirect");
+    console.log("[WRN!]Index redirect");
     res.render("index", {
       admin: req.user.admin,
       user_id: req.user.id,
