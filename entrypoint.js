@@ -47,14 +47,21 @@ app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/loan", loanRoute);
 
-app.get("/", p.checkAuthenticated, (req, res) => {
-  res.render("index", {
-    admin: req.user.admin,
-    user_id: req.user.id,
-    user_pic: req.user.pic,
-    user_name: req.user.name,
+app
+  .route("/") // default route to index
+  .get(p.checkAuthenticated, (req, res) => {
+    console.log("[WRN!]Indec redirect");
+    res.render("index", {
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
+  })
+  .all((req, res) => {
+    console.log("[WRN!]Unauthorized");
+    res.status(404).json("[WRN!] Unauthorized");
   });
-});
 
 //----------------------------------------------------------------
 app.listen(8080, () => {

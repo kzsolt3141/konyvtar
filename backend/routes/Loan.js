@@ -129,15 +129,19 @@ router
 router
   .route("/user/:uid")
   // return all the loan hitory of a user
-  .get(p.checkAuthAdmin, async (req, res) => {
+  .get(p.checkAuthenticated, async (req, res) => {
     var result = null;
     var sts = 200;
 
     try {
       const nextUserId = await userDB.getNextUserId();
 
-      if (isNaN(req.params.uid) || req.params.uid >= nextUserId) {
-        throw new Error("Invalid input");
+      if (
+        isNaN(req.params.uid) ||
+        req.params.uid >= nextUserId ||
+        (req.params.uid != req.user.id && req.user.admin != 1)
+      ) {
+        throw new Error("Invalid user ID! Redirecting...");
       }
 
       result = await database.getLoanByUid(req.params.uid);

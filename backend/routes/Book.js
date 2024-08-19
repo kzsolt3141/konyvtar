@@ -27,11 +27,16 @@ const upload = multer({ storage: storage });
 router
   .route("/table")
   // return all books in a simple table
-  .get(async (req, res) => {
-    res.render("book_table", {});
+  .get(p.checkAuthenticated, async (req, res) => {
+    res.render("book_table", {
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
   })
   // do the same but return it in json, will be used to display books in frintend
-  .post(upload.none(), async (req, res) => {
+  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
     let message = "Done!";
     let total = 0;
     let books = null;
@@ -79,7 +84,7 @@ router
 router
   .route("/notes/:id")
   // Return all the book notes identified by the ID
-  .get(p.checkAuthAdmin, async (req, res) => {
+  .get(p.checkAuthenticated, async (req, res) => {
     const nextBookId = await database.getNextBookId();
     if (isNaN(req.params.id) || req.params.id >= nextBookId) {
       res.status(400).send(`Hiba a jegyzet keresese kozben`);
@@ -98,7 +103,7 @@ router
 router
   .route("/genres/:genre?")
   // GET returns all previously registered book genres
-  .get(p.checkAuthAdmin, (req, res) => {
+  .get(p.checkAuthenticated, (req, res) => {
     database.getGenres(res);
   })
   // POST adds a new book genre to the database

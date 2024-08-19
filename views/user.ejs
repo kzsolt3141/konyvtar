@@ -36,6 +36,7 @@
       </a>
       <h1>Berecki könyvtár</h1>
 
+      <% if (locals.user_id != null) { %>
       <nav>
         <div class="dropdown-menu">
           <img src="/styles/static/menu.svg" />
@@ -73,6 +74,7 @@
           </div>
         </div>
       </nav>
+      <% } %>
     </div>
 
     <div class="enable_div" id="disable_div"></div>
@@ -83,7 +85,7 @@
         "/styles/static/default_book.png" %>" id="book_thumbnail"
         class="book_thumbnail">
 
-        <% if (!locals.blank) { %>       
+        <% if (!locals.blank && locals.admin) { %>       
           <div class="book_form_div">
             <h3 id="action_title" class="action_title"></h3>
             <div class="book_actions">
@@ -239,13 +241,7 @@
         </div>
 
         <div class="book_form_line">
-          <button
-            onclick="window.location.href='/user/login'"
-            type="button"
-            class="general_button"
-          >
-            <img src="/styles/static/user.svg" id="register" />
-          </button>
+          <div></div>
 
           <button type="submit" class="general_button">
             <img src="/styles/static/ok.svg" id="login" />

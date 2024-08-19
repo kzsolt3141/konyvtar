@@ -61,5 +61,10 @@
     <div class="global_status" id="global_status"></div>
 
     <div class="version" id="version"></div>
+
+    <!-- TODO use global status as in other places.. -->
+    <div id="global_status" class="global_status">
+      <%=(!!locals.message) ? message : "" %>
+    </div>
   </body>
 </html>

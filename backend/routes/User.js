@@ -78,10 +78,19 @@ router
 router
   .route("/notes/:id")
   // [ADMIN] find all notes for a user ID
-  .get(p.checkAuthAdmin, async (req, res) => {
+  .get(p.checkAuthenticated, async (req, res) => {
     const nextUserId = await db_users.getNextUserId();
-    if (isNaN(req.params.id) || req.params.id >= nextUserId) {
-      res.json(`hiba a jegyzet ${req.params.id} keresese kozben`);
+
+    if (
+      isNaN(req.params.id) ||
+      req.params.id >= nextUserId ||
+      (req.params.id != req.user.id && req.user.admin != 1)
+    ) {
+      res.status(500).render("user", {
+        uid: nextUserId,
+        blank: true,
+        message: "Invalid user ID! Redirecting...",
+      });
       return;
     }
 
@@ -234,14 +243,7 @@ router
     db_users
       .registerUser(req.body, req.file)
       .then((message) => {
-        res.render("user", {
-          message: message,
-
-          admin: req.user.admin,
-          user_id: req.user.id,
-          user_pic: req.user.pic,
-          user_name: req.user.name,
-        });
+        res.render("user_login", { message: message });
       })
       .catch((err) => {
         if (req.file) {
@@ -254,11 +256,6 @@ router
         }
         res.render("user", {
           message: err,
-
-          admin: req.user.admin,
-          user_id: req.user.id,
-          user_pic: req.user.pic,
-          user_name: req.user.name,
         });
       });
   });

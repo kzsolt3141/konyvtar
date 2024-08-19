@@ -97,14 +97,19 @@ if (isBlank === "false") {
           method: "PUT",
           body: actionFormData,
         })
-          .then((rsp) => rsp.json())
-          .then((data) => {
-            console.log(data);
-            const userStatus = data.userStatus == 1 ? "Aktiv" : "Inaktiv";
-            common.updateStatus(
-              `${data.userName} -> ${data.message}. new status: ${userStatus}`
-            );
-            document.getElementById("action_details").style.display = "none";
+          .then((rsp) => {
+            return rsp.ok ? rsp.text() : null;
+          })
+          .then((text) => {
+            if (text) {
+              data = JSON.parse(text);
+              console.log(data);
+              const userStatus = data.userStatus == 1 ? "Aktiv" : "Inaktiv";
+              common.updateStatus(
+                `${data.userName} -> ${data.message}. new status: ${userStatus}`
+              );
+              document.getElementById("action_details").style.display = "none";
+            }
             common.enableMain();
           });
       });
