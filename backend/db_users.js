@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 var db_ = null;
 
 //----------------------------------------------------------------
@@ -21,6 +23,31 @@ function init(db) {
         
     )
 `);
+
+  db_.get(`SELECT COUNT(*) AS count FROM users`, async (err, row) => {
+    if (row.count === 0) {
+      // Table is empty, insert DEFAULT ADMIN with "a@a" mail and "a" password
+      const password = await bcrypt.hash("a", 10);
+      db_.run(
+        `
+          INSERT INTO users (name, email, password, address, phone, birth_date, occupancy, pic, admin, status)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+        [
+          "admin", // name
+          "a@a", // email
+          password, // password
+          "-", // address
+          "0", // phone
+          null, // birth_date
+          "", // occupancy
+          "", // pic
+          true, // admin (set to true)
+          true, // status (set to true)
+        ]
+      );
+    }
+  });
 
   db_.run(`
 CREATE TABLE IF NOT EXISTS user_notes (

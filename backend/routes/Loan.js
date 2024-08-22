@@ -126,6 +126,17 @@ router
     res.status(sts).json(message);
   });
 
+router.route("/statistics").get(p.checkAuthenticated, async (req, res) => {
+  var result = null;
+  var sts = 200;
+
+  res.render("statistics", {
+    admin: req.user.admin,
+    user_id: req.user.id,
+    user_pic: req.user.pic,
+    user_name: req.user.name,
+  });
+});
 router
   .route("/user/:uid")
   // return all the loan hitory of a user
