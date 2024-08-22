@@ -62,21 +62,9 @@ router
       user_name: req.user.name,
     });
   })
-  // do the same but return it in json, will be used to display books in frontend
+  //TODO implement feedback page and handling here
   .post(p.checkAuthenticated, upload.none(), async (req, res) => {
-    let message = "Done!";
-    let total = 0;
-    let users = null;
     let sts = 200;
-
-    try {
-      users = await db_users.getAllUsers(req.body);
-      total = await db_users.getTotalUserNumber();
-    } catch (err) {
-      message = err.message;
-      sts = 500;
-    }
-
     res.status(sts).json({ total, users, message });
   });
 
@@ -94,8 +82,20 @@ router
   })
   // do the same but return it in json, will be used to display books in frontend
   .post(p.checkAuthenticated, upload.none(), async (req, res) => {
-    //TODO receive a message with a feedback for the page
-    res.status(sts).json({});
+    let message = "Done!";
+    let total = 0;
+    let users = null;
+    let sts = 200;
+
+    try {
+      users = await db_users.getAllUsers(req.body);
+      total = await db_users.getTotalUserNumber();
+    } catch (err) {
+      message = err.message;
+      sts = 500;
+    }
+
+    res.status(sts).json({ total, users, message });
   });
 
 //----------------------------------------------------------------
