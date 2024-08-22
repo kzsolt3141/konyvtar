@@ -50,11 +50,12 @@ router
   });
 
 //----------------------------------------------------------------
+//TODO implement feedback page and handling here
 router
-  .route("/table")
+  .route("/feedback")
   // return all books in a simple table
   .get(p.checkAuthenticated, async (req, res) => {
-    res.render("user_table", {
+    res.render("feedback", {
       admin: req.user.admin,
       user_id: req.user.id,
       user_pic: req.user.pic,
@@ -77,6 +78,24 @@ router
     }
 
     res.status(sts).json({ total, users, message });
+  });
+
+//----------------------------------------------------------------
+router
+  .route("/table")
+  // return all books in a simple table
+  .get(p.checkAuthenticated, async (req, res) => {
+    res.render("user_table", {
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
+  })
+  // do the same but return it in json, will be used to display books in frontend
+  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
+    //TODO receive a message with a feedback for the page
+    res.status(sts).json({});
   });
 
 //----------------------------------------------------------------
