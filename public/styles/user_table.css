@@ -1,0 +1,29 @@
+body {
+  max-width: 90%;
+}
+
+.user_table {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 2.5fr 2.5fr 1fr 1fr 1fr 0.5fr 0.5fr;
+}
+
+.user_table p {
+  border: 1px solid rgba(27, 87, 27, 0.15) !important;
+}
+
+.navi {
+  display: grid;
+  grid-template-columns: 70px 50px 50px 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.navi_icon {
+  width: 30px;
+  cursor: pointer;
+}
+
+.navi_input {
+  width: 30px;
+  text-align: center;
+}

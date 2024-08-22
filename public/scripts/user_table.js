@@ -47,10 +47,10 @@ async function getOrderedData(orderBy) {
 listAllUsers("id");
 
 common.createOrderingSelector(
-  "book_order",
-  document.getElementById("book_order_div"),
-  common.BookLabelNames,
-  listAllBooks
+  "user_order",
+  document.getElementById("user_order_div"),
+  common.UserLabelNames,
+  listAllUsers
 );
 
 async function listAllUsers(key) {
@@ -63,18 +63,11 @@ async function listAllUsers(key) {
     naviText.innerText = `/ ${maxPage}`;
 
     users.forEach(async (user) => {
-      const notes = await common.getBookNotesById(user["id"]);
-      const register_notes = notes.filter((entry) => /^\d+$/.test(entry.notes));
-      var register_note = "";
-      if (register_notes.length > 0) register_note = register_notes[0].notes;
-      user["register"] = register_note;
-
       for (const k in user) {
         if (k == "pic") continue;
-        if (k == "id") continue;
         if (k == "keys") continue;
-        const e = document.createElement(k === "title" ? "a" : "p");
-        e.href = `/book/${user.id}`;
+        const e = document.createElement(k === "name" ? "a" : "p");
+        e.href = `/user/${user.id}`;
         e.textContent = user[k];
         bookTable.appendChild(e);
       }
@@ -83,15 +76,15 @@ async function listAllUsers(key) {
 }
 
 naviBackBtn.addEventListener("click", () => {
-  const orderSelect = document.getElementById("book_order");
+  const orderSelect = document.getElementById("user_order");
   const currentPage = parseInt(naviPage.value.match(/\d+/), 10) - 1;
   tablePage = currentPage > 0 ? currentPage - 1 : currentPage;
-  listAllBooks(orderSelect.value);
+  listAllUsers(orderSelect.value);
 });
 
 naviNextBtn.addEventListener("click", () => {
-  const orderSelect = document.getElementById("book_order");
+  const orderSelect = document.getElementById("user_order");
   const currentPage = parseInt(naviPage.value.match(/\d+/), 10) - 1;
   tablePage = currentPage < maxPage - 1 ? currentPage + 1 : currentPage;
-  listAllBooks(orderSelect.value);
+  listAllUsers(orderSelect.value);
 });

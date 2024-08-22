@@ -263,8 +263,7 @@ function createOrderingSelector(id, place, label, sortcb) {
   typeSelect.name = id;
 
   for (const key in label) {
-    if (key == "id" || key == "available" || key == "notes" || key == "status")
-      continue;
+    if (key == "available" || key == "notes" || key == "status") continue;
     const option = document.createElement("option");
     option.value = key;
     option.text = label[key];

@@ -112,8 +112,13 @@ async function getAllUsers(body) {
         reject(err);
         return;
       }
-      delete rows[0].password;
-      resolve(rows);
+
+      const sanitizedRows = rows.map((row) => {
+        const { password, ...sanitizedRow } = row;
+        return sanitizedRow;
+      });
+
+      resolve(sanitizedRows);
     });
   });
 }
