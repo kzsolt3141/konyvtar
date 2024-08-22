@@ -126,15 +126,29 @@ if (isBlank === "false") {
     const activeLoanDiv = document.getElementById("active_loan");
     const activeLoans = await common.getActiveUserLoan(uid);
     if (activeLoans.length > 2) {
-      const h3 = document.createElement("h3");
-      h3.textContent = "MAX kolcsonzes!!";
-      activeLoanDiv.appendChild(h3);
+      const p = document.createElement("p");
+      p.textContent = "A felhasznalo elerte a MAX kolcsonzesi szamot!";
+      p.style.color = "#ff0000A0";
+      activeLoanDiv.appendChild(p);
+      const p2 = document.createElement("p");
+      p2.textContent = activeLoans.length;
+      p.style.color = "#ff0000A0";
+      activeLoanDiv.appendChild(p2);
     }
     activeLoans.forEach((activeLoan) => {
       const a = document.createElement("a");
-      a.textContent = `${activeLoan.title} ||  `;
+      a.textContent = activeLoan.title;
       a.href = `/book/${activeLoan.bid}`;
+      const p = document.createElement("p");
+      const diff = Math.floor(
+        (new Date() - new Date(activeLoan.lend_date)) / (1000 * 60 * 60 * 24)
+      );
+
+      p.textContent = diff;
+      p.style.backgroundColor = diff > 30 ? "#e68c8ca0" : "#6abb75a0";
+      p.style.textAlign = "center";
       activeLoanDiv.appendChild(a);
+      activeLoanDiv.appendChild(p);
     });
   }
 }

@@ -92,3 +92,11 @@
 
   border: 2px solid darkgreen;
 }
+
+.active_loan {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-right: 1em;
+  padding-left: 1em;
+  grid-gap: 1em;
+}
