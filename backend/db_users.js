@@ -80,6 +80,58 @@ function registerUser(body, file) {
   });
 }
 
+async function getAllUsers(body) {
+  if (!body || typeof body !== "object") {
+    throw new Error("Invalid input: 'body' must be an object.");
+  }
+
+  let { order, limit, offset } = body;
+
+  if (!order || !limit || !offset) {
+    throw new Error("'order', 'limit', 'offset' must be provided.");
+  }
+
+  offset = Number(offset);
+  limit = Number(limit);
+
+  if (isNaN(offset) || isNaN(limit) || !isFinite(offset) || !isFinite(limit)) {
+    throw new Error("'limit' and 'offset' must be valid numbers.");
+  }
+
+  const user_offset = offset * limit;
+
+  const sql = `
+    SELECT * FROM users 
+    ORDER BY ${order} ASC
+    LIMIT ${limit}
+    OFFSET ${user_offset}`;
+
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      delete rows[0].password;
+      resolve(rows);
+    });
+  });
+}
+
+async function getTotalUserNumber() {
+  const sql = `SELECT COUNT(*) AS total FROM users`;
+  return new Promise((resolve, reject) => {
+    db_.all(sql, (err, rows) => {
+      if (err) {
+        console.log(err.message);
+        reject("");
+        return;
+      }
+      resolve(rows[0].total);
+    });
+  });
+}
+
 function registerUserNotes(id, date, notes) {
   if (!notes || notes == "") notes = "Init";
   const sql = `
@@ -258,6 +310,8 @@ module.exports = {
   init: init,
   registerUser: registerUser,
   findUser: findUser,
+  getAllUsers: getAllUsers,
+  getTotalUserNumber: getTotalUserNumber,
   getUserNotesById: getUserNotesById,
   getUserById: getUserById,
   getUserByEmail: getUserByEmail,

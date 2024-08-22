@@ -35,7 +35,7 @@ router
       user_name: req.user.name,
     });
   })
-  // do the same but return it in json, will be used to display books in frintend
+  // do the same but return it in json, will be used to display books in frontend
   .post(p.checkAuthenticated, upload.none(), async (req, res) => {
     let message = "Done!";
     let total = 0;

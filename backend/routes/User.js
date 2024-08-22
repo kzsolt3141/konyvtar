@@ -50,6 +50,36 @@ router
   });
 
 //----------------------------------------------------------------
+router
+  .route("/table")
+  // return all books in a simple table
+  .get(p.checkAuthenticated, async (req, res) => {
+    res.render("user_table", {
+      admin: req.user.admin,
+      user_id: req.user.id,
+      user_pic: req.user.pic,
+      user_name: req.user.name,
+    });
+  })
+  // do the same but return it in json, will be used to display books in frontend
+  .post(p.checkAuthenticated, upload.none(), async (req, res) => {
+    let message = "Done!";
+    let total = 0;
+    let users = null;
+    let sts = 200;
+
+    try {
+      users = await db_users.getAllUsers(req.body);
+      total = await db_users.getTotalUserNumber();
+    } catch (err) {
+      message = err.message;
+      sts = 500;
+    }
+
+    res.status(sts).json({ total, users, message });
+  });
+
+//----------------------------------------------------------------
 // [ADMIN] retreive user details in JSON
 router
   .route("/details/:id?")
