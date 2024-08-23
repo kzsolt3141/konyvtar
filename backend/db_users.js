@@ -25,7 +25,7 @@ function init(db) {
 `);
 
   db_.get(`SELECT COUNT(*) AS count FROM users`, async (err, row) => {
-    if (row.count === 0) {
+    if (!row || row.count === 0) {
       // Table is empty, insert DEFAULT ADMIN with "a@a" mail and "a" password
       const password = await bcrypt.hash("a", 10);
       db_.run(
